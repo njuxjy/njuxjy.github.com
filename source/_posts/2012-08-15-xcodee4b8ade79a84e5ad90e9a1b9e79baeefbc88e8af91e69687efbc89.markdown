@@ -1,0 +1,99 @@
+---
+author: njuxjy
+comments: true
+date: 2012-08-15 07:44:18+00:00
+layout: post
+slug: xcode%e4%b8%ad%e7%9a%84%e5%ad%90%e9%a1%b9%e7%9b%ae%ef%bc%88%e8%af%91%e6%96%87%ef%bc%89
+title: Xcode中的子项目（译文）
+wordpress_id: 417
+categories:
+- iOS
+- 翻译
+---
+
+原文网址：http://www.cocoanetics.com/2011/12/sub-projects-in-xcode/
+
+================
+
+Xcode有一个非常有趣但没有出现在文档中的功能，是你可以在你的项目结构中加入子项目。你可以在你的项目中加入xcodeproj，然后指向该项目的输出。
+
+如果你在某个项目中开发了某个功能，现在想在另一个项目中使用这个完善的功能，那么子项目对你来说尤其有用。举例来说，你想给你的应用加上访问从Safari上拷贝过来的HTML代码的能力，需要用到我的[DTWenArchive](http://cocoanetics.github.com/DTWebArchive/)类。要么你可以把所有的类拷贝到你的项目中，要么编译出两个库（一个为模拟器，一个为设备，或者整合到一块），要么编译一个静态的通用框架。
+
+还有第四种方法我要在这篇文章中告诉你。这个方法既不需要你拷贝源代码，也不需要预先编译什么。
+
+注意对Xcode4.2来讲，可能搞定之前你会遇到些麻烦。有人告诉我说他在Xocde 3上做了以下我将要说的内容，然后搞定了。总之这两种方法总有一种是行的通的，要是行不通，那肯定是“你把它搞错了”。![;-)](http://www.cocoanetics.com/wp-includes/images/smilies/icon_wink.gif)
+
+
+### 子项目，一个被忽视的选项
+
+
+这是我自己第一次使用子项目。我的DTRichTextEditor框架很多地方用到了我的两个开源项目。我机器上的项目结构是这样的：
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2012/08/1.png)](http://www.xiaojiayi.com/wp-content/uploads/2012/08/1.png)
+
+文件系统结构和组结构基本一致。我有一个叫Externals的文件夹，里面有这两个GitHub项目的克隆。当你把xcodeproj加入到你项目中时，它会变成如图所示这样，你可以同时看到子项目中的源代码。更赞的是，当你调试的时候，你可以单步调试到子项目中的代码，就好像它们在本地一样。
+
+有一些要注意的地方，有时候重启几次Xcode后项目结构树才会显示出来。Xcode似乎对你同时打开子项目有意见。如果你那么做的话，你会得到一个出错消息，说子项目的一致性无法验证。因此确保你不要把子项目也同时打开。你可以在大项目中编辑子项目的代码。
+
+
+### 准备子项目
+
+
+要能够如上所示使用xcodeproj，你需要准备一些东西，我来给你介绍。
+
+你至少需要有一个用来编译iOS静态库的target。在你项目根文件中添加这么一个target。然后选择头文件和实现文件加入这个库。
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2012/08/11.png)](http://www.xiaojiayi.com/wp-content/uploads/2012/08/11.png)
+
+
+
+
+我喜欢将target的命名和产品不一样。我想让target名叫“Static Library”，然后在build settings中将产品命名为DTWebArchive，这样Producs下便产生了一个叫libDTWebArchive.a的产品。
+
+你不需要在project, private和public中修改头文件。将头文件从默认的project改为其他的，仅仅是将头文件拷到了产品输出路径上，这几乎没什么用。你也会想要改Scheme的名字，或者为你的targets自动生成schemes。这些scheme只是为了你个人方便，它们甚至没有保存在xcodeprj文件中。
+
+确保你的库构建没有任何警告或错误。注意如果你没有选择任何源文件的话，libtool也会失败，但没有有用的错误信息。这种情况在我身上发生过几次。
+
+
+### 添加子项目
+
+
+当你对静态库满意时，将该项目关闭，然后打开另一个即将包含它的项目。根据你实际情况，你可以将所有的项目放在同一个路径下互相挨着对方，也可以让大项目在物理目录上也包含小项目。我推荐后者，因为你的文件系统结构可能和其他编译这个项目的人不一样。如果你使用了绝对路径，或相对路径指向了项目根文件夹外的地方，你会自找麻烦的。
+
+当添加子项目的时候，你不需要将它选为任何target的成员。最好你在Finder中将xcodeproj拖入项目中。
+
+接下来你需要在build settings中添加路径，以便可以寻找到子项目的头文件。你不能将.h文件加入你的主项目中，但你可以告诉编译器哪里可以找到它们。指定相对于你项目跟文件夹的路径。我选择了recursive，因为我有多个子项目，这样的话我仅需要指定该设置一次。
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2012/08/12.png)](http://www.xiaojiayi.com/wp-content/uploads/2012/08/12.png)
+
+这样搭建好以后，你可以跟往常一样使用import语句来导入子项目中的头文件了。
+
+你告诉链接器在子项目中链接静态库。在Build Phasese选项卡的“Link Binary With Libraries”下设置。你可能想把静态库改为"Required"，因为我们无法构建动态库（dylib），苹果在他们的框架中已经使用了。
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2012/08/13.png)](http://www.xiaojiayi.com/wp-content/uploads/2012/08/13.png)
+
+你还要将静态库targets加为依赖。这样的话编译系统就知道如果在依赖中的代码有变更的话，它需要重新编译应用目标代码。
+
+如果你只用过c语言编程，那就算了。但既然我们用Objective-C编程（可能使用了ARC），我们需要加上“Other Linker Flags”：
+
+
+
+	
+  * **-ObjC**  否则的话链接器不会加载你的类
+
+	
+  * **-all_load** 如果你的库中有分类，不加的话分类得不到加载
+
+	
+  * **-fobjc-arc** 如果你连接的库使用了ARC而你的应用没有使用ARC
+
+
+事实上前两个非常标准，因此如果你搞过静态库的话肯定已经接触过了。
+
+
+### 结论
+
+
+你看，没多少工作量的，你可以不用再把需要复用的代码拷贝的到处都是了。你最好把它们放进你自己的基础框架（就像我自己的[DTFoundation](http://cocoanetics.github.com/DTFoundation/)），加上文档和恰当的单元测试。这样的话你加入的任何新方法或者做的任何改进都能使得你所有的应用受益，而不仅仅是你当前开发中的应用。
+
+

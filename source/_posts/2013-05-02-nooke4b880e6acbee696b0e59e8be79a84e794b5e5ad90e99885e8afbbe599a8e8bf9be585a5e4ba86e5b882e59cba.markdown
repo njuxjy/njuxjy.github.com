@@ -1,0 +1,49 @@
+---
+author: njuxjy
+comments: true
+date: 2013-05-02 11:04:43+00:00
+layout: post
+slug: nook%e4%b8%80%e6%ac%be%e6%96%b0%e5%9e%8b%e7%9a%84%e7%94%b5%e5%ad%90%e9%98%85%e8%af%bb%e5%99%a8%e8%bf%9b%e5%85%a5%e4%ba%86%e5%b8%82%e5%9c%ba
+title: (旧文迁移) Nook——一款新型的电子阅读器进入了市场（译文）
+wordpress_id: 683
+categories:
+- 翻译
+---
+
+原文网址：[http://www.nytimes.com/2009/10/21/technology/21nook.html?em](http://www.nytimes.com/2009/10/21/technology/21nook.html?em)
+
+ 
+
+[![popup](http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup_thumb.jpg)](http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup.jpg)
+
+ 
+
+由美国书商Barnes & Noble推出的Nook这款电子阅读设备在昨天揭开了它神秘的面纱，与Kindle正式展开了竞争。 
+
+ 
+
+正如众人所期盼Barnes & Noble在周二的一次引人注意的新闻发布会上展示了它的Nook电子阅读设备赢得了出版界普遍良好的反映并就人们私下议论的借阅功能提供了一些细节信息。 
+
+ 
+
+最重要的是出版商对于Barnes & Noble这个操控着全国最大的连锁书店的书商生产出了亚马逊Kindle的可靠替代品这件事似乎松了一口气。Nook售价为259美元，于周二下午在 nook.com上开始发售，价格跟最新版的Kindle不相上下。Nook将于11月下旬全面上市。 
+
+ 
+
+亚马逊公司目前在电子阅读器市场上占有绝对优势。尽管各种销量估计值不尽相同，但根一家据对出版业的咨询公司Codex Group的数据，亚马逊公司已经卖出了945000台，而与之相比索尼公司仅卖出了525000台索尼阅读器。 
+
+ 
+
+Barnes & Noble公司在七月份开了一家电子书店，它的出版物可以再ePub上获取到，是Adobe PDF格式的，可以在多种不同设备上阅读，包括苹果的 iPhone、黑莓、Mac和PC。Barnes & Noble公司将继续支持这些设备，同时也会支持即将到来的iRex公司和Plastic Logic公司的电子阅读器。 
+
+ 
+
+但是该公司很明显要在Nook上巩固电子书的销量。Nook的特征是有一个六英尺长的灰白的阅读屏和一个彩色的触摸屏控制面板。在连锁的1300家商店的任一家里，顾客都可以通过Wi-Fi网络下载电子书。在商店外面，顾客可以通过访问AT&T公司的3G网络来下载。 
+
+ 
+
+Nook与众不同的因素之一便是顾客可以把书“借”给朋友。但是顾客一次只可以把任一本书借出去14天，并且在书外借期间他们不能在自己的Nook上阅读它。 
+
+ 
+
+在一次采访中，Barnes&Noble.com的总裁William Lynch说，公司将在有营业场所的商店里不遗余力地推销Nook。Nook也自带软件可以检测到一个顾客走进了一家商店，这样它便可以跳出优惠券信息和其他促销信息，像即将到来的书的摘要或者新书阅读建议。当在商店的时候，Nook的主人可以通过流媒体软件阅读任何电子书。

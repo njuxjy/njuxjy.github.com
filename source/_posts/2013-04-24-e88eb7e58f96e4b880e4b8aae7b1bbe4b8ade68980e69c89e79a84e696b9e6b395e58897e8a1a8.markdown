@@ -1,0 +1,35 @@
+---
+author: njuxjy
+comments: true
+date: 2013-04-24 06:26:05+00:00
+layout: post
+slug: '%e8%8e%b7%e5%8f%96%e4%b8%80%e4%b8%aa%e7%b1%bb%e4%b8%ad%e6%89%80%e6%9c%89%e7%9a%84%e6%96%b9%e6%b3%95%e5%88%97%e8%a1%a8'
+title: 获取3rd SDK类中所有的方法列表
+wordpress_id: 570
+categories:
+- iOS
+---
+
+参考：http://senry.me/post/2012-10-25/40041673640 这篇中提到的获取某SDK方法列表的方法：
+
+    
+     int unsigned methodCount;
+       Method *methods = class_copyMethodList([SDKCLASS class], &methodCount);
+       for (int i = 0;i<methodCount;i++){
+           NSLog(@"%@", NSStringFromSelector(method_getName(methods[i])));
+       }
+
+
+不过这个方法只能取到所有实例方法，稍加改动就能取类方法：
+
+    
+        int unsigned methodCount;
+        Method *methods = class_copyMethodList(object_getClass([MainViewController class]), &methodCount);
+        for (int i = 0;i<methodCount;i++){
+            NSLog(@"%@", NSStringFromSelector(method_getName(methods[i])));
+        }
+
+
+因为[SDKClass class]的返回值本身还是个class object，要通过object_getClass取得该class object的class。
+
+

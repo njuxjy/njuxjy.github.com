@@ -1,0 +1,31 @@
+---
+author: njuxjy
+comments: true
+date: 2013-05-02 11:02:19+00:00
+layout: post
+slug: '%e6%90%ad%e5%ae%8c%ef%bc%8c%e6%a0%87%e8%ae%b0%e4%b8%8b-2'
+title: (旧文迁移) 搭完，标记下
+wordpress_id: 667
+categories:
+- 生活
+---
+
+这是用live writer写的第一篇日志。     
+在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：
+
+ 
+
+  
+  * 用live writer连空间的时候会有XML RPC错误，是因为wp里没开启，解决方法是在控制面板Setting-Writing中某选项勾下。 
+   
+  * 解决wp日志编辑器以及live writer中按回车会多一个空行的问题：按shift+enter。 
+   
+  * 解决在live writer中全角空格不缩进问题：在live writer中 日志-编辑日志设置-高级，将XHTML改为HTML。 
+   
+  * live writer中本地日志的保存地址在\My Documents\My Weblog Posts\Recent Posts
+ 
+
+在这之前，通过了本科的答辩。     
+在这之前，用５０块买了个godaddy域名，用40块买了个美国主机，256M/5G。对其数据没什么概念，能用就行。      
+在这之前，算了一下一年费用１００，用到９０岁也不过７０００块左右。用一个月工资做一件一辈子不会后悔的事情，有什么可犹豫的。      
+在这之前，在琢磨着咱也整个独博玩玩？

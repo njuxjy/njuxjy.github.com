@@ -1,0 +1,129 @@
+---
+author: njuxjy
+comments: true
+date: 2011-11-13 15:43:28+00:00
+layout: post
+slug: '%e5%9b%be%e5%83%8f%e6%bb%a4%e9%95%9c%e4%b9%8b%e7%a8%8b%e5%ba%8f%e5%ae%9e%e7%8e%b0'
+title: 图像滤镜之程序实现
+wordpress_id: 245
+categories:
+- symbian
+- 图像处理
+---
+
+前段时间做了一段时间塞班平台的图像处理研究，想要做出类似于instagram、Q拍那样的滤镜特效，在手机拍完照后可以用我们提供的滤镜对照片进行美化处理（有空再做个ios版的）。看了一些instagram、Q拍、美图秀秀、可牛快拍等软件做出来的效果，对于图像处理零基础的我表示鸭梨很大。从RGB通道、alpha通道、位图结构、灰度图、图层、颜色表等概念看起，然后了解基本的图像处理方法如锐化、柔化、扩散、雕刻、黑白、反色等基本特效的原理，到高斯模糊、图像混合、柏林噪声等进阶的玩法，到最后总结出了一套做图像特效的方法，给我一个.psd的photoshop源文件，我便可以根据里面的拆分步骤用程序去实现该效果。其中参考了不少国外站点的东西，尤其是StackOverflow上找到了很多有用的东东，东拼西凑组成了我图像处理这块的一些心得。先上图吧。
+
+原图如下：
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/Nostalgia1.bmp)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/Nostalgia1.bmp)
+
+
+
+a. 基础效果
+
+这里说基础是因为这些效果不涉及图像混合等更加复杂的东东，只是对每个像素的RGB通道做一些处理。 有的算法一行代码就能解决了，有的稍微复杂些，不过基本国内的网上都能找得到。
+
+
+
+	
+  1. 黑白
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/blackwhite.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/blackwhite.png)
+
+	
+  2. 浮雕
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/emboss.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/emboss.png)
+
+	
+  3. 素描
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/sumiao.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/sumiao.png)
+
+	
+  4. lomo
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/lomo.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/lomo.png)
+
+	
+  5. 马赛克
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/mosaic.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/mosaic.png)
+
+	
+  6. 扫描线
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/scanline.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/scanline.png)
+
+	
+  7. 波普
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/bopo.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/bopo.png)
+
+	
+  8. 鱼眼
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/fisheye.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/fisheye.png)
+
+
+
+
+b. 进阶效果
+
+
+
+
+这里仅作了图像混合，并没有用函数去处理每个RGB分量，毕竟不是专门搞ps的，不知道怎么弄算好看.. 不过貌似可牛快拍里有些效果就是做了图像混合，然后稍做了些处理。这种做法比较没技术含量.. 不适合单独作为产品级的效果，可以作为复杂特效的某些步骤。
+
+
+
+
+
+
+
+
+	
+  1. 早晨
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/morning.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/morning.png)
+
+	
+  2. 星光
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/star.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/star.png)
+
+
+
+
+
+
+
+这里就放出两张图了，因为做法其实都一样，最多传的参数不同罢了。当然图像混合也是有学问的，可以参考国外一哥们的系列文章：http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/
+
+
+
+
+c.高级特效
+
+
+
+
+下面两个效果挺花时间的，主要要知道怎么做比较费时间，做的过程的话第二个效果也比较复杂，是根据.psd文件的拆分步骤一步步做出来的，所以在移动平台上跑有些慢...
+
+
+
+
+
+
+
+
+	
+  1. 老照片
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/old-photo.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/old-photo.png)
+
+	
+  2. Nostalgia
+[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/nostalgia.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/nostalgia.png)
+
+
+
+
+做的方法受这个老外的影响很大：http://taptaptap.com/blog/creating-a-camera-plus-fx/
+
+
+
+
+这是个开发ios上滤镜app的老外设计师写的，而且是夫妻档，貌似老婆是设计师，她将做好的photoshop效果图给源文件给老公，然后老公根据.psd文件做成ios应用放到app store里去卖。我的Nostalgia特效就是模仿的他们的效果。不过老外没有把源代码放上来，就截了段核心函数，然后我自己摸索了好多天，不断的尝试，最后才搞成的效果。里面还涉及到了用Matlab模拟出曲线的函数，竟然用到了四次函数。。不过整个过程还是很享受的，很有乐趣。如果组内有需求，可以帮着搞一下。
+
+
+

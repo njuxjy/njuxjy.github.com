@@ -1,0 +1,60 @@
+---
+author: njuxjy
+comments: true
+date: 2013-05-22 06:29:14+00:00
+layout: post
+slug: '%e7%94%a8xcode%e7%9a%84%e6%96%ad%e7%82%b9%e6%89%93%e6%97%a5%e5%bf%97%ef%bc%88%e8%af%91%e6%96%87%ef%bc%89'
+title: 用Xcode的断点打日志（译文）
+wordpress_id: 783
+categories:
+- iOS
+- 翻译
+---
+
+原文地址：http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/
+
+=========================================
+
+If you don’t already know about it, setting actions for breakpoints in Xcode is a great way to monitor repetitive code without adding a bunch of NSLog() to your code.
+
+After setting a breakpoint, right-click and select “Edit Breakpoint…”. Then select “Debugger Command” for the Action. You can enter any valid debugger command at this point. When you check “Automatically continue after evaluating”, the debugger will run your command and your code doesn’t stop. Sweet.
+
+This approach works great when you want to log the contents of a variable by entering a command like `po myVar`. But there’s a problem: I often want to know where this variable is getting logged, so I ended up creating another breakpoint with a `script print "myMethod in myClass"` (in lldb) or `echo myMethod in MyClass\n` (in gdb) command.
+
+Great. Now you have to manage two breakpoints instead of one. Worse, when you have code like this:
+
+你知道不，为Xcode里的断点设置一些动作就可以很好地反复监控你的代码，而不需要在代码中加上一堆的NSLog()。
+
+在设置了断点后，右键点击选择"编辑断点"，然后在Action处选择“Debugger Command”。你可以在这里输入任何正确的调试命令。当你勾上"Automatically continue after evaluating"后，调试器会执行你的命令，而你的代码不会停下来。赞啊。
+
+当你想用命令 po myVar 来显示某个变量的值的时候，就可以用这个很棒的方法。但是有个问题：我通常想要知道某个变量是在哪里被打了日志，所以最后我又创建了一个断点，里面写上脚本命令：print "myMethod in myClass"(lldb里)，或者 echo myMethod in MyClass\n(gdb里)。
+
+完了，现在你需要管理两个断点而不是一个了。更糟的是，当你有如下代码的时候：
+
+    
+    for (MyClass *class in aCraploadOfClasses) {
+        if (class.propertyThatIsRarelySet) {
+            [self doSomethingWith:class];
+        }
+    }
+
+
+当你想要在class收到-doSomeThingWith:消息之前跟踪class的话，你就没法用双断点技巧了。
+
+我费了好多劲才想到现在的解决方案：**让调试器命令来调用NSLog!**
+
+举例来说：
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2013/05/NSLog.png)](http://www.xiaojiayi.com/wp-content/uploads/2013/05/NSLog.png)
+
+我们来分析下这个命令：
+
+    
+    p (void)NSLog(@"%s: %@", _cmd, syncItemId)
+
+
+_cmd是一个存有当前方法名的C字符串（它通过objc_msgSend被传给每个Objective-C方法）。在运行时，_cmd很好的取代了__PRETTY_FUNCTION___的作用。syncItemId是我在我的类里几个不同的方法中需要跟踪的变量。p命令还需要带有void返回值。
+
+这个小发现将会绳叼我很多时间：不再需要陷到Xcode里面去加上一些跟踪完问题就会立马删掉的代码。希望对你也有帮助！
+
+

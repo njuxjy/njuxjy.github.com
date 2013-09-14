@@ -1,0 +1,68 @@
+---
+author: njuxjy
+comments: true
+date: 2013-05-02 10:56:02+00:00
+layout: post
+slug: android%e5%bc%80%e5%8f%91%ef%bc%88%e4%b8%80%ef%bc%89
+title: (旧文迁移) Android开发（一）
+wordpress_id: 615
+categories:
+- 技术
+---
+
+1、环境配置
+
+ 
+
+  
+  * 安装Eclipse3.5，Android SDK，ADT插件（Help->Install New Softare->“[https://dl-ssl.google.com/android/eclipse](https://dl-ssl.google.com/android/eclipse)”->弹出来的两个都选上->装好重启下），参考“[http://androidappdocs.appspot.com/sdk/eclipse-adt.html](http://androidappdocs.appspot.com/sdk/eclipse-adt.html)” 
+   
+  * 配置环境变量，在Path后添加“C:\android-sdk_r3-windows\android-sdk-windows\tools”
+ 
+
+2、导入已有项目不要用import，而要用File->New->Android Project，不然Eclipse无法识别为Android项目。
+
+ 
+
+3、模拟器打开后一直开着好了，不用每个程序运行完就关掉，第一次打开模拟器时间较长。
+
+ 
+
+4、在命令行输入adb shell可进入模拟器的Shell环境中，要删除模拟器中自己写的程序，则：cd /data/app –> ls –>rm *.apk。
+
+ 
+
+5、学习资料
+
+ 
+
+  
+  * SDK中有很多Sample可以运行 
+   
+  * [http://android.toolib.cn/guide/index.php](http://android.toolib.cn/guide/index.php) 有API文档和开发向导，有很多教程和范例 
+   
+  * [http://www.rbgrn.net/](http://www.rbgrn.net/) 有Android 3D游戏开发日志 
+   
+  * [http://www.anddev.org/](http://www.anddev.org/) 最大的英文Android论坛 
+   
+  * [http://code.google.com/intl/zh-CN/android/index.html](http://code.google.com/intl/zh-CN/android/index.html) 不过经常性不能访问 
+   
+  * [http://www.hiapk.com/bbs/](http://www.hiapk.com/bbs/) 最大的中文Android论坛 
+   
+  * [http://www.chinaup.org/docs/documentation.html](http://www.chinaup.org/docs/documentation.html) 第二个的中文版 
+   
+  * [http://rayleung.javaeye.com/](http://rayleung.javaeye.com/) 关注Android的博客 
+   
+  * [http://www.android123.com.cn/](http://www.android123.com.cn/) 同上 
+   
+  * [http://code.google.com/p/androidbmi/wiki/IntroAndroid](http://code.google.com/p/androidbmi/wiki/IntroAndroid) 台湾资料 
+   
+  * 《Android A Programmer's Guide》 
+   
+  * 高焕堂的几本书 
+   
+  * 《Android SDK开发范例大全》 
+   
+  * 《深入浅出Google Android》 
+   
+  * 《Android基础教程》

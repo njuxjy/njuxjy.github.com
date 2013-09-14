@@ -1,0 +1,85 @@
+---
+author: njuxjy
+comments: true
+date: 2013-03-11 07:09:03+00:00
+layout: post
+slug: ios6-%e5%86%85%e5%ad%98%e8%ad%a6%e5%91%8a%e5%a4%84%e7%90%86
+title: iOS6 内存警告处理
+wordpress_id: 555
+categories:
+- iOS
+---
+
+在iOS6中将之前的viewDidUnload deprecated掉了，现在使用didReceiveMemoryWarning来处理内存警告。
+
+用个小demo来模拟下这个过程。在某个页面里，在viewDidLoad中开辟了一大块内存：
+
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+        self.bigArray = array;
+        [array release];
+    
+        for(NSInteger i = 0; i < 1000000; i++)
+        {
+            [array addObject:@"hello"];
+        }
+
+
+可以看到内存使用率陡然上升：
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2013/03/1.png)](http://www.xiaojiayi.com/wp-content/uploads/2013/03/1.png)
+
+然后点击某个按钮跳转到另一个页面中，此时模拟一个内存警告。在模拟器中很容易模拟，在真机上可以通过代码来模拟：
+
+    
+    - (void)sendMemWarning
+    {
+        [[UIApplication sharedApplication] performSelector:@selector(_performMemoryWarning)];
+    }
+
+
+因为是私有API，不能打包机发布版本中。实现之前页面中的didReceiveMemoryWarning函数释放可以重建的一些资源：
+
+    
+    - (void)didReceiveMemoryWarning
+    {
+        [super didReceiveMemoryWarning];
+        if ([self isNeedClearMemory])
+        {
+            self.view = nil;
+            if ([self respondsToSelector:@selector(clearMemory)])
+            {
+                [self performSelector:@selector(clearMemory)];
+            }
+        }
+    }
+    
+    - (BOOL)isNeedClearMemory
+    {
+        if (self.view.window == nil)
+        {
+            return YES;
+        }
+        return NO;
+    }
+    
+    - (void)clearMemory
+    {
+        self.button = nil;
+        self.bigArray = nil;
+    }
+
+
+
+
+
+
+由于每个vc都会接收到此消息，而当前展示页面不能释放内存，因此需要先加以判断是否为活跃页面。需要自己手动释放view，系统不像之前会自动释放不活跃的view。对于在接到警告时需要释放掉内存的变量，不要在init中初始化，这里面的东西属于不可再生资源。
+
+接到内存警告后，内存使用量减至之前水平（之后的再次上升是因为又回到了之前的页面，重新viewDidLoad加载了大块内存）：
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2013/03/11.png)](http://www.xiaojiayi.com/wp-content/uploads/2013/03/11.png)
+
+that's all.
+
+

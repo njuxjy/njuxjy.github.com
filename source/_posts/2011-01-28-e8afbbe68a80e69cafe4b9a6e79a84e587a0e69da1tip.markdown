@@ -1,0 +1,55 @@
+---
+author: njuxjy
+comments: true
+date: 2011-01-28 02:47:01+00:00
+layout: post
+slug: '%e8%af%bb%e6%8a%80%e6%9c%af%e4%b9%a6%e7%9a%84%e5%87%a0%e6%9d%a1tip'
+title: 读技术书的几条tip
+wordpress_id: 13
+categories:
+- 技术
+tags:
+- python
+- 笔记
+- 读书
+---
+
+最近想学下python，搞了个电子版的《Head First Python》读下，才看了前言部分，作者关于阅读技术书籍有几条tip，目的是为了让读者理解透彻，让阅读有趣味，不至于瞌睡，现摘录如下：
+
+ 
+
+  
+  1. **Slow down. The more you understand, the less you have to memorize.          
+**多思，重在理解。         
+
+   
+  2. **Do the exercises. Write your own notes.          
+**身边放一支笔和一张纸，做点题，在纸上涂涂画画。         
+
+   
+  3. **Read the “There are No Dumb Questions.”          
+**书中的问题试着去解答。         
+
+   
+  4. **Make this the last thing you read before bed. Or at least the last challenging thing.          
+**作者的意思是最好睡前读，因为学习了新的知识后大脑需要时间去消化记忆，如果这时间做了别的事情，学到的东西会遗忘。这条不太同意。         
+
+   
+  5. **Talk about it. Out loud.          
+**直到能向别人清晰讲述一个知识点后，才算真正掌握了它。         
+
+   
+  6. **Drink water. Lots of it.          
+**阅读时多喝水，脑子需要润滑剂。         
+
+   
+  7. **Listen to your brain.          
+**一旦发现自己无法集中注意力，或很快忘记自己刚读的内容，立马休息片刻。         
+
+   
+  8. **Feel something.          
+**最好阅读时能有情绪上的收获。要么拍着大腿说“这段写的太好了”，或者看完一章后抱怨说“这章简直在放屁”，或者觉得“这书写的太枯燥无聊了，我应该扔了出去玩一会”，这些都比翻完一本书一点反应也没有强。         
+
+   
+  9. **Write a lot of code!          
+**不能同意得更多。 

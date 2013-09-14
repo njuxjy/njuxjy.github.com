@@ -1,0 +1,17 @@
+---
+author: njuxjy
+comments: true
+date: 2013-04-23 08:23:15+00:00
+layout: post
+slug: ios%e6%8a%93%e5%8c%85%e5%87%a0%e7%a7%8d%e6%96%b9%e6%b3%95
+title: iOS抓包几种方法
+wordpress_id: 567
+categories:
+- iOS
+---
+
+1. 在有以太网口的情况下， 可以打开mac的互联网共享，共享以下来源的连接选择“以太网”，用以下端口共享给电脑选“wifi”，然后设置共享密码，在iPhone上连接该共享wifi即可。然后mac上用Charles等工具来抓包
+
+2. 由于air没有以太网口，可用tcpdump+Charles方法（可参考：http://res0w.com/?p=977），或虚拟机+fiddler方法（可参考：http://www.99css.com/archives/974），或仅用Charles方法（可参考：http://www.99css.com/archives/1272）。最后一种感觉最简单些。
+
+

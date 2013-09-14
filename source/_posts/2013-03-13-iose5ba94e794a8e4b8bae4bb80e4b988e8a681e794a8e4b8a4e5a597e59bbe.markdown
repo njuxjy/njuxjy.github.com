@@ -1,0 +1,27 @@
+---
+author: njuxjy
+comments: true
+date: 2013-03-13 13:35:19+00:00
+layout: post
+slug: ios%e5%ba%94%e7%94%a8%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e7%94%a8%e4%b8%a4%e5%a5%97%e5%9b%be
+title: iOS应用为什么要用两套图
+wordpress_id: 559
+categories:
+- iOS
+---
+
+之前有个疑问，既然现在retina的屏幕已经很主流，3GS用户越来越少，而且只放@2x的图在低分辨率屏幕上仍然是可以展示的，那么是否可以在项目中只用一套@2x的图呢，也可以减轻美工部分工作量？
+
+看了stackOverFlow上一个帖子解了我的疑惑：http://stackoverflow.com/questions/10576520/ios-apps-why-include-both-2x-and-low-res-images
+
+主要来讲原因有：
+
+1. 在3GS等非retina屏幕的设备上，系统发现@2x的图片没有其对应的非retina版本，于是只能用比原来尺寸大很多的@2x的图，会占用很多内存
+
+2. 这些设备每次遇到需要画图的地方都需要将retina的图读入内存，并且进行一次复杂的缩放操作，既耗内存又耗cpu，影响性能。在iPad1上尤其明显。
+
+3. 经由系统缩放的图的效果肯定不如自己提供的非retina图好
+
+同事说不提供两套图是通不过苹果审核的，这点倒不是很同意，因为自己以前的项目有些图片只有一套图，app store上一些应用也是。
+
+随着非retina设备逐步进入历史，即使苹果有在这点上有审核，也应该调整策略了吧。一套@2x就够了。

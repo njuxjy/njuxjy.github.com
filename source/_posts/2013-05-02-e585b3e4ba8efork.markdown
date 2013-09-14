@@ -1,0 +1,45 @@
+---
+author: njuxjy
+comments: true
+date: 2013-05-02 11:08:37+00:00
+layout: post
+slug: '%e5%85%b3%e4%ba%8efork'
+title: (旧文迁移) 关于fork()
+wordpress_id: 700
+categories:
+- 技术
+---
+
+APUE上关于fork的使用有段比较经典的代码：     
+if ((pid = fork()) < 0) {      
+err_sys("fork error");      
+} else if (pid == 0) { /* child */      
+execlp(buf, buf, (char *)0);      
+err_ret("couldn't execute: %s", buf);      
+exit(127);      
+}      
+/* parent */      
+if ((pid = waitpid(pid, &status, 0)) < 0)      
+err_sys("waitpid error");      
+一开始看这段代码会有疑惑，比如说else if(pid==0)执行子进程代码那块，字面上理解这段代码就是说进程号为0则判断其为子进程，则执行里面的代码，可是，子进程号为0，这怎么可能？ 因此我觉得这里将fork的返回值取名为pid有误导读者的影响，改为fRetValue或者干脆叫i会不会好点？      
+下面是网上摘的一段fork的解释：      
+**调用方法**      
+#include      
+#include      
+pid_t fork(void);      
+正确返回：在父进程中返回子进程的进程号，在子进程中返回0      
+错误返回：-1      
+子进程是父进程的一个拷贝。即，子进程从父进程得到了数据段和堆栈段的拷贝，这些需要分配新的内存；而对于只读的代码段，通常使用共享内存的方式访问。fork返回后，子进程和父进程都从调用fork函数的下一条语句开始执行。      
+父进程与子进程的不同之处在于：fork的返回值不同——父进程中的返回值为子进程的进程号，而子进程为0      
+关于fork，还有个问题，就是print缓冲区被子进程复制的问题，如果执行下面这段代码：      
+pid_t fRetValue;      
+printf(“fork!”);      
+fRetValue=fork();      
+if (fRetValue < 0)      
+printf(“error in fork!”);      
+else if (fRetValue == 0)      
+printf(“i am the child process, my process id is %d”,getpid());      
+else      
+printf(“i am the parent process, my process id is %d”,getpid());      
+父子进程都会打印出fork!，而如果将printf(“fork!”)改为printf(“fork!\n”)就只会打印出一个fork!，同样摘了段解释如下：      
+主要的区别是因为有了一个\n回车符号这就跟Printf的缓冲机制有关了,printf某些内容时,操作系统仅仅是把该内容放到了stdout的缓冲队列里了,并没有实际的写到屏幕上但是,只要看到有 n 则会立即刷新stdout,因此就马上能够打印了.运行了printf(“AAAAAA”) 后, AAAAAA 仅仅被放到了缓冲里,再运行到fork时,缓冲里面的 AAAAAA 被子进程继承了因此在子进程度stdout缓冲里面就也有了 AAAAAA.所以,你最终看到的会是 AAAAAA 被printf了2次!!!!而运行 printf(“AAAAAAn”)后, AAAAAA 被立即打印到了屏幕上,之后fork到的子进程里的stdout缓冲里不会有 AAAAAA 内容因此你看到的结果会是 AAAAAA 被printf了1次!!!!

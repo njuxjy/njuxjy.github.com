@@ -1,0 +1,95 @@
+---
+author: njuxjy
+comments: true
+date: 2013-02-27 06:38:54+00:00
+layout: post
+slug: '%e7%b1%bb%e5%be%ae%e4%bf%a1%e5%90%91%e4%b8%8a%e6%bb%91%e5%8a%a8%e5%8f%96%e6%b6%88%e5%8f%91%e9%80%81%e9%9f%b3%e9%a2%91%e7%9a%84%e5%ae%9e%e7%8e%b0'
+title: 类微信向上滑动取消发送音频的实现
+wordpress_id: 542
+categories:
+- iOS
+---
+
+之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。
+
+[![](http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png)](http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png)
+
+界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时，向上滑动时画面中央出现“松开手指取消发送”的提示，向下滑动时出现其他提示，同时一直在录着音。手势的滑动可以发生在该界面的任何部分，在上面的tableview伤滑动也有效。
+
+在ChatVoiceView中首先给按钮加上一些事件关联：
+
+    
+        [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpInside:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+        [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpOutside:withEvent:) forControlEvents:UIControlEventTouchUpOutside];
+        [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonDragOutside:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+
+
+在响应函数中，除了录音相关的操作外，将事件传递给按钮的nextResponder，也就是让ChatVoiceView根据按钮被按下去的状态做不同的处理：
+
+    
+    - (void)voiceHoldButtonDragOutside:(id)sender withEvent:(UIEvent *)event
+    {
+        self.longPressBtn.highlighted = YES;
+        shouldResponseToSwipe = YES;
+        [[sender nextResponder] touchesMoved:[event allTouches] withEvent:event];
+    }
+    
+    - (void)voiceHoldButtonTouchUpInside:(id)sender withEvent:(UIEvent *)event
+    {
+        shouldResponseToSwipe = YES;
+        //do sth here
+        [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+    }
+    
+    - (void)voiceHoldButtonTouchUpOutside:(id)sender withEvent:(UIEvent *)event
+    {
+        shouldResponseToSwipe = YES;
+        //do sth here
+        [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+    }
+
+
+
+
+在ChatVoiceView中加上触摸事件捕获函数：
+
+
+
+
+
+
+    
+    - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+    {
+        if(shouldResponseToSwipe == NO)
+        {
+            return;
+        }
+        UITouch *touch = [touches anyObject];
+        CGPoint location = [touch locationInView:self.superview];
+        CGPoint prevLocation = [touch previousLocationInView:self.superview];
+        if (location.y - prevLocation.y > 0 && direction == 1)//向下
+        {
+            //do sth
+        }
+        else if(location.y - prevLocation.y < 0 && direction == 2)//向上
+        {
+            //do sth
+        }
+    }
+    -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+    {
+        if(shouldResponseToSwipe == NO)
+        {
+            return;
+        }
+        shouldResponseToSwipe = NO;
+    }
+
+
+
+
+
+done.
+
+

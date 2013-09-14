@@ -1,0 +1,55 @@
+---
+author: njuxjy
+comments: true
+date: 2012-10-31 02:51:38+00:00
+layout: post
+slug: ios%e6%91%87%e5%8a%a8%e6%a3%80%e6%b5%8b
+title: iOS摇动检测
+wordpress_id: 513
+categories:
+- iOS
+---
+
+首先在AppDelegate中开启摇动支持：
+
+安师大
+
+    
+    - (void)applicationDidFinishLaunching:(UIApplication *)application {
+            application.applicationSupportsShakeToEdit = YES;
+            [window addSubview:viewController.view];
+            [window makeKeyAndVisible];
+    }
+
+
+首先在AppDelegate中开启摇动支持：ViewController中增加三个方法：canbecomeFirstResponder:, viewDidAppear:和viewWillDisappear:。
+
+    
+    -(BOOL)canBecomeFirstResponder {
+        return YES;
+    }
+    
+    -(void)viewDidAppear:(BOOL)animated {
+        [super viewDidAppear:animated];
+        [self becomeFirstResponder];
+    }
+    
+    - (void)viewWillDisappear:(BOOL)animated {
+        [self resignFirstResponder];
+        [super viewWillDisappear:animated];
+    }
+
+
+增加motionEnded方法:
+
+    
+    - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+    {
+        if (motion == UIEventSubtypeMotionShake)
+        {
+            // your code
+        }
+    }
+
+
+ok, that's it.

@@ -1,0 +1,276 @@
+---
+author: njuxjy
+comments: true
+date: 2011-07-14 15:53:12+00:00
+layout: post
+slug: '%e7%94%b5%e9%9d%a2%e5%87%86%e5%a4%87'
+title: 电面准备
+wordpress_id: 107
+categories:
+- 生活
+---
+
+电面过很多次，无外乎问这么几块内容：英语自我介绍、英语介绍项目、项目相关、实习经历、技术问题。项目经历和实习经历说过无数遍了，不需要特别准备了，除非做更多的大项目，否则把现有的那些不起眼的小项目说得再熟也加不了多少分。技术问题面太广，且各公司重点都不一样，因此只能靠平时积累，不过关于设计模式的东西有的公司喜欢问，并且这玩意就那么点东西，所以这个可以准备下。所以下面写的东西我打算打印出来放身边，以便电面时参考。包括英文自我介绍、英文项目介绍和设计模式。
+
+====================================================================
+
+**英文自我介绍  
+**My name is Xiaojiayi. I’m now a graduate student in my first year in Software Institute, Nanjing University for my master’s degree. My major is software engineering. I got my bachelor’s degree also in software institute, Nanjing University in July, 2009. I have strong interest in c++ now, and I wanna devote myself to the development of c++ applications. In my spare time, I like basketball, reading and blogging. Ok, that’s all.
+
+**英文项目介绍  
+****1) Android Exam Review System  
+**I’ll say something about the Android exam review system. The system is designed for those who want to do tests on their mobile phones at any time and anywhere. The test type includes GRE, TOFEL, IELTS and so on. Function modules of the system include practice mode, test mode, error problem mode, and history analysis. I got familiar with the development of the Android machine man interaction application through this project. **2) Movie Tickets Booking System Based on Java Web  
+**I’ll say something about the Movie Tickets Booking System Based on Java Web. The project is completed on my own as my graduation project, which took me several months to finish it. It’s used for demo only without any commercial value. Function modules of the system include booking tickets online, browsing film information, back-stage management and so on. It is developed by Ajax, integrated with Struts framework and Hibernate framework. Through this project I got familiar with the developing process of J2EE applications.
+
+**设计模式**  
+
+_1. __简单工厂模式_  
+
+一个Simple Factory生产成品，而对客户端隐藏产品产生的细节。实作时定义一个产品介面，并透过特定静态方法来建立成品  
+
+![clip_image002](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image002.jpg)  
+
+_2. __抽象工厂模式_  
+
+将具体的Product封装在具体Factory实现中，而客户仍只要面对Factory与Product的抽象介面，避免依赖于具 体的Factory与Product，由于Factory封装了所必须的Product，所以要更换掉所有的元件，只要简单的抽换掉Factory就可以了，不用修改客户端的代码  
+
+![clip_image004](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image004.jpg)  
+
+如果要更换所有的视感元件，就只要抽象掉具体的Factory就可以了，例如：  
+
+CustomDialog windowsDialog =  
+new CustomDialog(new WindowsWidgetFactory());  
+windowsDialog.showDialog();  
+CustomDialog macDialog =  
+new CustomDialog(new MacWidgetFactory());  
+macDialog.showDialog();  
+
+在CustomDialog类中保存IButton和ITextField两个引用，在其构造函数中调用setWidgetFactory函数：  
+
+public void setWidgetFactory(IWidgetFactory widgetFactory) {  
+setButton(widgetFactory.getButton());  
+setTextField(widgetFactory.getTextField());  
+}  
+
+_3. __工厂方法模式_  
+
+在一个抽象类中留下某个创建元件的抽象方法没有实现，其它与元件操作相关联的方法都先依赖于元件所定义的接口，而不是依赖于元件的实现，当成品中有一个或多个元件无法确定时，您先确定与这些元件的接口，然后用元件的抽象接口先完成其它的工作，元件的实现则推迟至实现元件接口的子类完成，一旦元件加入，即可完成您的成品。  
+
+假设要完成一个文件编辑器，希望这个编辑器可以适用于所有类型的档案编辑，例如RTF、DOC、TXT等等，尽管这些文件有着不同的格式，先确定的是这些文件必然具备的一些接口，例如储存、开启、关闭等等，您用一个IDocument类型来进行操作，这么一来这个框架就无需考虑实 际的储存、开启等细节是如何进行的。  
+
+![clip_image006](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image006.jpg)
+    
+    public void newDocument() { <br>         document = createDocument(); <br>         document.open();<br>     }<br>     public void saveDocument() { <br>         if(document != null) <br>             document.save(); <br>     }
+
+
+
+
+_4. __单件模式_ 
+
+
+public class Singleton {  
+private static Singleton instance = new Singleton();  
+private Singleton() {  
+// ....  
+}  
+public static Singleton getInstance() {  
+return instance;  
+}  
+} //可以避免多线程问题 
+
+
+_5. __组合模式_ 
+
+
+将对象表示成树形结构来表示整体-部分的层次结构，使得用户对单个对象和组合对象的处理具有一致性。 
+
+
+![clip_image008](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image008.jpg) 
+
+
+_6. __装饰者模式_ 
+
+
+动态地给一个对象增加一些额外的职责。 
+
+
+![clip_image009](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image009.jpg) 
+
+
+**public abstract class Decorator extends VisualComponent {****  
+protected VisualComponent component;  
+public Decorator(VisualComponent component) {  
+this.component = component;  
+}  
+public void draw() {  
+component.draw();  
+}  
+}  
+public class ScrollDecorator extends Decorator {  
+public ScrollDecorator(VisualComponent component) {  
+super(component);  
+}  
+public void draw() {  
+super.draw();  
+scrollTo();  
+}  
+public void scrollTo() {  
+// ....  
+}  
+}** 
+
+
+**ScrollDecorator scrollDecorator =**** ****  
+new ScrollDecorator(new TextView());** 
+
+
+_7. __策略模式_ 
+
+
+定义一系列的算法，把它们一个个封装起来，并使它们可互相替换，使算法可以独立于使用它的客户而变化。 
+
+
+![clip_image010](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image010.jpg)
+    
+    public abstract class TextStrategy { <br>     protected String text;<br>     public TextStrategy(String text) { <br>         this.text = text; <br>     }<br>     public abstract String replace(); <br>
+    } 
+    
+    public class LinuxStrategy extends TextStrategy { <br>     public LinuxStrategy(String text) { <br>         super(text); <br>     }<br>     public String replace() { <br>         preOperation(); <br>         System.out.println(<br>              text = text.replaceAll("@r@n", "@n")); <br>         postOperation(); <br>         return text; <br>     }<br>     private void preOperation() { <br>         System.out.println("LinuxStrategy preOperation"); <br>     }<br>     private void postOperation() { <br>         System.out.println("LinuxStrategy postOperation"); <br>     } <br>
+    } 
+    
+    public class TextCharChange { <br>     public static void replace(TextStrategy strategy) { <br>         strategy.replace(); <br>     } <br>
+    }
+
+
+
+
+_8. __命令模式_ 
+
+
+![clip_image012](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image012.gif) 
+
+
+1. **public** **class** Invoker {
+
+2. **private** Command command;
+
+3. **public** **void** setOrder(Command command) {
+
+4. **this**.command = command;
+
+5. }
+
+6. **public** **void** ExecuteCommand() {
+
+7. command.ExecuteCommand();
+
+8. }
+
+9. } 
+
+
+1. **public** **abstract** **class** Command {
+
+2. **protected** Receiver receiver;
+
+3. **public** Command(Receiver receiver){
+
+4. **this**.receiver = receiver;
+
+5. }
+
+6. **public** **abstract** **void** ExecuteCommand();
+
+7. }
+
+1. **public** **class** ConcreteCommand **extends** Command {
+
+2. **public** ConcreteCommand(Receiver receiver){
+
+3. **super**(receiver);
+
+4. }
+
+5. @Override 
+
+
+6. **public** **void** ExecuteCommand() {
+
+7. receiver.Execute();
+
+8. }
+
+9. }
+
+1. **public** **class** Receiver {
+
+2. **public** **void** Execute(){
+
+3. System.out.println("Receiver excute!");
+
+4. }
+
+5. }
+
+1. **public** **class** Client {
+
+2. **public** **static** **void** main(String[] args) {
+
+3. Receiver r = **new** Receiver();
+
+4. Command c = **new** ConcreteCommand(r);
+
+5. Invoker i = **new** Invoker();
+
+6. i.setOrder(c);
+
+7. i.ExecuteCommand();
+
+8. }
+
+9. }
+
+_9. __适配器模式_ 
+
+
+将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的类可以一起工作。 
+
+
+![clip_image013](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image013.gif) 
+
+
+_10. __Façade__模式_ 
+
+
+为子系统中的一组接口提供一个一致的界面，定义了一个高层接口，此接口使得这个子系统更加容易使用 
+
+
+![clip_image015](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image015.jpg) 
+
+
+Façade：为调用方法定义简单的调用接口 
+
+
+Client：通过Façade接口调用提供某功能的内部类群 
+
+
+Package：提供功能的模块或子系统 
+
+
+_11. __模板方法模式_ 
+
+
+定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。 
+
+
+![clip_image016](http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image016.jpg)
+    
+    public abstract class AbstractClass { <br>    public void templateMethod() { <br>        // step by step template to solve something         // implementor should follow those step         opStep1();         opStep2();         opStep3();     <br>    }     public abstract void opStep1(); <br>    public abstract void opStep2(); <br>    public abstract void opStep3(); 
+    } 
+    
+    public class ConcreteClass extends AbstractClass { <br>    public abstract void opStep1() {         // implement the real operation     }     public abstract void opStep2() { <br>        // implement the real operation <br>    }     public abstract void opStep3() { <br>        // implement the real operation <br>    } <br>}
+
+
+
+
+对于一些程序而言，我们希望规定一些处理的步骤、流程或骨架，就像是上例中的step1到step3一样，至于流程中的step1到step3如何实现并不规定，而留给实现的人自行决定，这就是Template Method模式的目的
