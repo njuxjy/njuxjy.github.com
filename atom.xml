@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[不可卷也]]></title>
+  <link href="http://njuxjy.github.io/atom.xml" rel="self"/>
+  <link href="http://njuxjy.github.io/"/>
+  <updated>2013-09-14T11:07:17+08:00</updated>
+  <id>http://njuxjy.github.io/</id>
+  <author>
+    <name><![CDATA[njuxjy]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
