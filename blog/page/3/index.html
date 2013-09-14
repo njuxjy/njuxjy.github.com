@@ -1,0 +1,1353 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="原文网址：http://www.developer.com/mgmt/article.php/11085_3848981_1/The-7-Rules-for-Writing-World-Class-Technical-Documentation.htm &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/page/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e692b0e58699e4b896e7958ce7baa7e68a80e69cafe69687e6a1a3e79a847e69da1e8a784e58899efbc88e8af91e69687efbc89/">(旧文迁移) 撰写世界级技术文档的7条规则（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:01:20+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文网址：<a href="http://www.developer.com/mgmt/article.php/11085_3848981_1/The-7-Rules-for-Writing-World-Class-Technical-Documentation.htm">http://www.developer.com/mgmt/article.php/11085_3848981_1/The-7-Rules-for-Writing-World-Class-Technical-Documentation.htm</a></p>
+
+<p>=================================================================</p>
+
+<p><strong>简介     <br/>
+</strong>    <br/>
+撰写技术文档比较困难，而阅读一份糟糕的技术文档就更加困难了，甚至可能比写文档还要痛苦。写出一份清晰准确、引人入胜的技术文档是要投入很多精力的。因而为了让人们省点事儿，我将与你们分享我在创作一份技术文档时遵循的7条规则。我并非自个儿想出了这些规则，而是得益于我与许多有才华的技术文字编辑长达十多年的共事。我所理解的这些都源自于他人为我指明了道路，我万分感谢他们。    <br/>
+我希望在读完这篇文章以后，你在自己的技术写作工具箱里又多了一些利器，它们能帮助你创作出更清晰、更吸引人、更易懂和更有趣的技术文档。我还为大家在结尾额外附送了一段内容，介绍了我创作一篇技术文档的过程。    <br/>
+好吧，下面就是这7条规则：</p>
+
+<ol>
+<li><p> 枯燥即糟糕</p></li>
+<li><p> 在开始之前，搞清楚你想要你的读者读完你的文章后能做什么</p></li>
+<li><p> 始终按照形式良好的提纲来写</p></li>
+<li><p> 避免不明确的代词</p></li>
+<li><p> 清晰性=图示+文字</p></li>
+<li><p> 当处理概念时&hellip;逻辑图示及例子，逻辑图示及例子</p></li>
+<li><p> 拥抱修改</p></li>
+</ol>
+
+
+<p><strong>1.枯燥即糟糕     <br/>
+</strong>    <br/>
+这也许是最难成文的一条规则，也是最重要的一条。当今的因特网世界有太多的东西可以抢走你读者的目光。乏味、平淡的文章是不行的。不论好坏，你的读者在长见识的同时需要被娱乐。因此，如果你的文章难以理解且了然无趣，读者便会直接点那个传说中的“下一页”按钮，去看另一个网页、另一个电视节目或者他或她的Facebook页面。    <br/>
+我发现能娱乐读者的最简单的方法是先娱乐自己。为了总能写出一篇我自己想读的文章，我做了很多努力。我写作时力求做到心情愉悦。如果我感到厌倦，读者也会厌倦。如果我感到困惑，扶着也会困惑。如果我不真正在意手边的话题，读者也不会在意。就是这么简单。    <br/>
+我喜欢幽默，所以在力保清晰性的同时我尽量使我的文章有幽默感。我在文中尽量和读者对话，而不是向他们喋喋不休。我写的话题都是自认为重要的。为了避免使读者困惑，我大量使用图解说明。    <br/>
+再说一次，我尽量使阅读体验总是有趣。我一直清楚自己是在一个充满竞争的环境里写作。外面充斥着大量内容，会分掉我的一杯羹——读者。因此，对于规则1我的建议是，如果你的文章对你来说是有趣的，那么对读者来说也是。</p>
+
+<p><strong>2.在开始之前，搞清楚你想要你的读者读完你的文章后能做什么     <br/>
+</strong>    <br/>
+技术文章是要对读者阅读后的行为产生影响的。读者之所以花时间来阅读你的作品是因为他或她想在阅读之后有能力做某些事。这些事可能是学着制作手工巧克力曲奇，关闭一个核反应堆或者启动Hadoop cluster。你要记住的是，读者把你的文章作为实现他目的的一种手段。你的文章是通往另一个定义良好的行为的媒介。    <br/>
+因而，搞清楚你想要你的读者读完你的文章后能做什么，你会从中获益的。在开头便说明你的意图，不要让读者来猜。你可以像这样来简洁明了地声明：“在读完本文后，你将能够[在此填空]。”如果很清楚你想要你的读者读完你的文章后能做什么，你写起文章来就会觉得越发容易。</p>
+
+<p><strong>3.始终按照形式良好的提纲来写     <br/>
+</strong>    <br/>
+形式良好的提纲是你文档的骨架。写技术文档如果不用提纲，就像不用地图在纽约地铁系统里寻找方向。你可能最终到达任何一个你并不想去的地方。    <br/>
+按照形式良好的提纲来写并没有增加你的工作量，反之能帮你省事儿。当你按照提纲来写，你很清楚你已经写了什么以及你将要写什么。    <br/>
+我有两个一直使用的写提纲的规则：</p>
+
+<ol>
+<li><p> 子层次的话题至少需要两个。</p></li>
+<li><p> 任意一个提纲层次至少需要两句话。</p></li>
+</ol>
+
+
+<p>请允许我娓娓道来。下面的列表1是一个提纲示例，它违反了规则1：子层次的话题至少需要两个。</p>
+
+<blockquote><p>列表1：一个形式糟糕的提纲      <br/>
+1.制作一个Orange Cranberry Tangerine Fizzle（译者注：某种饮料，不会翻译，下同）      <br/>
+1.1.制作Fizzle的步骤      <br/>
+1.1.1.准备配料      <br/>
+1.1.2.混合Fizzle      <br/>
+1.1.3.端上Fizzle</p></blockquote>
+
+<p>注意，在列表1中，层次1有单一的子层次1.1-制作Fizzle的步骤。这种结构违反了规则1。为了使子层次形式良好，必须至少还有一个对等的话题。换句话说，这意味着任何一个给定的层次必须有至少两个子层次。    <br/>
+请看下面的列表2。注意现在层次1有了三个子层次，其中，混合Fizzle这个子层次现在有了其对等层次。制作Fizzle的步骤这一单一层次现在被删除了。    <br/>
+你可能会问：“制作Fizzle的步骤这一话题去哪里了？”答案是该话题已经不再是提纲项了，而是其父话题的内容了，如下面的列表2所示。</p>
+
+<blockquote><p>列表2：一个形式良好的提纲，但违反了两句话规则      <br/>
+1.制作一个Orange Cranberry Tangerine Fizzle      <br/>
+下面的段落描述了制作orange cranberry tangerine fizzle需要遵循的过程。      <br/>
+1.1.准备配料      <br/>
+1.2.混合Fizzle      <br/>
+1.3.端上Fizzle</p></blockquote>
+
+<p>请注意，虽然列表2展示了有正确子层次结构的提纲，但层次1的话题内容只有一句话。提纲的话题内容只有一句话违反的是列提纲的第二条规则，任意一个提纲层次至少需要两句话。    <br/>
+下面的列表3展示了将Orange Cranberry Tangerine Fizzle这部分调整到支持两句话规则以后的样子。</p>
+
+<blockquote><p>列表3：一个形式良好的提纲，且支持两句话规则      <br/>
+1.制作一个Orange Cranberry Tangerine Fizzle      <br/>
+在炎炎夏日，Orange Cranberry Tangerine Fizzle是招待朋友的必备。该饮料取材天然，不加人工香料。Orange Cranberry Tangerine Fizzle不光味道好，对身体同样有益！      <br/>
+下面的段落描述了制作orange cranberry tangerine fizzle需要遵循的过程。      <br/>
+1.1.准备配料      <br/>
+1.2.混合Fizzle      <br/>
+1.3.端上Fizzle</p></blockquote>
+
+<p>为什么我要如此强调恰当的提纲结构以及每个层次至少两句话呢？首先，遵循子层次规则迫使我对自己文章的逻辑分段做到心中有数。子层次规则也可以确保我的文章以一种有意义且简单的方式传达出我的观点。    <br/>
+其次，两句话规则迫使我创作出引人入胜、详尽而有意义的文章。“一句话”文章常常缺少细节。并且，除了俏皮话喜剧之外，“一句话”风格的文章读来不会是最有趣的。</p>
+
+<p><strong>4.避免不明确的代词     <br/>
+</strong>    <br/>
+不明确代词的引用可能是技术写作实践中造成困惑的最典型的原因了。    <br/>
+考虑列表4中的段落。</p>
+
+<blockquote><p>列表4:一个有不明确代词的段落      <br/>
+Trafalgabors（译者注：故意没翻译，也没法翻译）是Weebietatas（同上）框架的基本组件。本文将介绍它们是什么，以及如何使用它们。</p></blockquote>
+
+<p>上面这个段落看起来有些可笑，但说明了一些要点。首先，此段落尝试把你放到一个读者的位置上。读者想要理解发生了什么事，但他对语言不熟悉。并且因为对语言不熟悉，读者感到自己既无知又脆弱，想要一些新的信息，他或她要变得更聪明些。但是读者同样有些焦虑。承认自己的无知，即使是对自己，即使在潜意识里，也会令读者感到不安。读者的认知能力是经不起折腾的。一些对作为作者的你来说理所当然的概念和单词可能对于读者完全陌生。一个解释得糟糕的概念或一个没有正确说明的单词就可能使读者感到厌烦。（译者注：作者这段不知道有没有逻辑，反正我是没看懂）。   <br/>
+至于上面的那个段落，我不奇怪有人会问：“什么是Trafalgabor？什么是Weebietata？这一段说的是什么？怎样使用Trafalgabors？怎样使用Weebietatas？它们两者怎么使用？太难以理解了，我还是回去看我的Facebook主页吧。”    <br/>
+如果读者要从阅读你的文章中抽出时间来想你究竟要表达什么，那么说明你解释得不够，读者很可能会陷入困惑。一旦你使读者困惑了，你就输了。世界上其他需要读者注意的东东便趁虚而入，抢走读者对你作品的注意力。因此，他们按下“下一页”按钮，你的作品便无人问津了。    <br/>
+在上面的列表4的例子里，困惑是由不明确地使用了代词——第二句中的“它们”造成的。“它们”指代的是Trafalgabors，是Weebietatas或者是两者？请记住，读者对Trafalgabors或Weebietatas一无所知。（请见下面的图1。）</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/trafalgabors.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/trafalgabors_thumb.jpg" alt="trafalgabors" /></a>     <br/>
+<strong>图1</strong>：使用不明确的代词使得技术文章令人困惑</p>
+
+<p>解决该问题的办法很简单。请看下面的列表5。不明确代词移除了。段落又恢复了清晰性。</p>
+
+<blockquote><p>列表5：不明确代词的改进方案      <br/>
+Trafalgabors是Weebietatas框架的基本组件。本文将介绍Trafalgabors是什么，以及其如何使用。      <br/>
+小心！不明确地使用代词是通往难以理解的技术文档的地标。</p></blockquote>
+
+<p><strong>5.清晰性=图示+文字     <br/>
+</strong>    <br/>
+请看下面的照片。告诉我此图啥意思？ <a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/all01.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/all01_thumb.jpg" alt="all-01" /></a></p>
+
+<p>我并不惊奇于你的困惑。这是张令人费解的照片。你认识里面的每一样东西，但你就是不知道它们是什么意思。这就是图示的本质。一张没有文字说明的图片是缺少上下文语境的。   <br/>
+当提到图示，读者需要上下文语境来避免困惑。读者不应该浪费时间和脑细胞来猜想图表是什么意思。避免难以理解的图示的最简单方法就是给图示加一个标题。    <br/>
+请看下面的图2。同样一张图，现在就没有疑问了。 <a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/all01.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/all01_thumb.jpg" alt="all-01" /></a>    <br/>
+<strong>图2</strong>：制作Orange Cranberry Tangerine Fizzle需要的工具和配料</p>
+
+<p>当涉及到技术写作，我发现给所有图表加上有序的、说明性的标题是一个好习惯。   <br/>
+请不要仅仅创建标有序号的标题。序号和描述性注解都要使用。同样地，要避免使用孤儿图示。孤儿图示是指一张出现在技术文档里而在文中却没有引用指向它的图示。    <br/>
+如果你在文中插入了一个图表，确保在文中引用它，使用图片序号以及类似“上面的”和“下面的”这种词语所描述的位置。你不会想要读者从阅读你的文章中抽出时间来将图表和文章关联起来，或者在你文中定位一个图表的位置。如果你在文中加了一个叫“图4”的图，那么请确保你的文中有类似这样的句子，“请参考下面的图4”。    <br/>
+注意：眼睛会被图片所吸引    <br/>
+十年前我在一个给一家很大很大的计算机生产商写硬副本用户手册的组里工作。所有的手册都要遵循正式的定量可用性研究。用户体验博士们教给我的东西之一便是当一个人读一份文档时，读者的眼睛会首先注意到图片。然后读者才去读图片周围的文字。因此，手册的作者一直确保手册的每一页都至少有一张图片。</p>
+
+<p><strong>6.当处理概念时&hellip;逻辑图示及例子，逻辑图示及例子     <br/>
+</strong>    <br/>
+概念是难以理解的&hellip;这就是它们被称为概念的原因。因此，当我需要解释一个概念的时候，不管它是什么，热力学第二定律也好，一种编程技术也好，或者某个成熟的软件框架也好，我都在写作中使用以下的模式：概念-逻辑图示-例子。我试着如果要引入一个概念，就必须用逻辑图表以及示例来证实这个概念。    <br/>
+让我们应用这个规则来描述一个初等代数的概念。    <br/>
+等式的传递性质如下：    <br/>
+如果A=B，且B=C，那么A=C。    <br/>
+现在让我们用逻辑图示来描述这个概念。（请看图3）    <br/>
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/trans01.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/trans01_thumb.jpg" alt="trans-01" /></a> <br/>
+<strong>图3</strong>：等式的传递性是初等代数的基本原则。</p>
+
+<p>下面的列表6展示了一些具体例子来加强对此概念的理解。</p>
+
+<blockquote><p>列表6：一些等式传递性的具体例子</p>
+
+<ul>
+<li><p>如果7=3+4，且3+4=5+2，那么7=5+2</p></li>
+<li><p>如果12+5=7+10，且7+10=6+11，那么12+5=6+11</p></li>
+<li><p>如果x+y=z，且z=2a，那么x+y=2a</p></li>
+</ul>
+</blockquote>
+
+<p>就这样，这条规则满足了。我们展示了等式的传递性这一概念，提供了描述性的图示，并且进一步用具体示例来证实了这个概念。   <br/>
+让我们继续来看一个和软件开发更加相关并且更难理解的概念。这个概念是Maven POM的继承机制。在下面的展示1中，你将首先看到这个概念，然后是一张逻辑图表来描述此概念。最后，你将看到另一张图表，展示了在继承的情况下POM文件的具体使用方法。</p>
+
+<blockquote><p>展示1：描述Maven POM的继承机制的技术文档节选</p>
+
+<p>理解POM文件的继承机制</p>
+
+<p>一个POM（项目对象模型）文件是一个XML文件，描述和使用在Maven项目中。你可以建立一个Maven项目来从一个单独的父POM文件中继承其设置。从父POM文件中继承设置的能力就被称为POM继承。你可以在POM文件中使用<parent>元素来定义父POM文件。     <br/>
+下面的图4说明了一个虚构的项目体系结构，其展示了你如何建立一个主POM文件，使得其他POM文件可以继承其通用设置。      <br/>
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/pominheritance.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/pominheritance_thumb.jpg" alt="pom-inheritance" /></a> <br/>
+<strong>图4</strong>：你可以指定一个主POM供其他继承其通用设置</p>
+
+<p>下面的图5展示了Maven项目stooges-web、stooges-api和stooges-dal的POM.xml文件的内容。每个项目都配置为使用<parent>元素来从stooges-project继承设置。     <br/>
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/pomexample.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/pomexample_thumb.jpg" alt="pom-example" /></a> <br/>
+<strong>图5</strong>：使用<parent>元素来指定Maven项目从外部POM文件继承设置</p></blockquote>
+
+<p>上面的例子严重依赖于图来提供逻辑证明和具体示例。设计出有趣、吸引人、准确的图示和示例是一项艰巨的任务，但很值得去努力。为一篇技术文档多次设计图示并且提供示例代码很耗时，如果不比真正稿子的撰写更费时，那也差不多了。因而，我制定相应的计划以确保我的时间分配能满足最后期限。   <br/>
+当论及如何将一个概念阐述得水晶般透彻，那么就用图解法，并举一个示例吧。</p>
+
+<p><strong>7.拥抱修改</strong></p>
+
+<p>一蹴而就一篇优秀的技术文档是很罕见的。理解你的话题，组织你的观点，寻找语言清晰准确地表达观点需要耗费大量的时间和精力。因此，不要因为期待着第一次就能万事俱备而束缚了自己的手脚。相反，计划写出至少三个版本。第一个版本只是写一些草稿以便弄清楚自己的意图。第二版在你的作品中融入清晰性和准确性。然后，一旦你事实确凿，图示清晰，并且组织合理，那么就创建第三版，使你的作品引人入胜而别致。   <br/>
+篡改下爱迪生的名言：“技术文档是10%的创作和90%的修改！”</p>
+
+<p><strong>附送段</strong></p>
+
+<p>既然你已经了解了创建世界级技术文档的7条规则，那么我就和你分享下我创作一篇技术文档的过程吧。很简明，但是扼要。我把这个过程称作是，制作技术文档的7步。开始了：</p>
+
+<ol>
+<li><p> 我列出提纲，至少到第二个层次，如果顺利的话到第三个层次。</p></li>
+<li><p> 在提纲中为每个概念加入我的图解。</p></li>
+<li><p> 为我的图解配上标题。</p></li>
+<li><p> 按照提纲填充内容，遵循两句话规则，并根据手边的内容调整我的提纲。</p></li>
+<li><p> 修改。</p></li>
+<li><p> 我把文章发给和主题相关的专家来复审。（和主题相关的专家指的是可以识别出文中不准确和不清晰之处的人）</p></li>
+<li><p> 根据复审者的反馈再次修改。</p></li>
+</ol>
+
+
+<p>这样便搞定了。7条规则，7个步骤。谁还能再要求什么呢？因此，既然你已经学会了我所有技巧，大胆地往前走吧，让这个世界变得更加准确、吸引人、形象和有趣。值得我们去努力。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e5928ce88f9ce5a4b4efbc9ae68891e79a84e697a0e5b0bde4b98be8b7af/">(旧文迁移) 和菜头：我的无尽之路</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:59:37+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我辞职了。</p>
+
+<p>几年前，当网易刚刚推出《梦幻西游》的时候，我们四个老朋友约了一起去打网游。在游戏里，老鬼庆叫鸳鸯蝴蝶扇，吕少叫逍遥吕少，晖晖叫吴霜剑，我还 是叫和菜头。虽然出生地有不同，但是我们基本都在昆明开始念小学，一直读到高中。家里能有钱供我们念大学，毕业以后都回到昆明，拥有一份稳定的工作。打 《梦幻西游》的时候，他们三个人已经结婚，日子细水长流。四个人中间，只有老鬼庆是自由人。他原来在一家效益很好的国企，和所有红火的国企一样，他的公司 最后破产倒闭，注册新壳重新再来。在破产之前，他辞职创业，开了自己的公司。大家都很忙，所以在游戏里见面的时间反而多过喝茶的时间。曾经我们一度玩得很 投入，每个人每个月为网易支付1000元人民币。而如果是大家见面吃饭，大概三个月都花不了那么多钱。世界已经在慢慢变化，但在当时我们懵然不觉。</p>
+
+<p>前天大家再次聚会，老鬼庆已经在江湖上飘了5年，晖晖辞职开网店已经满一年，我刚刚结束了十一年的国企生涯。现在，只有吕少一个人还是“有单位 的”，玩《梦幻西游》时的比例刚好倒了过来。我们是什么？我们是小镇上的青年。小镇的生活安稳平静，一年到头风调雨顺，有吃不完的饭局喝不完的普洱打不完 的麻将和唱不完的卡拉OK。打生下来开始，小镇就为我们安排好了一条笔直的人生路，从摇篮到坟墓，只要你不逾越规矩，那么就可以一直这么生活下去。念书、 工作、结婚、生子、退休，然后老去。在这条路上，会安排几次小插曲，包括一场有惊无险的群架，一次无疾而终的爱情，一个转瞬即逝的机会，一段若有若无的婚 外情。其余的日子白云缭绕，阳光灿烂，你可以慢慢买一套房子，一辆车子，轻车熟路地活着，就像最后可以用两个指头就能解开乳罩但是彼时心跳只有80次。</p>
+
+<p>纳税，而且爱国，为了岳父而学习象棋。读报，看《新闻联播》，觉得这小城和世界并不遥远。相信老婆是这市镇里最美的女人，相信孩子是那一年出生的孩 子里最聪明的一个。用一个更大的电视换掉上一个，给自己的夏利车换上宝马的喇叭，每年出去旅游一次，回来告诉自己：还是这里最好。分析时政，分析市政府、 区政府、单位的人事变动，等待升职等待加薪等待股市利好等待房价下跌等那个漂亮的女同事再次经过自己的办公室门口，做舍宾做有氧做瑜伽做户外周末去农家乐 钓鱼骑马摘果沐浴桑拿一条龙服务仅需100元。然后就老了，面带威严地走在这城里，犹如退位的帝王再次驾临自己的王国。潜伏在各个小区里，种花种草种树， 养猫养狗养金鱼，满意地看着孙儿跑来跑去，追着他/她喂饭，满心幸福但是装出无奈的样子叹息。</p>
+
+<p>我当然承认这是一种幸福，而且是安稳的幸福。只是它太确定无疑了，一眼就能望到头。只是它太好了，以至于很难真去过活。</p>
+
+<p>有一种人，不知道是因为DNA的变异还是前世的夙缘，总是无法安稳下来。他们的生命之流如同咆哮奔涌的大河，没有一刻能够停顿下来。在寂静无人的深 夜里，无梦相扰的安睡中，心中也有猛兽会随时醒来，躁动不安，永无宁日。出于利益的计算，谁都知道现世界安稳是好的，谁都知道外面风高浪疾。可是，即便大 海吞噬了无数人，而且每个人都明了这一点，世界上也并不因此而减少了水手和海盗的数量。总有人会把自己置于风险、压力、变动之中，不可知犹如辣椒让人痛苦 却又欲罢不能。所以，这种人宁可一次次把自己投入命运不可知的洪流，为的只是见到以前不曾见过的风景，哪怕因此而有无数辛苦遭逢也不愿意在确定无疑的生活 里慢慢老去。别人在生活中可以下的赌注很多，这种人的赌注就是他自己。</p>
+
+<p>我花了十一年说服自己，我花了十一年装作是个正常人。而我却发现除了消耗自己有限的生命之外，一无所获。在我身边，有多少这样心有不甘但是又怯于举 步的人，像是金丝笼里的金丝雀，一次次犹豫、挣扎、徘徊，又一次次从笼门口退回，站回饲料和饮水边。我还可以在这条反复挣扎的小路上往返27年，可以继续 咒骂、抱怨27年。于是，我可以得到27年安稳但是绝对不快乐的日子，以及无数“想当年，如果我。。。”开头的句子。这又有什么必要？在这种人生里，唯一 值得咒骂和抱怨的就是自己。如此选择，就应该如此承担。我并不是个勇敢的人，我也非常惧怕外面的水深波澜恶，我也担忧失去所有保障自力求生的艰难。但是相 比之下，我更惧怕不变的生活，惧怕自己变成一个口沫横飞永远抱怨的糟老头子，我惧怕我自己拿到一张前往人世的门票却白白浪费了这次机会。我实在等不起了。</p>
+
+<p>投入命运熊熊火，不管得失怎么量。</p>
+
+<p>大学毕业5年，放弃了专业；大学毕业11年，放弃了职业、人脉、经验、福利、待遇。今天的我，和任何一个应届毕业生一样，两手空空，从头开始。和任 何一个出走小镇青年一样，站在超级城市的门口，一无所知，也一无所有。但是，也正因为没有置办家业，没有娶妻生子，现在才可以轻身上路。安迪花了17年时 间挖穿了肖申克监狱的墙，我花了11年2个月时间。安迪的墙是联邦政府建造的，而我的墙大半是我自己筑的。和自己博弈了11年，赢家是和菜头。</p>
+
+<p>在我面前是一条不可知的无尽之路，不知道它会引领我走向何方。但是，我已经感觉到自由清新的风，我看到了深不可测的蔚蓝。</p>
+
+<p>2008年，我33岁。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8/">(旧文迁移) Android开发（二）——在Android应用程序中使用加速度传感器</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:57:53+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近工作需要看了点传感器的东西，顺便熟悉了下Android平台上开发传感器程序的流程，作为借鉴。好久没用Android，竟然发现搭环境也有些生疏了，于是打算从如何搭建环境写起，也算是复习一遍，题目就叫《从零开始构建Android加速度传感器程序》。</p>
+
+<p>由于国内Android官网（developer.android.com）没法访问（当然google下还是能找到访问的办法），图省事就找了公司文件服务器上的老版本sdk（android-sdk-1.5_r2-windows）装上，结果发现只要一用SensorManager.getSystemService(SENSOR_SERVICE)这句，程序就死了，折腾半天发现是sdk版本问题，说是1.5r3版本（不包括r3）以前的版本在传感器这块有bug，在r3开始以后的版本中已经修复，又搜遍了服务器没发现有更新的版本，只好自己去网上（<a href="http://androidappdocs.appspot.com/%EF%BC%89%E4%B8%8B%E4%B8%80%E4%B8%AA%E3%80%82">http://androidappdocs.appspot.com/%EF%BC%89%E4%B8%8B%E4%B8%80%E4%B8%AA%E3%80%82</a> 更多的废话请看下面……</p>
+
+<p>=======================================================================</p>
+
+<p><strong>配置Android</strong><strong>开发环境</strong></p>
+
+<ol>
+<li><p>下载eclipse3.5版（当然其他版本也可以，文中用的是此版本，其他版本情况基本类似）。当然jdk之类的是先要安装的。</p></li>
+<li><p>在这里（<a href="http://androidappdocs.appspot.com/sdk/index.html%EF%BC%89%E4%B8%8B%E8%BD%BDandroid">http://androidappdocs.appspot.com/sdk/index.html%EF%BC%89%E4%B8%8B%E8%BD%BDandroid</a> sdk的安装程序<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image002.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image002_thumb.jpg" alt="clip_image002" /></a></p></li>
+</ol>
+
+
+<p>并点AndroidSDKSetup.exe进行安装，注意勾选这个：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image004.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image004_thumb.jpg" alt="clip_image004" /></a></p>
+
+<p>这玩意的安装过程就是从网上下载你选择的sdk放到它自己的目录里，所以装完后你将这整个文件android-sdk_r5-windows随便放到你喜欢的路径下，并在环境变量Path后加上“……\android-sdk-windows\tools”</p>
+
+<ol>
+<li>接下来要安装的是ADT（Android Development Tool），是个eclipse插件，所以可以依次在eclipse里点击Help->Install new software->Add，按下图所示输入Name和Location：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image006.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image006_thumb.jpg" alt="clip_image006" /></a></p>
+
+<p>OK，在下拉列表里选择刚加入的站点，并勾选要下载的文件：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image008.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image008_thumb.jpg" alt="clip_image008" /></a></p>
+
+<p>一路next。要是有问题把站点路径的https改成http。要是还有问题的话，就先下载ADT的zip包（Android2.1要求ADT-0.9.6，在<a href="http://androidappdocs.appspot.com/sdk/eclipse-adt.html%E4%B8%8A%E6%9C%89%E4%B8%8B%E8%BD%BD%EF%BC%89%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E5%88%9A%E5%88%9A%E8%BE%93%E5%85%A5Location%E7%9A%84%E7%95%8C%E9%9D%A2%E7%82%B9%E5%87%BBArchive%E9%80%89%E6%8B%A9zip%E5%8C%85%E5%AE%89%E8%A3%85%EF%BC%9A">http://androidappdocs.appspot.com/sdk/eclipse-adt.html%E4%B8%8A%E6%9C%89%E4%B8%8B%E8%BD%BD%EF%BC%89%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E5%88%9A%E5%88%9A%E8%BE%93%E5%85%A5Location%E7%9A%84%E7%95%8C%E9%9D%A2%E7%82%B9%E5%87%BBArchive%E9%80%89%E6%8B%A9zip%E5%8C%85%E5%AE%89%E8%A3%85%EF%BC%9A</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image010.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image010_thumb.jpg" alt="clip_image010" /></a></p>
+
+<ol>
+<li>装完ADT，eclipse依次点击Window->Preferences->Android，选择SDK根目录。这样便装完了，可以新建个Android Project跑个helloworld看看效果。</li>
+</ol>
+
+
+<p>ps:    <br/>
+1. 要是启动simulator有问题，在命令行中输入android create avd –name mySimulatorName –target 2先创建AVD。</p>
+
+<ol>
+<li><p>要是控制台出现错误信息Android requires .class compatibility set to 5.0. Please fix project properties，选择 project &ndash;> Android Tools &ndash;>Fix Project Properties。</p></li>
+<li><p>Android界面可视化编辑工具——>DroidDraw，可以拖出界面，生成的XML布局文件拷贝进自己的工程里。</p></li>
+<li><p>模拟器要记得定时清理文件，不然有可能会占很多空间：c:\documents and settings\Administrator\Local Settings\Temp\AndroidEmulator中的.tmp文件都可以删除。</p></li>
+<li><p>每个SDK版本都有其相应的ADT版本。</p></li>
+</ol>
+
+
+<p><strong>简单的helloworld</strong><strong>程序</strong></p>
+
+<p>1.<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image012.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image012_thumb.jpg" alt="clip_image012" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image014.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image014_thumb.jpg" alt="clip_image014" /></a></p>
+
+<ol>
+<li>包的目录结构如下所示：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image016.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image016_thumb.jpg" alt="clip_image016" /></a></p>
+
+<ol>
+<li>对项目右键Run as-> Android Application，等模拟器启动，第一次启动要很久（google上有解决办法），启动完毕运行应用程序，Hello World !</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image018.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image018_thumb.jpg" alt="clip_image018" /></a></p>
+
+<p>ps:   <br/>
+1. 如何看到System.out.println打印的信息？</p>
+
+<p>不像普通的java程序可以在控制台中看到，我们需要在logcat里查看调试信息。具体方法如下：</p>
+
+<p>1) 点击Window->Show View->Other->Android->Logcat</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image020.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image020_thumb.jpg" alt="clip_image020" /></a></p>
+
+<p>2) 于是在应用程序运行过程中所有的调试信息都可以在这里看到：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image022.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image022_thumb.jpg" alt="clip_image022" /></a></p>
+
+<ol>
+<li>在这里（<a href="http://androidappdocs.appspot.com/reference/packages.html%EF%BC%89%E5%8F%AF%E4%BB%A5%E6%9F%A5%E7%9C%8B%E5%88%B0Android">http://androidappdocs.appspot.com/reference/packages.html%EF%BC%89%E5%8F%AF%E4%BB%A5%E6%9F%A5%E7%9C%8B%E5%88%B0Android</a> API。</li>
+</ol>
+
+
+<p><strong>用SensorSimulator</strong><strong>向Android</strong><strong>模拟器发送模拟信号</strong></p>
+
+<p>Android中传感器的类型有方向、加速度、光线、磁场、临近性、温度等，本文以较有代表性的加速度传感器为例，旨在说清传感器应用开发的流程。</p>
+
+<p>我们要想办法向Android模拟器传送加速度改变的信号，以便让应用程序监控到事件并作出响应。Android SDK中貌似没有和模拟器搭配使用的类似工具，幸运的是国外有个OpenIntents团队开发的Sensor simulator工具（可以在<a href="http://code.google.com/p/openintents/downloads/">http://code.google.com/p/openintents/downloads/</a> list上找到sensorsimulator-1.0.0-beta1.zip下载，在<a href="http://openintents.org/en/node/6%E4%B8%8A%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E5%9C%A8%E7%BA%BF%E7%9A%84Applet%E6%BC%94%E7%A4%BA%E7%A8%8B%E5%BA%8F%EF%BC%89%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E3%80%82">http://openintents.org/en/node/6%E4%B8%8A%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E5%9C%A8%E7%BA%BF%E7%9A%84Applet%E6%BC%94%E7%A4%BA%E7%A8%8B%E5%BA%8F%EF%BC%89%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E3%80%82</a></p>
+
+<p>关于加速度传感器是怎么回事，这里就不多解释了，有兴趣可以参考下这个网页（说的是iphone的，但Android原理类似，<a href="http://www.riameeting.com/node/538%EF%BC%89%E3%80%82">http://www.riameeting.com/node/538%EF%BC%89%E3%80%82</a></p>
+
+<p>首先介绍下加速度传感器Demo的应用场景：把手机当做一个平面，平面上有个小球在滚动，Demo中模拟出现实世界球在重力作用下的滚动轨迹。由于没有真机，要在模拟器上实现，所以必须有工具能制造出使模拟器“上下左右前后旋转”的错觉，Sensor simulator便是通过调整虚拟手机的摆放位置向Android模拟器传达信息。</p>
+
+<p>下面介绍如何使用Sensor Simulator：</p>
+
+<ol>
+<li><p>将文件解压，打开bin下的sensorsimulator.jar</p></li>
+<li><p>将bin下的SensorSimulatorSettings.apk安装到模拟器中，具体方法是先打开模拟器，然后在命令行中输入adb install SensorSimulatorSettings.apk，如图安装成功：</p></li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image024.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image024_thumb.jpg" alt="clip_image024" /></a></p>
+
+<ol>
+<li>在模拟器中打开Sensor Simulator Settings，在模拟器中将IP配置为和PC上Sensor Simulator中的IP相同，如图所示：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image026.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image026_thumb.jpg" alt="clip_image026" /></a></p>
+
+<ol>
+<li>在Sensor Simulator Settings中点击Testing，点击Connect，勾选几种传感器类型使之enable，如下图所示：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image028.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image028_thumb.jpg" alt="clip_image028" /></a></p>
+
+<p><strong>加速度传感器演示程序</strong></p>
+
+<p>Sensor Simulator配置完毕了，我们可以建个小项目来验证下：</p>
+
+<ol>
+<li><p>新建个SensorBall的项目，通过Add jars的方法将sensorsimulator-1.0.0-beta1\lib下的sensorsimulator-lib.jar添加到工程中来</p></li>
+<li><p>在AndroidManifest.xml中添加</p></li>
+</ol>
+
+
+<p>&lt;uses-permission android:name=&ldquo;android.permission.INTERNET&rdquo;/></p>
+
+<ol>
+<li>跟传统的mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);方式获取传感器服务不同，这里要用</li>
+</ol>
+
+
+<p>mSensorManager = SensorManagerSimulator.getSystemService(this, SENSOR_SERVICE);这种方式</p>
+
+<ol>
+<li>使用mSensorManager.connectSimulator();连接到Sensor simulator</li>
+</ol>
+
+
+<p>由于代码不是自己写的，网上看到的，就不在这里贴代码了，有兴趣的可以参考这里：</p>
+
+<p><a href="http://ophonesdn.com/article/show/183">http://ophonesdn.com/article/show/183</a></p>
+
+<p>最后的效果如下图所示：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image030.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image030_thumb.jpg" alt="clip_image030" /></a></p>
+
+<p>当调整Sensor simulator中虚拟手机位置时，Android模拟器中的小球位置也会发生变化。</p>
+
+<p>关于Sensor simulator的更详细的介绍和使用方法，可以参考下面这两个网页：<a href="http://openintents.org/en/node/23">http://openintents.org/en/node/23</a>   <br/>
+<a href="http://code.google.com/p/openintents/wiki/SensorSimulator">http://code.google.com/p/openintents/wiki/SensorSimulator</a></p>
+
+<p>（完）</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89/">(旧文迁移) Android开发（一）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:56:02+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>1、环境配置</p>
+
+<ul>
+<li><p>安装Eclipse3.5，Android SDK，ADT插件（Help->Install New Softare->“<a href="https://dl-ssl.google.com/android/eclipse">https://dl-ssl.google.com/android/eclipse</a>”->弹出来的两个都选上->装好重启下），参考“<a href="http://androidappdocs.appspot.com/sdk/eclipse-adt.html">http://androidappdocs.appspot.com/sdk/eclipse-adt.html</a>”</p></li>
+<li><p>配置环境变量，在Path后添加“C:\android-sdk_r3-windows\android-sdk-windows\tools”</p></li>
+</ul>
+
+
+<p>2、导入已有项目不要用import，而要用File->New->Android Project，不然Eclipse无法识别为Android项目。</p>
+
+<p>3、模拟器打开后一直开着好了，不用每个程序运行完就关掉，第一次打开模拟器时间较长。</p>
+
+<p>4、在命令行输入adb shell可进入模拟器的Shell环境中，要删除模拟器中自己写的程序，则：cd /data/app –> ls –>rm *.apk。</p>
+
+<p>5、学习资料</p>
+
+<ul>
+<li><p>SDK中有很多Sample可以运行</p></li>
+<li><p><a href="http://android.toolib.cn/guide/index.php">http://android.toolib.cn/guide/index.php</a> 有API文档和开发向导，有很多教程和范例</p></li>
+<li><p><a href="http://www.rbgrn.net/">http://www.rbgrn.net/</a> 有Android 3D游戏开发日志</p></li>
+<li><p><a href="http://www.anddev.org/">http://www.anddev.org/</a> 最大的英文Android论坛</p></li>
+<li><p><a href="http://code.google.com/intl/zh-CN/android/index.html">http://code.google.com/intl/zh-CN/android/index.html</a> 不过经常性不能访问</p></li>
+<li><p><a href="http://www.hiapk.com/bbs/">http://www.hiapk.com/bbs/</a> 最大的中文Android论坛</p></li>
+<li><p><a href="http://www.chinaup.org/docs/documentation.html">http://www.chinaup.org/docs/documentation.html</a> 第二个的中文版</p></li>
+<li><p><a href="http://rayleung.javaeye.com/">http://rayleung.javaeye.com/</a> 关注Android的博客</p></li>
+<li><p><a href="http://www.android123.com.cn/">http://www.android123.com.cn/</a> 同上</p></li>
+<li><p><a href="http://code.google.com/p/androidbmi/wiki/IntroAndroid">http://code.google.com/p/androidbmi/wiki/IntroAndroid</a> 台湾资料</p></li>
+<li><p>《Android A Programmer&rsquo;s Guide》</p></li>
+<li><p>高焕堂的几本书</p></li>
+<li><p>《Android SDK开发范例大全》</p></li>
+<li><p>《深入浅出Google Android》</p></li>
+<li><p>《Android基础教程》</p></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/androide6b8b8e6888fe5bc80e58f91e8b5b7e6ada5efbc88e8af91e69687efbc89/">(旧文迁移) Android游戏开发起步（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:55:01+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://www.rbgrn.net/content/215-light-racer-3d-development-journal">http://www.rbgrn.net/content/215-light-racer-3d-development-journal</a></p>
+
+<p>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝</p>
+
+<p>如果你有兴趣为Android平台开发游戏，有很多你需要了解的东西。我是Light Racer，Light Racer 3D以及Wixel的开发者，这些游戏目前在<a href="http://www.android.com/market/">Android Market</a>上有售。我以前也开发过游戏，但Light Racer是我的第一个Android应用程序，我从中学到了很多Android游戏开发知识，也愿意与诸位分享。我甚至写了一本在线的书详细介绍了Light Racer3D的开发，内容全是教你怎样做以及有用的代码片段。如果你有过游戏开发经验，那么转移到移动平台上来将不是特别困难。你主要只需学习其架构以及API就行了。如果你是一名游戏开发新手，我总结了一张列表，上面有你必需知道的东西，供你起步用。这些知识适用于很多类型的游戏，包括动作类、策略类、模拟类和益智类。</p>
+
+<p>Android是一个基于Java的环境。这对初学者来说是个好消息，因为相对于C++，Java被广泛认为是一门更容易上手的语言，它是移动开发的规范。Google也做了一件出色的工作，它将API文档化并提供示例代码供使用。其中有个叫做API Demos的示例几乎展示了所有API的功能。如果你熟悉Java并且用过Eclipse，要让你的第一个应用跑起来那是相当简单。如果你以前从没写过代码，在你前进路上还要学习很多，但别气馁。</p>
+
+<p><strong>获取SDK</strong></p>
+
+<p>新手上路的第一步便是获取<a href="http://developer.android.com/intl/zh-CN/sdk/index.html">Android SDK</a>（软件开发工具包）。SDK里有一个核心类库，一个模拟器，一些工具和示例代码。我强烈建议使用Eclipse和<a href="http://developer.android.com/intl/zh-CN/sdk/index.html#installingplugin">Android Eclipse插件</a>。如果你玩Android的话，Eclipse IDE对Java开发者来说很好用。如果这是你第一次开发Java项目，你可能会需要下载全套JDK，它里面包括签名和部署你的应用程序的一些工具。</p>
+
+<p><strong>学习应用程序架构</strong></p>
+
+<p><strong> </strong>别急着一头扎进开发的海洋里，理解<a href="http://developer.android.com/intl/zh-CN/guide/topics/fundamentals.html">Android应用程序架构</a>是很重要的。如果你不学一下，你设计出来的游戏在线下将很难调试。你将需要理解Applications、Activities、Intents以及它们怎样相互联系。Google提供了很多有用的架构信息。真正重要的是要理解为什么你的游戏需要多于一个的Activity，以及什么才是设计一个有良好用户体验的游戏。要理解这些，首先要了解什么是Activity生命周期。</p>
+
+<p><strong>学习Activity生命周期</strong></p>
+
+<p><strong> </strong>Activity生命周期由Android操作系统来管理。你的activity创建、恢复、暂停、销毁都受操作系统的支配。正确处理这些事件是很重要的，这样应用程序才能表现良好，做用户认为正确的事。在你设计你的游戏之前了解所有这些是如何工作的是件好事，因为以后你可以为自己节省调试时间和昂贵的重新设计时间。对大多数应用来说，默认的设置将工作正常，但对于游戏，你可能需要考虑将SingleInstance标志打开。当设置为默认时，Android在它认为合适时会创建activity的新实例。对于游戏来说，你可能只需要一个游戏activity的实例。这对于你要怎样管理事务的状态有些影响，但对于我来说，这解决了一些资源管理的问题，应予以考虑。</p>
+
+<p><strong>主循环</strong></p>
+
+<p><strong> </strong>根据你写的游戏的类型，你可能需要也可能不需要一个主循环。如果你的游戏不依赖于时间或者它仅仅对用户所做的加以回应，并且不做任何视觉上的改变，永远等待着用户的输入，那么你就不需要主循环。如果你写的是动作类游戏或者带有动画、定时器或任何自动操作的游戏，你应该认真考虑下使用主循环。</p>
+
+<p>游戏的主循环以一个特定的顺序通常尽可能多的在每秒钟内“滴答”提醒子系统运行。你的主循环需要在它自己的线程里运行，原因是Android有一个主用户界面线程，如果你不运行自己的线程，用户界面线程将会被你的游戏所阻塞，这会导致Android操作系统无法正常的更新任务。执行的顺序通常如下：状态，输入，人工智能，物理，动画，声音，录像。</p>
+
+<p>更新状态意思是管理状态转换，例如游戏的结束、人物的选择或下一个级别。很多时候你需要在某个状态上等上几秒钟，而状态管理应该处理这种延迟，并且在时间过了之后设置成下一个状态。</p>
+
+<p>输入是指用户按下的任何键、对于滚动条的移动或者用户的触摸。在处理物理之前处理这些是很重要的，因为很多时候输入会影响到物理层，因而首先处理输入将会使游戏的反应更加良好。在Android里，输入事件从主用户界面线程而来，因此你必须写代码将输入放入缓冲区，这样你的主循环可以在需要的时刻就从缓冲区里取到它。这并非难事。首先为下一个用户输入定义一个域，然后将onKeyPressed或onTouchEvent函数设为接到一个用户动作就放到那个域里，有这两步就够了。如果对于给定游戏的状态，这是一个合法的输入操作，那么所有输入需要在那一刻做的更新操作都已经定下来了，剩下来就让物理去关心怎样响应输入吧。</p>
+
+<p>人工智能所做的类似于用户在决定下一个要“按”哪个按钮。学习怎样写人工智能程序超出了这篇文章的范围，但大体的意思是人工智能会按照用户的意图来按按钮。这些也有待物理去处理和响应吧。</p>
+
+<p>物理可能是也可能不是真正的物理。对于动作类游戏来说，关键点是要考虑到上一次更新的时间、正在更新的当前时间、用户输入以及人工智能，并且决定它们朝着什么方向发展和是否会发生冲突。对于一个你可视化地抓取一些部件并滑动它们的游戏来说，物理就是这个游戏中滑动部件或者使之放入合适的位置的部分。对于一个小游戏来说，物理即使这个游戏中决定答案是错还是对的部分。你可能将其命名为其他东西，但每个游戏都有一个作为游戏引擎的红肉部分（译者注：可能是主体部分的意思），在这篇文章里，我把这部分称为物理。</p>
+
+<p>动画并非像在游戏里放入会动的gif图片那样简单。你需要使得游戏能在恰当的时间画出每一帧。这并没有听起来那么困难。保留一些像isDancing、danceFrame和lastDanceFrameTime那样的状态域，那样动画更新便能决定是否可以切换到下一帧去了。动画更新真正做的事就那么多。真正来显示动画的变化是由录像更新来处理的。</p>
+
+<p>声音更新要处理触发声音、停止声音、音量变化以及音调变化。正常情况下当写游戏的时候，声音更新会产生一些传往声音缓冲区的字节流，但是Android能够管理自己的声音，因而你的选择将是使用SoundPool或者MediaPlayer。它们都需要小心处理以免出错，但你要知道，因为一些底层实现细节，小型、低比特率的声音文件将带来最佳的性能和稳定性。</p>
+
+<p>录像更新要考虑游戏的状态、角色的位置、分数、状态等等，并将一切画到屏幕上。如果使用主循环，你可能需要使用SurfaceView，并做一个“推”绘制。对于其他视图，视图本身能够调用绘制操作，主循环不必处理。SurfaceView每秒产生的帧数最多，最适合于一些有动画或屏幕上有运动部件的游戏。录像更新所要做的工作是获取游戏的状态，并及时地为这个状态绘制图像。其他的自动化操作最好由不同的更新任务来处理。</p>
+
+<p>代码看起来是什么样的？这儿有个例子。</p>
+
+<pre><code>&lt;span style="color: #606060" id="lnum1"&gt;   1:&lt;/span&gt; &lt;span style="color: #0000ff"&gt;public&lt;/span&gt; &lt;span style="color: #0000ff"&gt;void&lt;/span&gt; run() {
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum2"&gt;   2:&lt;/span&gt;     &lt;span style="color: #0000ff"&gt;while&lt;/span&gt; (isRunning) {
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum3"&gt;   3:&lt;/span&gt;         &lt;span style="color: #0000ff"&gt;while&lt;/span&gt; (isPaused &amp;&amp; isRunning) {
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum4"&gt;   4:&lt;/span&gt;             sleep(100);
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum5"&gt;   5:&lt;/span&gt;         }
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum6"&gt;   6:&lt;/span&gt;         update();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum7"&gt;   7:&lt;/span&gt;     }
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum8"&gt;   8:&lt;/span&gt; }
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum9"&gt;   9:&lt;/span&gt;  
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum10"&gt;  10:&lt;/span&gt; &lt;span style="color: #0000ff"&gt;private&lt;/span&gt; &lt;span style="color: #0000ff"&gt;void&lt;/span&gt; update() {
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum11"&gt;  11:&lt;/span&gt;     updateState();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum12"&gt;  12:&lt;/span&gt;     updateInput();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum13"&gt;  13:&lt;/span&gt;     updateAI();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum14"&gt;  14:&lt;/span&gt;     updatePhysics();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum15"&gt;  15:&lt;/span&gt;     updateAnimations();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum16"&gt;  16:&lt;/span&gt;     updateSound();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum17"&gt;  17:&lt;/span&gt;     updateVideo();
+
+
+
+
+
+
+&lt;span style="color: #606060" id="lnum18"&gt;  18:&lt;/span&gt; }
+</code></pre>
+
+<p><strong>3D还是2D？</strong></p>
+
+<p><strong> </strong>在开始写游戏之前，你要决定是做3D的还是2D的。2D游戏有一个低得多的学习曲线，一般更容易获得良好的性能。3D游戏需要更深入的数学技能，并且如果你不在意的话会有性能问题产生。如果你打算画比方框和圆圈更复杂的图形，还需要会使用3D Studio和Maya那样的建模工具。Android支持OpenGL用来3D编程，并且在OpenGL方面有很多很好的教程可供学习。</p>
+
+<p><strong>建立简单、高质量的方法</strong></p>
+
+<p><strong> </strong>上手时，要确保你整个游戏不要就用一个庞大而冗长的方法。如果你遵循我上面描述的主循环模式，这将相当简单。每个你写的方法应当完成一个非常特定的任务，并且它就应该无差错地那样做。举例来说，如果你需要洗一副纸牌，你应该写一个“shuffleCards”的方法，并且该方法就应该只做这一件事。</p>
+
+<p>这是一个适用于任何软件开发的编码实践，但对于游戏开发来说这尤为重要。在一个有状态的、实时的系统里，调试将变得非常困难。使你的方法尽量的小，一般的经验法则是每个方法有且仅有一个目的（译者注：完成且仅完成一个功能）。如果你要为一个场景用编程方式画一个背景，你可能需要一个叫做“drawBackground”的方法。诸如此类的任务能够很快完成，因而你可以按照搭积木的方法来开发你的游戏，而你能够继续添加你要的功能，并且不会使得这一切难以理解。</p>
+
+<p><strong>最重要的是效率！</strong></p>
+
+<p><strong> </strong>性能是任何游戏的主要问题。我们的目标是使得游戏的反应越快越好，看起来越流畅越好。某些方法如Canvas.drawLine比较慢。并且要将屏幕大小的位图画到主画布上，每一帧都是代价昂贵的。如何权衡对于达到最佳性能很有必要。确保管理好你的资源，使用技巧来以最少量的CPU资源完成你的任务。如果性能不好的话，即使是最好的游戏玩起来也没劲。人们一般对于游戏卡或者响应慢几乎难以容忍。</p>
+
+<p><strong>提示和技巧</strong></p>
+
+<p><strong> </strong>看一下SDK中的示例LunarLander。它使用SurfaceView，这对于一个每秒需要处理最多帧的游戏来说是合适的。如果你要做3D，示例中有GLView可以处理3D显示的很多初始化工作。对LightRacer来说，我不得不优化把所有东西都画出来这种方法，否则帧率将会大大地降低。我只在视图初始化的时候把背景画进一个位图里一次。路径放在它们自己的位图里，随着车手的前进而更新。这两个位图在每一帧里都被画进主画布中去，车手画在顶端，到最后会有一个爆炸。这种技术使得游戏运行在一个可以玩的程度。</p>
+
+<p>如果适用的话，使得你的位图的大小精确等于你打算画到屏幕上的大小，这也是个好的实践。这么做了以后就需要缩放，可以节省CPU资源。</p>
+
+<p>在游戏中始终一致的位图配置（如RGBA8888）。这将会通过减少不同格式之间转换的时间来节省图形库的CPU时间。</p>
+
+<p>如果你决定开发3D游戏但没有3D方面的知识，你需要挑选一两本3D游戏编程方面的书并学习线性代数。你最少要理解点积、叉积、向量、单元向量、法线、矩阵和变换。这方面我遇到的最好的书是叫<a href="http://www.amazon.com/Mathematics-Programming-Computer-Graphics-Development/dp/1584502770/ref=sr_1_4?ie=UTF8&amp;s=books&amp;qid=1225989610&amp;sr=1-4">《3D游戏编程和计算机图形学数学》</a>。</p>
+
+<p>声音文件要小而且低比特率。需要加载的越少，加载速度越快，游戏所需内存越少。</p>
+
+<p>声音使用OGG文件，图片使用PNG文件。</p>
+
+<p>确保释放所有媒体播放器，当Activity销毁时空出所有的资源。这能保证垃圾收集器清除了所有东西，也能保证在两次游戏开始之间没有内存泄露。</p>
+
+<p>加入Android谷歌小组，寻求社区支持。这里有人可以在开发过程中给你帮助。</p>
+
+<p>最重要的是，花时间测试再测试，确保每一小部分都如你所愿地工作。改善游戏是整个开发中最耗时最困难的部分。如果你匆匆将其推向市场，你很可能会使用户们失望，你会感到你的努力都白费了。你不可能使所有人都喜欢你写的东西，但你至少要尽量发布你最高质量的作品。</p>
+
+<p><a href="http://code.google.com/intl/zh-CN/android/index.html">Google在这里有帮助你上手的绝佳的文档</a>。</p>
+
+<p>在<a href="http://www.rbgrn.net/content/215-light-racer-3d-development-journal">Light Racer 3D开发日志</a>可以找到可工作的示例代码和指导。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e5a5a5e5b7b4e9a9ace59ca8e4b8ade59bbde689b9e8af84e7bd91e7bb9ce5aea1e69fa5e588b6e5baa6efbc88e8af91e69687efbc89/">(旧文迁移) 奥巴马在中国批评网络审查制度（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:52:01+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://www.timesonline.co.uk/tol/news/world/asia/article6918320.ece">http://www.timesonline.co.uk/tol/news/world/asia/article6918320.ece</a></p>
+
+<p>奥巴马总统与中国上海的学生以不同寻常的现场问答形式进行了一场对话，批评了网络审查制度，并告诉这个拥有世界上最多上网人数的国家的人们，信息的的自由流动是力量的源泉。</p>
+
+<p>在他正式访华的第一天里，奥巴马先生小心翼翼地校准着自己的言论，以避免使中国民众感到尴尬。尽管如此，当他在强调中美这两个太平洋巨人必须合作而非冲突的时候，他确信他的回答触及到了中国国内的一些敏感话题，如言论自由的普世价值以及信息的自由传播。</p>
+
+<p>经过了长达十一个小时艰辛的争论，奥巴马先生才得以在上海登上舞台，手持麦克风，从520名大学生中挑选出提问者。中方对于美方要求现场直播和在线流媒体直播感到局促不安。最终，这场市政厅式的会议仅在上海电视台直播，但文字部分则由新华社进行更新。</p>
+
+<p>所提问题一部分来自现场观众，其余的则从中国或美国驻华大使馆的网站上提交的几千个问题里挑选。</p>
+
+<p>奥巴马先生被问到是否了解“GFW”——一款防火墙的通俗术语，中国政府用其加在网络上来阻挡那些审查员认为不合适的内容。奥巴马先生说：“我一向是开放互联网使用的坚定支持者。我非常支持不设置审查制度。我认识到不同的国家有不同的传统。”</p>
+
+<p>在某个回答中，他微妙地批评了中国，他说他认为拥有指责国家领导人的自由可以帮助加强民主。“老实说，我也曾经有好几次希望信息不能那样自由流动，那样的话我就不必一直听着人们批评我。人们当权时自然而然会想‘那人怎么会这样说我？太不负责任了’。”</p>
+
+<p>但奥巴马先生认为就是这样的开放环境使他成为一个更好的领袖，迫使他倾听他不愿听到的意见。中国的领导人很少需要或有机会接受公众的批评。GFW把几乎所有这样的评论都过滤掉了，极少有人敢发表评论贬低共产党的领导，怕遭报应。</p>
+
+<p>他尽量避免和中共的审查者产生意见分歧，因为他们认为网络是需要监管的，要保护民众免受伤害。“好处是远远多于坏处的。这也是我为什么对互联网成为本次论坛一部分感到很高兴的原因了。”</p>
+
+<p>本次论坛标志着他对中国民众的首次直接评论，也可能是他在紧张的四天行程中的唯一一次机会，这项行程包括与胡锦涛主席会面以及参观长城。</p>
+
+<p>奥巴马先生利用这次接触中国三亿五千万网名的机会为中国民众争取被剥夺的自由。他说个人表达并非美国的理想，而是一项所有人都有的普遍权利。“我们不寻求把任何政治体制强制给任何国家，但是我们也不认为我们所支持的这些原则是我们国家所独有的。”</p>
+
+<p>他谈话中的这份理想明天能否传达到北京的中共领导人耳朵里还是个未知数，而在周三，他的行程又将被排满，贸易分歧、北朝鲜的核问题、中国对伊朗货币政策价值的争端这些问题等待他去处理。</p>
+
+<p>奥巴马先生希望这次为期四天的行程能有一个有好的开端。他说：“大国之间合作，而不是冲突，我们能收获更多。”</p>
+
+<p>总统承认他用起Twitter来笨手笨脚的，无法掌握这项技术，这在中国引起了迅速反应。“他怎么能骗我们？他Twitter主页上有260万跟随者呢！”</p>
+
+<p>中国的聊天室里很快便人声鼎沸，纷纷对奥巴马的表现作出回应。有人仅仅说了句：“好帅啊！”</p>
+
+<p> <a href="http://frcasino.fr/">slots online</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e88bb9e69e9capp-storee8999ae4bcaae79a84e69bb4e696b0e78988efbc9ae4ba9ae6b4b2e79a84e4b9b3e688bfe5be88e5a5bdefbc8ce69c80/">(旧文迁移)苹果App Store虚伪的更新版：“亚洲的乳房”——很好，最畅销；嘲讽意味的应用，禁止！（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:49:21+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文网址：<a href="http://www.techcrunch.com/2009/10/23/app-store-hypocrisy-update-asian-boobs-fine-top-seller-satirical-app-banned/">http://www.techcrunch.com/2009/10/23/app-store-hypocrisy-update-asian-boobs-fine-top-seller-satirical-app-banned/</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0624.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0624_thumb.png" alt="IMG_0624" /></a></p>
+
+<p>还记得吗，这个月早些时候我们写过一篇关于“<a href="http://www.yeeyan.com/articles/tag/%E8%8B%B9%E6%9E%9C"><em>苹果</em></a>认为有关超短裙的应用程序是适合的，而与此同时却从App Store上禁止了一个带有嘲讽意味的电子创意卡片应用程序”的文章？是的，我们也许发现了一个更好的例子来证明苹果公司滑稽的伪善。</p>
+
+<p>事实上，这个例子并不难找。有个叫“亚洲的<a href="http://www.yeeyan.com/articles/tag/%E4%B9%B3%E6%88%BF"><em>乳房</em></a>”的应用程序目前在App Store里销量第一。那么这是个什么东西呢？让我们顾名思义吧：这是个以亚洲女性乳房为特色的应用程序。很多很多的乳房，超过2500对。事实上你可以将这个数字乘以二，因为每张图里有两个乳房。那的确是很多很多了。</p>
+
+<p>这个0.99美元的应用程序的描述同样经典：</p>
+
+<blockquote><p>       这里有性感亚洲大波女孩的照片，100多个图表种类，2500多张照片，定期更新。
+       日本女孩、韩国女孩、中国女孩、台湾女孩、模特、空姐、护士、学生妹、女教师、比基尼女孩、性感女孩等等。</p></blockquote>
+
+<p>很高兴他们一一列举深入挖掘出了这些重要的“性感女孩”的种类。</p>
+
+<p>再一次重申，我完全支持<a href="http://www.yeeyan.com/articles/tag/%E8%8B%B9%E6%9E%9C"><em>苹果</em></a>公司允许在App Store销售这类应用程序，只要他们标上合适的标签如“17岁以上”（这个程序确实标了）。这些女孩并非裸体（苹果仍然不允许出现这些，除了某些<a href="http://www.techcrunch.com/2009/06/24/yep-iporn-is-here-for-the-iphone/">意外情况</a>），但波波到处都是，屁股镜头和胯部镜头也是。纯粹的iPhone的乐趣。</p>
+
+<p>问题在于<a href="http://www.yeeyan.com/articles/tag/%E8%8B%B9%E6%9E%9C"><em>苹果</em></a>公司正在禁止一些诸如电子创意卡片的应用程序，讽刺的是，这些程序同样也标明了17岁以上。苹果公司似乎并不喜欢那些调侃嘲弄像罗曼波拉斯基还有希特勒这样公众人物的应用程序。</p>
+
+<p>这真是天大的荒谬，超短裙应用和<a href="http://www.yeeyan.com/articles/tag/%E4%B9%B3%E6%88%BF"><em>乳房</em></a>应用没事，但嘲弄却不行。也许测试这些应用的大多数人都是脾气败坏令人恐怖的老头，我不明白。</p>
+
+<p><a href="http://www.apple.com.cn/itunes/download/?itmsUrl=itms%3A%2F%2Fax.itunes.apple.com%2FWebObjects%2FMZStore.woa%2Fwa%2FviewSoftware%3Fid%3D324187335%26mt%3D8%26ign-mscache%3D1">在这可以找到0.99美元的亚洲乳房</a>。在哪都找不到电子创意卡片应用。因为苹果公司有这些可笑的<a href="http://www.techcrunch.com/2009/06/29/heres-how-iphone-app-store-ratings-work-hint-they-dont/">条款</a>。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0626.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0626_thumb.png" alt="IMG_0626" /></a>       <a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0625.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0625_thumb.png" alt="IMG_0625" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0623.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/IMG_0623_thumb.png" alt="IMG_0623" /></a>          <a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/12.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/12_thumb.jpg" alt="12" /></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e4bb8ae697a5e5a587e4ba8b/">(旧文迁移)今日奇事</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T18:45:15+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今早睡得正香甜。突然蚊帐的一个角因为绳子松了，掉下来了。
+这是一件再普通不过的事情，理论上系上去，洗洗手接着睡就好了。
+可是，我偏偏做出了那样的决定。下面的条件中，只要有一个不满足，我就不会那样做了。</p>
+
+<ol>
+<li><p> 蚊帐掉落的那个角在靠墙的那边，直接够不着。</p></li>
+<li><p> 蚊帐靠外面可以够到的那个角打了死结。</p></li>
+<li><p> 该蚊帐许久未洗了。虽然看不出来，理论上应该是很脏了。</p></li>
+</ol>
+
+
+<p>条件１如果不成立，问题就迎刃而解了。
+条件２如果不成立，我可以先把外面的绳子解下来，用手托着，再去够里面的那个角。
+条件３如果不成立，我就不用专门腾出一只手像董英雄炸碉堡一样高高举起蚊帐，而是任由其垂在我头发上凉席上衣服上，先睡着，睡爽了慢慢找答案。
+这个事情发生后，我产生过以下主意，有些也做了尝试：</p>
+
+<ol>
+<li><p> 我先将那个角举到固定绳子的位置，尝试隔着蚊帐把外面的绳子系上去，可惜未果。难度系数太大了。</p></li>
+<li><p> 我想拿根钉子把蚊帐的一角敲死在墙壁里，可惜我学的是软件工程。</p></li>
+<li><p> 电扇先开起来吹吹，热死了。</p></li>
+</ol>
+
+
+<p>于是很长一段时间内，床上的景观是这样的：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/image.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/image_thumb.png" alt="image" /></a></p>
+
+<p>后来，我拨云见日般将蚊帐撕开一道口子，正好容得下我两只手在帐外作业。一会功夫就系好了。
+舍友说，蚊子飞进来怎么办。
+我说，没关系，蚊子找不到那么隐蔽的入口。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e697a7e69687e8bf81e7a7bbe3808ae4babae4bbb6e3808b-e68f8fe8bfb0e4ba86e4b880e4b8aae4b98ce68998e982a6e5bc8fe79a84e58a9ee585ac/">(旧文迁移)《人件》——描述了一个乌托邦式的办公环境（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T17:34:37+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>　　原文地址：<a href="http://www.appscanadian.ca/archives/peopleware-describing-the-best-office-youll-never-work-in/">http://www.appscanadian.ca/archives/peopleware-describing-the-best-office-youll-never-work-in/</a></p>
+
+<p>　　有一两个读者可能还依稀记得在我开这个博客不久后，我花了好些钱用来买和软件相关的书籍上。我很快便发现当时我从事的工作并没有给我带来一种“我马上就要回家了，可以读好多技术类书籍”的感觉，因而读书这事并没有如我预期那样进展顺利。我读了一些《代码大全》，但随着时间的推移我没继续读下去。我想我现在也只读完那本书的三分之一，尽管我早在一年多以前就开始读了。</p>
+
+<p>　　大约一个月以前，决定先不读《代码大全》了。我开始阅读《人件》：富有成效的项目和团队。我花了三个礼拜读完了，主要是在公交车上用来消磨时间，但这本书确实有点意思。</p>
+
+<p>　　对那些不熟悉本书的人来说，本书不过是作者Tom DeMarco和Timothy Lister写他们管理智慧的区区两百页纸而已。这两人在软件开发领域摸爬滚打了多年，也给各种不同公司提供过咨询，他们有好多关于怎样最好地构建以及怎样带一个富有成效的软件开发团队方面的心得要说。</p>
+
+<p>　　本书很明显针对的是那些已经是（和有希望成为）软件产品项目经理的人。然而我无法从那个角度来审视这本书，因为我刚从大学毕业三年，我的职业生涯还稳定在“IT民工”的阶段。说实话我希望我永远都不要做一个管人的人，因为我有限的使用权力的经验告诉我那并不适合我。除此之外，我知道既然我喜欢舞弄权力，这是一个不让我这么做的绝好的理由。说了这么多，我试着从我自己的非管理的视角来审视这本书。</p>
+
+<p>　　我简单（带玩笑意味的）建议那些对他们工作环境不满意的人们（我上一份工作也是这样）：不要读这本书；它只会是你沮丧。</p>
+
+<p>　　读这本书的时候，我不禁注意到了书中描述的很多东西能反映出我对前雇主的不满情绪。书中所引用的书、研究报告和合法的来源都使得这情绪愈加强烈！我发现有确凿证据显示不仅我的工作环境本可以变得更好些，而且我所曾经拥有的东西事实上都对我不利！</p>
+
+<p>　　很多人读这本书时也许都会有这个根本问题。没有哪个工作环境，甚至是广受好评的谷歌办公室，可以达到书中所描绘的那样高的标准。我想关键之处在于：很多好的开发者都努力做得更好，那么一个好的雇主也应该努力改进自己。</p>
+
+<p>　　作者解释道，一个优秀的知识型工人（举例说这些人的主要任务是思考问题，和那些进行某些体力劳动的人相对）需要三种东西来获得成功：</p>
+
+<blockquote><p>１.知识型工人理应得到那些能使他们成功的东西。意思是像给他们一个安静的工作环境。开放式办公环境看似能节省成本，还能通过简化沟通方式培养团队精神，但这使人无法集中注意力，从而浪费了工人的时间，事实上导致不能按时完成工作。
+２.知识型工人需要被单独对待，几乎每个人都有着和一些或者大多数同事不一样的需求。这意味着尽管一开始要建立开放式办公环境，以确保普通的成功（基于真实的研究和统计数据，而不是感觉到的成本效益），然而能很方便的满足个人的需求也是很重要的。
+３.经理的职责是支持知识型工人的工作，因为是他们，而不是其他什么东西，可以直接影响到项目的期限。这意味着一个好的经理必须在门口丢下他或她的自负心理，意识到他或她可能存在的任何“大哥大”倾向，努力把分心减到最低限度。</p></blockquote>
+
+<p>　　能同时拥有这三样东西是极其困难的。甚至能接近于使这三样东西完美结合也可以被视作是巨大的成功了。因此如果你确实决定要读这本书，试着不要由于书中所描绘的看似乌托邦一样的工作环境而心急如焚。你可能并非工作在一个完美的环境中，但根本没有人的工作环境是完美的。然而通过一点点的工作，你可以开始实现工作环境的一点点改变，然后一步步接近于完美的办公环境。</p>
+
+<p>旁注：
+　　我决定我下一个任务是读《计算机程序的构造和解释》。</p>
+
+<p>　　我计划读完整本书，包括所有的练习和项目。我意识到这是个远大的目标，但我肯定是会尝试的。在我读书期间，我将努力写博客分享我的进展，一节一节，直至整本书结束。</p>
+
+<p>　　祝我好运吧！</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/e5889de5b09de8b68ae78bb1e5ba94e794a8e5bc80e58f91efbc9ae794a8theose58699e4b8aahello-world/">初尝越狱应用开发：用Theos写个Hello World</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:55:04+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考文章如下：</p>
+
+<p><a href="http://brandontreb.com/">http://brandontreb.com/</a> 的 Beginning Jailbroken iOS Development系列</p>
+
+<p><a href="http://iphonesdkdev.blogspot.com/2012/06/how-to-install-thoes-under-xcode-44.html">http://iphonesdkdev.blogspot.com/2012/06/how-to-install-thoes-under-xcode-44.html</a></p>
+
+<p>=============</p>
+
+<p>环境是Xcode4.6，SDK iOS5.1和6.1。要写个程序让系统在刚启动时弹出hello world对话框，like this:</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/04/11111.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/04/11111.jpg" alt="" /></a></p>
+
+<p>首先是安装开发工具：</p>
+
+<pre><code># clone theos.git
+cd ~
+git clone git://github.com/DHowett/theos.git
+
+# clone iphoneheaders.git
+cd ~/theos/
+mv include include.bak
+git clone git://github.com/rpetrich/iphoneheaders.git include
+for FILE in include.bak/*.h; do mv $FILE include/; done
+rmdir include.bak/
+
+# get IOSurfaceAPI.h
+cd ~/theos/include/IOSurface/
+curl -O -k https://raw.github.com/javacom/toolchain4/master/Projects/IOSurfaceAPI.h
+
+# clone theos-nic-templates.git
+cd ~/theos/templates/
+git clone git://github.com/orikad/theos-nic-templates.git
+
+# get dpkg-deb for Mac OS X
+cd ~/theos
+curl -O http://test.saurik.com/francis/dpkg-deb-fat
+chmod a+x dpkg-deb-fat
+sudo mkdir -p /usr/local/bin
+sudo mv dpkg-deb-fat /usr/local/bin/dpkg-deb
+
+# get ldid for Mac OS X
+cd ~/theos/bin
+curl -O http://dl.dropbox.com/u/3157793/ldid
+chmod a+x ldid
+
+# get libsubstrate.dylib substrate.h
+cd ~/theos
+curl -OL http://apt.saurik.com/debs/mobilesubstrate_0.9.3366-1_iphoneos-arm.deb
+dpkg-deb -x mobilesubstrate_0.9.3366-1_iphoneos-arm.deb mobilesubstrate
+cp mobilesubstrate/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate  ~/theos/lib/libsubstrate.dylib
+cp mobilesubstrate/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h include/substrate.h
+</code></pre>
+
+<p>一开始由于疏忽或者操作错误漏装了ldid，导致后续编译通不过，如果ldid有问题的话，还可以尝试以下：</p>
+
+<pre><code>curl -s http://dl.dropbox.com/u/3157793/ldid &gt; ~/Desktop/ldid
+chmod +x ~/Desktop/ldid
+mv ~/Desktop/ldid $THEOS/bin/ldid
+</code></pre>
+
+<p>接着要用Macports安装dpkg用于打debian包，装完Macports得重启terminal生效，装dpkg:</p>
+
+<pre><code>sudo port install dpkg
+</code></pre>
+
+<p>接着配置环境变量:</p>
+
+<pre><code>export THEOS=/opt/theos/
+export SDKVERSION=6.1
+export THEOS_DEVICE_IP=192.168.1.122
+</code></pre>
+
+<p>device_ip可以通过SBSettings(不过在我的i5里不管用)查看，或者通过设置里面直接可以查看。</p>
+
+<p>接着用命令创建工程：</p>
+
+<pre><code>$THEOS/bin/nic.pl
+</code></pre>
+
+<p>在10个模版中选择一个：</p>
+
+<pre><code> [1.] iphone/application
+  [2.] iphone/cydget
+  [3.] iphone/dashboardx_widget
+  [4.] iphone/framework
+  [5.] iphone/library
+  [6.] iphone/notification_center_widget
+  [7.] iphone/preference_bundle
+  [8.] iphone/sbsettingstoggle
+  [9.] iphone/tool
+  [10.] iphone/tweak
+</code></pre>
+
+<p>这里选择10，可以覆盖系统的一些实现。接着修改Makefile文件，将第一行的include语句改为：</p>
+
+<pre><code>export ARCHS = armv7
+export TARGET=iphone:latest:5.1
+include $(THEOS)/makefiles/common.mk
+</code></pre>
+
+<p>关于这里我浪费了很多时间，由于之前看的教程用的是Xcode4.5和iOS6.0，而我是4.6和6.1，会出现编译错误：</p>
+
+<pre><code>collect2: ld terminated with signal 6 [Abort trap: 6]
+    ld(8724,0x7fff78fd2960) malloc: *** error for object 0x7f89b35003f0: pointer being freed was not allocated
+    *** set a breakpoint in mallocerror_break to debug
+</code></pre>
+
+<p>这边target写6.1不行，得装低版本的SDK才行。接着改写Tweak.xm文件，在下面加上（其实上面都是注释）：</p>
+
+<pre><code>#import &lt;SpringBoard/SpringBoard.h&gt;
+
+%hook SpringBoard
+
+-(void)applicationDidFinishLaunching:(id)application {
+    %orig;
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome" 
+        message:@"Hello world，你好世界" 
+        delegate:nil 
+        cancelButtonTitle:@"确定" 
+        otherButtonTitles:nil];
+    [alert show];
+    [alert release];
+}
+
+%end
+</code></pre>
+
+<p>这里hook了SpringBoard类里的applicationDidFinishlaunching函数，第一行的%orig是调用了原实现，如果不调用SpringBoard就起不起来，你的手机就没发正常开机显示桌面了，得用ssh去删程序（这个没试过，不敢试&hellip;）。就这样是通不过编译的，因为用到了UIKit库中的UIAlertView，得在MakeFile里加上引入框架：</p>
+
+<pre><code>HelloWorldTweak_FRAMEWORKS = UIKit
+</code></pre>
+
+<p> 接着可以编译打包装到手机了，在这步之前，手机得做些准备工作。插一句题外话，iOS的root默认密码是alpine，要修改的话去cydia里下了MobileTerminal，用手机上的命令行改：</p>
+
+<pre><code>iPhone:~ mobile$ su root
+Password:
+iPhone:/var/mobile root# cd
+iPhone:~ root#
+iPhone:~ root# passwd
+Changing password for root.
+New password:
+Retype new password:
+iPhone:~ root#
+</code></pre>
+
+<p>手机要安装iSSH，或者通过其他手段允许ssh接入。最后开始最重要的工作，就一句话，包括编译打包和装机：</p>
+
+<pre><code>make package install
+</code></pre>
+
+<p>期间会要求输几次密码，不出意外的话程序安装成功。手机会resping，好了以后就出现hello world了~</p>
+
+<p>==================</p>
+
+<p>感觉这样做越狱会比较麻烦，肯定有更简单的方法，搜了下，有个叫iOSOpenDev的，下次尝试下。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

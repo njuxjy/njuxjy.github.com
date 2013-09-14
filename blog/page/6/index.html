@@ -1,0 +1,1855 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="本文内容非原创，属于网上资源的整理。 ======================================== 二阶段构造 问题1：为什么需要二阶段构造？ 首先考虑如下的语句： CClassName* ptr = new (ELeave) CClassName();   &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/page/6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89/">Symbian学习笔记三（内存管理）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-01T20:12:48+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><strong>二阶段构造</strong></p>
+
+<p>问题1：为什么需要二阶段构造？</p>
+
+<p>首先考虑如下的语句：</p>
+
+<ol>
+<li> CClassName* ptr = new (ELeave) CClassName();  </li>
+</ol>
+
+
+<p>在内存有足够空间的情况下，代码首先在堆上分配一个CClassName类型的对象，并将地址赋给ptr指针，然后调用类的构造函数初始化这个对象。</p>
+
+<p>这样，如果类的构造函数出现了异常，则会发生问题，这种异常发生时没有任何指针指向成功分配给CClassName对象的内存区域，因此这些内存成为孤立内存，发生内存泄漏。这就引出了symbian内存处理的一个重要规则：构造函数绝对不能异常退出。</p>
+
+<p>问题2：为什么二阶段函数能够避免内存泄漏？</p>
+
+<p>二阶段构造函数，顾名思义就是将一个对象的构造分为两个阶段：</p>
+
+<p>第一个阶段是常规的的构造函数，在该构造函数中，没有可能导致异常退出的代码；</p>
+
+<p>第二个阶段是可能会产生异常的构造阶段，实现为函数ConstructL()；</p>
+
+<p>这样，对象的构造过程就应当包括了如下的代码：</p>
+
+<ol>
+<li><p> CClassName* self = new (ELeave) CClassName();   </p></li>
+<li><p> CleanupStack::PushL(self);   </p></li>
+<li><p> self->ConstructL();   </p></li>
+<li><p> CleanupStack::Pop(self);  </p></li>
+</ol>
+
+
+<p>这样的构造方式为什么就能够避免内存泄漏呢？下面我们来逐行分析代码：</p>
+
+<ol>
+<li> CClassName* self = new (ELeave) CClassName();  </li>
+</ol>
+
+
+<p>重载的运算符new首先将内存分配给新的self实例，如果分配失败，那么程序异常退出，如果成功给新的对象分配了内存，那么接着执行不会异常退出的第一阶段构造函数；</p>
+
+<ol>
+<li> CleanupStack::PushL(self);  </li>
+</ol>
+
+
+<p>接着我们将本地指针self推入清除栈，因为下面要调用可能发生异常的退出函数。</p>
+
+<ol>
+<li> self->ConstructL();  </li>
+</ol>
+
+
+<p>如果该二阶段构造函数在执行时异常退出，那么新的CClassName的指针由清楚栈负责清楚，避免了内存泄漏；另外，如果该函数没有异常退出，则拥有了一个完全构造的CClassName实例。</p>
+
+<ol>
+<li> CleanupStack::Pop(self);  </li>
+</ol>
+
+
+<p>安全的将本地指针从清除栈中弹出；</p>
+
+<p>每实例化一个对象就要写上述代码确实有些啰嗦了，Symbian OS为了简化实例化的步骤，又引入了NewL(),NewLC()两个函数(其实也可以写成一个NewL(),然而大家都比较推崇同时创建NewL()和NewLC())，其具体的实现方式见问题3；</p>
+
+<p>问题3：如何在新的类中创建二阶段构造函数？</p>
+
+<p>.h头文件：</p>
+
+<ol>
+<li><p> Class CClassName : public CBase   </p></li>
+<li><p> {   </p></li>
+<li><p> public:   </p></li>
+<li><p>        static CClassName* NewL();   </p></li>
+<li><p>        static CClassName* NewlC();   </p></li>
+<li><p>        ~CClassName();   </p></li>
+<li><p> private:   </p></li>
+<li><p>        CClassName(); //第一阶段构造   </p></li>
+<li><p>        void ConstructL(); //第二阶段构造   </p></li>
+<li><p>. ……   </p></li>
+<li><p>. }  </p></li>
+</ol>
+
+
+<p>cpp源文件:</p>
+
+<ol>
+<li><p> CClassName* CClassName::NewL()   </p></li>
+<li><p> {   </p></li>
+<li><p>        CClassName* self = CClassName::NewLC();   </p></li>
+<li><p>        CleanupStack::Pop(self);   </p></li>
+<li><p>        return self;   </p></li>
+<li><p> }   </p></li>
+<li><p> CClassName* CClassName::NewLC()   </p></li>
+<li><p> {   </p></li>
+<li><p>        CClassName* self = new (ELeave) CClassName();   </p></li>
+<li><p>.        CleanupStack::PushL(self);   </p></li>
+<li><p>.        self->ConstructL(); //二阶段构造   </p></li>
+<li><p>.        return self;   </p></li>
+<li><p>. }   </p></li>
+<li><p>. void CClassName::ConstructL()   </p></li>
+<li><p>. {   </p></li>
+<li><p>. /<strong><strong><strong><strong><strong><strong>**可能产生异常的代码</strong></strong></strong></strong></strong></strong>/  </p></li>
+<li><p>. }  </p></li>
+</ol>
+
+
+<p><strong>Why Memory Management</strong></p>
+
+<p>    <a href="http://www.sf.org.cn/symbian-os.html">Symbian OS</a>本身就是为<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=2473&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.zfjd.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=802405&amp;k=%E5%86%85%E5%AD%98">内存</a>和<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5143&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=210306&amp;k=%E8%B5%84%E6%BA%90">资源</a>受限的设备开发的，应用<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4744&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cnzz.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=436188&amp;k=%E7%A8%8B%E5%BA%8F">程序</a>运行过程中很可能碰到内存用光，或者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=6038&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.weibo800.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=638529&amp;k=%E7%A1%AC%E4%BB%B6">硬件</a>资源不可用的情况。而这种exceptions是通过修改程序无法解决的，所以遵守以下几条：</p>
+
+<ul>
+<li><p>尽量不要<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5383&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//biyela.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=167752&amp;k=%E4%BD%BF%E7%94%A8">使用</a>不必要的RAM</p></li>
+<li><p>尽早释放资源，如文件server等</p></li>
+<li><p>当你每次申请内存时，都须准备处理out-of-memory错误</p></li>
+<li><p>当 out-of-memory错误发生时，返回到<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5373&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.hongniang.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=378695&amp;k=%E4%B8%80%E4%B8%AA">一个</a>stable的状态，并释放所有期间申请到的资源</p></li>
+</ul>
+
+
+<p><strong> Stack and Heap</strong></p>
+
+<p>    Stack：默认大小8kb，自动删除，如 TInt i = 0;</p>
+
+<p>    Heap ：至少０.5Mb，由程序员手动删除，如 CMyObj* obj = new (ELeave) CMyObj;</p>
+
+<p><strong>Leaves</strong></p>
+
+<p>    首先介绍Conventional C++ Memory Management，在Symbian看来，这是非常低效率的。</p>
+
+<ul>
+<li><p>NULL Pointer Checking  if ((myObj = new CMyObj( ) ) == NULL) { //Error Handling }</p></li>
+<li><p>ANSI C++ Exeption Handling   try { //throw an Exception } catch (int e) { //Error Handling }</p></li>
+</ul>
+
+
+<p>    在Symbian中<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5301&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//bbs.21our.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=465235&amp;k=%E6%8E%A8%E8%8D%90">推荐</a><a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=755&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cntvs.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=260104&amp;k=%E9%87%87%E7%94%A8">采用</a>Leave，如果内存或者资源不能分配到，这个<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4864&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.llf535.com/&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=198436&amp;k=%E4%BB%A3%E7%A0%81">代码</a>就会Leave，沿着Call Stack，直到操作系统或者在某个函数中被Handle掉。</p>
+
+<p>    所有可能Leave的函数最好以L结尾，保证该函数的用户知道这个函数可能Leave。</p>
+
+<p>    Leave的例子：</p>
+
+<ul>
+<li><p>动态内存分配： return new (ELeave) TUint8[1000];</p></li>
+<li><p>产生一个Leave：User::Leave(KErrNotFound);</p></li>
+<li><p>内存不足时Leave：User::LeaveNoMemory();</p></li>
+<li><p>NULL的时候Leave：User::LeaveIfNull(aNotify);</p></li>
+<li><p>当发生错误时Leave：RFs fs; TInt err = fs.Connect(); User::LeaveIfError(err);</p></li>
+</ul>
+
+
+<p>    处理Leave：</p>
+
+<p>    操作系统有默认的处理Leave的方式：</p>
+
+<ul>
+<li><p>在程序启动过程中：直接关闭应用程序。</p></li>
+<li><p>应用程序启动后：显示一个错误消息。</p></li>
+</ul>
+
+
+<p>    开发者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5145&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=858573&amp;k=%E5%8F%AF%E4%BB%A5">可以</a>通过trap装置来处理Leave。TRAP(<em>r, </em>s)和TRAPD(<em>r, </em>s)，其中：</p>
+
+<ul>
+<li><p>_r：是一个TInt类型的leave code，默认值为TErrNone。</p></li>
+<li><p>_s：一系列可能Leave的C++ Statements。</p></li>
+<li><p> TRAPD(err, DoFunctionL());   </p></li>
+<li><p> if (err != KErrNone)   </p></li>
+<li><p>     { //Error Handling }   </p></li>
+<li><p> else  </p></li>
+<li><p>     { //Everything is well }  </p></li>
+</ul>
+
+
+<p><strong>  The Cleanup Stack</strong></p>
+
+<p>    Cleanup stack用于存储在leave发生后需要deallocating的局部变量(指针)。即：当一个函数leave了，所有在cleanup stack上的对象会被全部删除掉。</p>
+
+<p>    Cleanup Stack的使用方法：</p>
+
+<p>CleanupStack::PushL(ptr) ：当发生leave时所有内存都会被释放
+CleanupClosePushL(handle)：当发生leave时这个句柄（handler）会被关闭</p>
+
+<p>CleanupStack::Pop(pointer)：第一个元素出栈
+CleanupStack::PopAndDestroy(pointer)：第一个元素出栈并释放内存</p>
+
+<p>    如果一个函数可能leave，检查一下两种情况：</p>
+
+<ul>
+<li><p>如果leave了，是否所有在堆（heap）上的元素都在cleanup stack中了</p></li>
+<li><p>如果没有leave，你是否自己恰当地将他cleanup了</p></li>
+<li><p> CMyClass* CMyClass::NewL(TInt aBufSize)   </p></li>
+<li><p>    {   </p></li>
+<li><p>    CMyClass* self = new (ELeave) CMyClass;   </p></li>
+<li><p>    CleanupStack::PushL(self);   </p></li>
+<li><p>    self->ConstructL(aBufSize);   </p></li>
+<li><p>    CleanupStack::Pop(self);   </p></li>
+<li><p>    return self;   </p></li>
+<li><p>    }  </p></li>
+</ul>
+
+
+<p>    如果某个函数会在cleanup stack上留下一个对象，那么他必须以C结尾。</p>
+
+<p><strong>Two Phase Construction</strong></p>
+
+<p>    C++构造函数一定不能leave。所有内存和资源的分配应该在第二阶段构造函数ConstructL( )中完成。</p>
+
+<p>编码指南，所有用户定义的C类必须：</p>
+
+<ul>
+<li><p>定义NewL和NewLC函数为public static</p></li>
+<li><p>定义ConstructL和C++ Constructor为private</p></li>
+</ul>
+
+
+<p><strong>Best Practise</strong></p>
+
+<p>     Construction的规则：</p>
+
+<ul>
+<li><p>默认的C++构造函数中不能含有可能leave的代码</p></li>
+<li><p>可能发生leave的函数必须在ConstructL中被调用</p></li>
+<li><p>如果基类也有ConstructL，必须首先调用，不要忘了explicit scoping</p></li>
+</ul>
+
+
+<p>    Destruction的规则：</p>
+
+<ul>
+<li><p>C类必须在析构函数中删除它自己所包含的对象</p></li>
+<li><p>在删除一个对象后，把它的指针设为NULL</p></li>
+<li><p>不要删除不是本类所拥有的对象</p></li>
+<li><p>在reallocation前首先删除对象，并且将其指针设为NULL</p></li>
+</ul>
+
+
+<p>    Further Discussion：</p>
+
+<ul>
+<li><p>Preserve Stack Memory：每个进程只有8K，以引用的方式传递参数，大的对象放在堆上</p></li>
+<li><p>Preallocation vs last moment allocation：一般的原则是只在使用前分配资源并且在使用后马上释放。但是preallocation的好处是节约处理时间，并且在没有内存的情况下照常运行（资源已经分配到了）</p></li>
+<li><p>where to put trap harness：最基本的情况是依靠GUI应用程序的框架。根据应用的不同，可以自定义粒度。</p></li>
+<li><p>Error Code Returns vs. leaving functions：在执行某个处理前检测是否会出现问题，如下代码：</p></li>
+</ul>
+
+
+<p>                                    User::LeaveIfError(fs.Connect());</p>
+
+<p><strong>Memory Leaks</strong></p>
+
+<p>    如果你的程序有内存泄露，在模拟器上关闭时会crash。尽早发现并解决你的内存泄露，因为你可以追查到你可能导致内存泄露的代码改动。如果实在找不到，可用下面方法：</p>
+
+<p>    Heap Balance Checking：</p>
+
+<ul>
+<li><p>_UHEAP_MARK</p></li>
+<li><p>_UHEAP_MARKEND</p></li>
+</ul>
+
+
+<p>    用上述这两个宏放在你要检查的代码的开头和结尾，如果发生panic，则说明这段代码中发生了内存泄露。可以嵌套使用。</p>
+
+<p><strong>Panics </strong></p>
+
+<p>    Panic是一个未经处理的exception，暗示着一个无法解决的错误。</p>
+
+<p>一般程序有以下三类错误：</p>
+
+<ul>
+<li><p>程序错误：如引用一个超过数组范围的元素</p></li>
+<li><p>环境错误：内存、磁盘空间不够，或缺少其他资源等</p></li>
+<li><p>用户错误：输入错误数据</p></li>
+</ul>
+
+
+<p>    可以使用trap和cleanup stack技术来解决环境和用户错误，但是对于第一类的程序错误，我们无法恢复，最好是使用User::Panic()函数，它带有两个参数，第一个是string，第二个是Tint。</p>
+
+<p>内存管理的二十二条军规</p>
+
+<p>1、C类必须有析构函数，这是CBase的一个虚函数。
+2、C类的构造函数和ConstructL()必须为protect或private类型的成员函数
+3、在C class中必须有一个NewLC()函数，除非它是嵌套类。NewL()是可选的，并且总是根据NewLC()来实现。
+4、NewL()和NewLC()在c class中必须是static函数。
+5、C类通过指针和引用来传递。
+6、拷贝构造函数在symbian中没有用。
+7、不要一定在析构函数中删除类的成员对象。（生命期结束即可删除）
+8、析构函数中必须对对象进行if检查。即</p>
+
+<ol>
+<li> if(iObject) delete iObject;iObject = NULL;  </li>
+</ol>
+
+
+<p>9、R类没有明确的构造、析构或拷贝构造函数以及赋值操作。
+10、delete a;a=NULL;a=b;标准重新分配过程。
+11、任何可能导致异常退出的函数皆加L后缀。
+12、不要删除非拥有对象（也就是，那些仅仅只使用的对象）
+13、分配动态数组前定义一个合适粒度。
+14、把new换成new(ELeave).
+15、if(函数不能异常退出&amp;&amp;要自己处理错误时)使用TRAP&amp;&amp;不要过多嵌套。
+16、if(aObject被一个自动变量指针引用&amp;&amp;将进行一个可能在aObject生存期内Leave的操作）
+CleanupStack::PushL(aObject);
+17、决不能把一个i前缀的成员变量PushL入清理栈。
+18、构造函数决不能Leave，把可能异常退出的语句放到ConstructL()中去。
+19、Symbian的默认栈容量为8k，小心使用递归。
+20、TBuf的长度最好不超16，必要的情况下用HBufC代替TBuf.
+21、使用__UHEAP_MAEK 宏来检测你的内存状况。
+22、尽可能早的删除一切失去使用价值的东西，不要等到函数尾部（自动变量）或在析构函数中才删除（成员变量）。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2/">Symbian学习笔记二（字符串）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-01T16:18:15+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/cfdb8e3b00aa7e6fb9998fd9.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/cfdb8e3b00aa7e6fb9998fd9.jpg" alt="" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/a3b3aa30c8e67cb31b4cffa13.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/a3b3aa30c8e67cb31b4cffa13.jpg" alt="" /></a></p>
+
+<ul>
+<li><p>8位：（TDesC8），用于二进制数据或者ASCII字符串</p></li>
+<li><p>16位：（TDesC16），默认，Unicode</p></li>
+</ul>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/32.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/32.jpg" alt="" /></a></p>
+
+<p>描述符可以分为五类：</p>
+
+<ol>
+<li><p> 抽象类（Abstract）：（TDes、TDesC、Tdes8、TdesC8），其他描述符的基类，仅提供接口和基本功能，不能被实例化，一般只用作函数的参数。</p></li>
+<li><p>  文字常量（Literal）：（TlitC、<em>LIT()），用于存储文字字符串（literal string），即C中字符串常量，通常使用</em>LIT()这种方式（当然还有<em>L()和</em>L8()的描述方式，但都不提倡用）。</p></li>
+<li><p>  栈类（Buffer）：（Tbuf、TbufC、 Tbuf8、TbufC8），数据存储于栈上，最基本的描述符变量类型，大小在编译时确定，包含描述符本身数据，使用最为普遍</p></li>
+<li><p> 堆类（Heap）：（HbufC、HbufC8），数据存储于堆上，大小在运行时确定，也就是是用来处理动态申请的描述符类。</p></li>
+<li><p> 指针类（Pointer）：（TPtr、TPtrC、TPtr8、TPtrC8），本身不包含描述符数据，但是包含长度数据，而且还包含一个指向位于描述符之外数据的指针。</p></li>
+</ol>
+
+
+<p>1、  文字描述符常量</p>
+
+<ol>
+<li> LIT(KMyFile, &#8221;c:\System\Apps\MyApp\MyFile.jpg&#8221;);  </li>
+</ol>
+
+
+<p><em>L()可以生成一个指向字符值的地址（TPtrC），它经常被用来传递字符串到函数中（包括描述符的构造函数和格式化函数）；同理</em>L8()则可以生成一个指向二进制数据的地址（TPtrC8）举例如下：</p>
+
+<ol>
+<li><p> NEikonEnvironment::MessageBox(_L(&ldquo;Error: init file not found!&rdquo;));   </p></li>
+<li><p> //数字转字符串   </p></li>
+<li><p> TBuf16<20> buf;   </p></li>
+<li><p> TInt iNum = 20;   </p></li>
+<li><p> buf.Format( _L( &#8221;%d&#8221; ) , iNum  );  </p></li>
+</ol>
+
+
+<p>2、  栈描述符</p>
+
+<ol>
+<li><p> LIT(Ktext , &#8221;Test Text&#8221;);   </p></li>
+<li><p> _LIT(Ktext1 , &#8221;Test1 Text&#8221;);   </p></li>
+<li><p> _LIT(KXtraText , &#8221;New:&ldquo;);   </p></li>
+<li><p> _LIT(NewText , &#8221;New1&#8221;);   </p></li>
+<li><p> _LIT(NewText1 , &#8221;New2&#8221;);   </p></li>
+<li><p> TBufC<10> Buf1 ( Ktext );//Buf1长度为9 内容 “Test Text”   </p></li>
+<li><p> TBufC<10> Buf2 ( Ktext1 );//Buf2长度为10 内容 “Test1 Text”   </p></li>
+<li><p> // 通过赋值的方式改变数据   </p></li>
+<li><p> Buf2 = Buf1; //Buf2长度变为9 内容 “Test Text”   </p></li>
+<li><p>. //通过使用Des()生成指针改变TBufC的数据   </p></li>
+<li><p>. TPtr Pointer = Buf1.Des();   </p></li>
+<li><p>. // 删除后四个字符   </p></li>
+<li><p>. Pointer.Delete(Pointer.Length()-4, 4 ); //Buf1长度变为5 内容“Test ”//但是内存应该没变   </p></li>
+<li><p>. // 增加新的数据   </p></li>
+<li><p>. Pointer.Append(KXtraText);//Buf1长度为9 内容为“Test New：”   </p></li>
+<li><p>. // 也可以使用下列方式改变数据   </p></li>
+<li><p>. TBufC<10> Buf3(NewText);   </p></li>
+<li><p>. Pointer.Copy(Buf3);//Buf1长度为4，内容为New1   </p></li>
+<li><p>. // 或直接从字符串里获得数据   </p></li>
+<li><p>. Pointer.Copy(NewText1);//Buf1长度为4，内容为New2  </p></li>
+</ol>
+
+
+<p>    以上介绍的是不可修改的栈描述符，而可修改的描述符就不用通过那么复杂的方法来实现修改，它直接可以用Copy、Delete等方法，但是无论可修改的还是不可修改的，一旦指定最大的数据长度后，最大长度就不能进行修改了。</p>
+
+<p>在内存中如下所示:</p>
+
+<ol>
+<li> TBuf<16> helloWorld = KHelloWorld; TInt len = KHelloWorld().Length(); helloWorld[len-1]=&lsquo;?&rsquo;;  </li>
+</ol>
+
+
+<p>TBufC的用法如下：</p>
+
+<ol>
+<li> _LIT(KHelloWorld, &#8221;Hello World&#8221;); const TInt maxBuf = 32; TBufCbuf; TInt currentLen = buf.Length(); // == 0 buf = KHelloWorld; currentLen = buf.Length(); // == 11 TText ch = buf[2]; // == &#8217;l&#8217;  </li>
+</ol>
+
+
+<p> TBuf的用法如下：</p>
+
+<ol>
+<li> const TInt bufLen = 6; TUInt8 objType = 1; TUInt8 objId = 1; TUInt8 xCoord = 128; TUInt8 yCoord = 192; &hellip;. TBuf8<bufLen> buf; buf.Append(objType); buf.Append(objId); &hellip; //we can now do something with the buffer such as writting it to a binary file or send via socket.  </li>
+</ol>
+
+
+<p>3、  堆描述符</p>
+
+<p>堆描述符虽然都是不可修改类型的，但是它仍然具有构造和修改，与栈描述符不同的是：首先对内存需要显示释放，其次是堆描述符没有最大长度的限制，任何时候都可以用ReAlloc（）函数重新申请分配。具体见示例：</p>
+
+<ol>
+<li><p> //例1、构造   </p></li>
+<li><p> //有两种方式来生成一个Heap Descriptor   </p></li>
+<li><p> //第一种方式用New(),NewL(),或NewLC()   </p></li>
+<li><p> //如下操作便可以构建一个存放数据的空间，空间为15，不过目前大小为0   </p></li>
+<li><p> HBufC * Buf = HBufC::NewL(15);   </p></li>
+<li><p> //第二种方式是采用Alloc()，AllocL()或AllcLC()来处理，   </p></li>
+<li><p> //不过这是已经存在的数据的管理方式。新的Heap Descriptor   </p></li>
+<li><p> //可以自动的根据这个内容来构造。   </p></li>
+<li><p> _LIT (KText , &#8221;Test Text&#8221;);   </p></li>
+<li><p>. TBufC<10>  CBuf = KText;   </p></li>
+<li><p>. HBufC * Buf1 = CBuf.AllocL();   </p></li>
+<li><p>. CleanupStack::PushL(Buf1);   </p></li>
+<li><p>. //例2、修改   </p></li>
+<li><p>. //下面是通过赋值方式改变其数据的方法   </p></li>
+<li><p>. _LIT ( KText1 , &#8221;Text1&#8221;);   </p></li>
+<li><p>. *Buf1 = KText1;   </p></li>
+<li><p>. // 通过可修改指针来改变数据的方式   </p></li>
+<li><p>. TPtr Pointer = Buf1->Des();   </p></li>
+<li><p>. //添加数据   </p></li>
+<li><p>. Pointer.Delete(Pointer.Length() - 2, 2);   </p></li>
+<li><p>. //删除数据   </p></li>
+<li><p>. _LIT ( KNew, &#8221;New:&ldquo;);   </p></li>
+<li><p>. Pointer.Append(KNew);   </p></li>
+<li><p>. //例3、重新申请内存   </p></li>
+<li><p>. Buf1 = Buf1->ReAllocL(KText().Length() + KNew().Length());   </p></li>
+<li><p>. CleanupStack::PushL(Buf1);   </p></li>
+<li><p>. //例4、释放内存   </p></li>
+<li><p>. //直接用delete   </p></li>
+<li><p>. delete Buf;   </p></li>
+<li><p>. Buf = NULL;   </p></li>
+<li><p>. //如果在使用NewL、ReAllocL等异常函数后我们使用清除栈压入的话   </p></li>
+<li><p>. //那么我们也可以用清除栈来释放内存   </p></li>
+<li><p>. CleanupStack::PopAndDestroy();   </p></li>
+<li><p>. Buf1 = NULL;  </p></li>
+</ol>
+
+
+<p>注：关于以上用清除栈的方式，个人只是猜测，因为对Symbian的异常处理三部曲，至今仍没有很好的掌握，所以如果有什么误用还望指点。</p>
+
+<ol>
+<li> HBufC<em> heapBuf = HBufC::NewL(KHelloWorld().Length()); </em>heapBuf = KHelloWorld(); delete heapBuf;  </li>
+</ol>
+
+
+<p>     在内存中的情况如下图所示：</p>
+
+<p>    HBufC通常在以下几种情况下使用：</p>
+
+<ul>
+<li><p> 在运行时从资源文件中加载字符串</p></li>
+<li><p> 从用户界面中接收用户输入的字符串</p></li>
+<li><p>从应用程序引擎中接收字符串，如contacts database中的名字</p></li>
+</ul>
+
+
+<p>     对HBufC中的内容进行修改：</p>
+
+<ol>
+<li> HBufC<em> heapBuf = HBufC::NewL(KHelloWorld().Length()); </em>heapBuf = KHelloWorld(); delete heapBuf;  </li>
+</ol>
+
+
+<p>4、  指针描述符</p>
+
+<ol>
+<li><p> //例1、用TBuf和TBufC构造出TPtrC对象   </p></li>
+<li><p> _LIT(KText , &#8221;Test Code&#8221;);   </p></li>
+<li><p> TBufC<10> Buf ( KText );   </p></li>
+<li><p> //或者为 TBuf<10> Buf ( KText );   </p></li>
+<li><p> // Creation of TPtrC using Constructor   </p></li>
+<li><p> TPtrC  Ptr (Buf);   </p></li>
+<li><p> // Creation of TPtrC using Member Function   </p></li>
+<li><p> TPtrC     Ptr1;   </p></li>
+<li><p> Ptr1.Set(Buf);   </p></li>
+<li><p>. //例2、用TText*构造TPtrC   </p></li>
+<li><p>. const TText* text = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
+<li><p>. TPtrC ptr(text);   </p></li>
+<li><p>. // 或者   </p></li>
+<li><p>. TPtrC Ptr2;   </p></li>
+<li><p>. Ptr2.Set(text);   </p></li>
+<li><p>. //如果要存储TText的一部分数据，我们使用下列方法   </p></li>
+<li><p>. TPtrC   ptr4(text, 5);   </p></li>
+<li><p>. //例3、从另一个TPtrC中构造TPtrC   </p></li>
+<li><p>. const TText * text1 = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
+<li><p>. TPtrC Ptr3(text1);   </p></li>
+<li><p>. // 从一个TPtrC中获得另一个TPtrC   </p></li>
+<li><p>. TPtrC p1(Ptr3);   </p></li>
+<li><p>. // 或   </p></li>
+<li><p>. TPtrC p2;   </p></li>
+<li><p>. p2.Set(Ptr3);  </p></li>
+</ol>
+
+
+<p>以上是不可修改的TPtrC的构造，相对应的也有可修改的TPtr的构造，不过我们下面省略了用Set()函数的构造方法</p>
+
+<ol>
+<li><p>  //例1、通过TBufC,HBufC的Des()方法获取   </p></li>
+<li><p> _LIT(KText, &#8221;Test Data&#8221;);   </p></li>
+<li><p> TBufC<10> NBuf ( KText );   </p></li>
+<li><p> TPtr Pointer = NBuf.Des();   </p></li>
+<li><p> //例2、通过指定内存区域和大小来生成   </p></li>
+<li><p> const TText * Text = _S(&ldquo;Test Second&rdquo;);   </p></li>
+<li><p> TPtr Pointer1((TText*)Text, 11, 12);   </p></li>
+<li><p> //例3、 通过另一个TPtr对象来生成   </p></li>
+<li><p> TPtr Pointer2 ( Pointer );  </p></li>
+</ol>
+
+
+<p>对于可修改的TPtr虽然前面用过，但是我们在这里在简单的添加两个例子加深下印象，并且说明指针修改的始终是它指向的描述符：</p>
+
+<ol>
+<li><p> //例1、改变已有TPtr数据的方式：赋值和Copy()方法   </p></li>
+<li><p> _LIT(KText, &#8221;Test Data&#8221;);   </p></li>
+<li><p> _LIT(K1, &#8221;Text1&#8221;);   </p></li>
+<li><p> _LIT(K2, &#8221;Text2&#8221;);   </p></li>
+<li><p> TBufC<10> NBuf ( KText );//NBuf内容为“Test Data”   </p></li>
+<li><p> TPtr Pointer = NBuf.Des(); //Pointer指向NBuf的内容   </p></li>
+<li><p> Pointer = K1; // NBuf内容为“Text1”   </p></li>
+<li><p> Pointer.Copy(K2); // NBuf内容为“Text2”   </p></li>
+<li><p> //例2、直接通过修改长度改变数据内容   </p></li>
+<li><p>. Pointer.SetLength(2); // NBuf内容为&#8221;Te&#8221; 注：实际内存的内容应该没变   </p></li>
+<li><p>. const unsigned char KBuffer[ ] = {0x00, 0x33, 0x66, 0x99, 0xbb, 0xff}; TPtrC8 bufferPtr( KBuffer, sizeof(KBuffer)); iSocket.Write(bufferPtr, iStatus);  </p></li>
+</ol>
+
+
+<p>在内存中如下所示：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/4.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/4.jpg" alt="" /></a></p>
+
+<p>TPtr的用法：</p>
+
+<ol>
+<li> _LIT(KHelloWorld, &#8221;Hello World&#8221;); const TInt maxBuf = 32; TBufC<maxBuf> buf; buf = KHelloWorld; TPtr ptr = buf.Des(); ptr[7] = &#8217;a&#8217;;  ptr[8] = &#8217;l&#8217;;  ptr[9] = &#8217;e&#8217;;  ptr[10] = &rsquo;s&#8217;; CEikonEnv::Static()&ndash;>InfoMsg(ptr); // &#8221;Hello Wales&#8221;  </li>
+</ol>
+
+
+<p>5、  抽象描述符</p>
+
+<p>抽象描述符，没有什么好说的，正如前面所说，只用在函数的形参中，通常要强调参数是不可修改的，就用const TDesC&amp;表示，可修改的参数用TDesC&amp;表示。</p>
+
+<ul>
+<li><p>在函数参数中尽量使用基类</p></li>
+<li><p>使用中性的描述符，一般情况下使用TDesC而不是TDesC8或者TDesC16</p></li>
+<li><p>当描述符内容不应该改变时，使用const修饰符</p></li>
+<li><p>经典用法：void SetText(const TDesC&amp; aText);    TPtrC Text() const;</p></li>
+</ul>
+
+
+<p>描述符之间的转换</p>
+
+<p><strong>不可修改向可修改描述符的转换</strong></p>
+
+<p>原则1：通过不可修改描述符类内的Des()函数，将不可修改的描述符转换成可修改的指针描述符</p>
+
+<p>示例1：TBufC转换成TPtr</p>
+
+<ol>
+<li><p> _LIT(KText, &#8221;Test Data&#8221;);   </p></li>
+<li><p> TBufC<10> NBuf ( KText );   </p></li>
+<li><p> TPtr Pointer = NBuf.Des();  </p></li>
+</ol>
+
+
+<p>示例2：HBufC转换成TPtr</p>
+
+<ol>
+<li><p> HBufC * Buf = HBufC::NewL(15);   </p></li>
+<li><p> _LIT (KText , &#8221;Test Text&#8221;);   </p></li>
+<li><p> *Buf = KText;   </p></li>
+<li><p> TPtr Pointer = Buf->Des();  </p></li>
+</ol>
+
+
+<p>原则2：通过TPtr的构造函数或Set()函数可以将TPtrC描述转换为可修改的指针描述符</p>
+
+<p>示例3：TPtrC到TPtr</p>
+
+<ol>
+<li><p> const TText * text1 = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
+<li><p> TPtrC Ptr1(text1);   </p></li>
+<li><p> TPtrC Ptr2(Ptr1);   </p></li>
+<li><p> //可以通过构造函数   </p></li>
+<li><p> TPtr Ptr3((TUint16 *)(Ptr1.Ptr()), Ptr1.Length());   </p></li>
+<li><p> //也可以通过Set()函数   </p></li>
+<li><p> Ptr3.Set((TUint16 *)(Ptr1.Ptr()),Ptr1.Length(), Ptr1.Length());  </p></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89/">Symbian学习笔记一（基本数据类型及命名规范）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-27T11:16:17+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><strong>基本数据类型</strong></p>
+
+<p> 在Symbian中，很多C++基本类型都被重新定义了，最好使用Symbian的，理由如下：</p>
+
+<ul>
+<li><p>所有Symbian API都是用的Symbianc重定义的</p></li>
+<li><p>将来Symbian OS由32位转为64位时，支持性更好</p></li>
+<li><p>这本身就是Symbian C++ Coding Standards所要求的</p></li>
+</ul>
+
+
+<p><strong>1.  Integers</strong></p>
+
+<p>    typedef signed int TInt;  C++中的signed int，32位，基本用法类似。</p>
+
+<p>    typedef unsigned int TUint;  一般用于计数器(Counter)或者标记(Flags)。</p>
+
+<p>    其他Int类型：TInt64， TInt32， TInt16，TInt8； 同时有一份TUint的版本。</p>
+
+<p><strong>2. Text</strong></p>
+
+<p> text类型在Symbian编程中基本不用，而一般采用描述符（descriptor）。TText默认是16位的。</p>
+
+<p><strong>3. Boolean </strong></p>
+
+<p>    typedef int TBool;有两个枚举值：ETrue和EFalse。TBool变量最好不要直接和ETure和EFalse比较。如下：</p>
+
+<p>TBool flag = ETrue;
+if (flag)  // if (!flag)
+{
+flag = EFalse;
+}</p>
+
+<p><strong>4.  Floating Point</strong></p>
+
+<p>    对浮点数的支持视处理器而定，如果没有FPU，效率非常低，所以最好是不要用浮点数。如果一定要用，尽量转化为整数操作。
+typedef float TReal32;  typedef double TReal64; typedef double TReal;</p>
+
+<p><strong>5. TAny</strong></p>
+
+<p>    typedef void TAny;</p>
+
+<p>    TAny一般只用作指针，其他情况下用void比较好。</p>
+
+<p>    TAny* MyFunction();     void MyOtherFn();</p>
+
+<p>    TAny* 在很多Symbian API中都用到了，如：</p>
+
+<p>    static TUint8<em> Copy( TAny</em> aTrg, const TAny* aSrc, TInt aLength);</p>
+
+<p><strong>5. Enumerations</strong></p>
+
+<p>enum TState {EOff, Eon, EInit};</p>
+
+<p>Enumeration类型应该以T开头，而枚举值应该以E开头。</p>
+
+<p>TState  state = GetState();
+if (state == EOn)
+{
+//Do something here
+}</p>
+
+<p><strong>命名规范</strong></p>
+
+<p>    <em>T类</em>：只包含值，而不包含指针以及外部的资源，在栈上分配空间。</p>
+
+<p>                TVersion osVersion = User::Version();</p>
+
+<p>    <em>C类</em>：所有需要分配内存的类都必须从CBase继承并且以C开头。</p>
+
+<p>class CExample : public CBase
+{
+private:
+CDesCArrayFlat* iArray;
+}</p>
+
+<p>CExample* example = new (ELeave) CExample;</p>
+
+<p>    <em>R类</em>：包含指向某个资源的handler。</p>
+
+<p>                RTimer timer;
+timer.CreateLocal();</p>
+
+<p>    <em>M类</em>：定义一个接口，一般只包含纯虚函数，不包含成员数据，减少类之间的依赖，用来接受回调消息。</p>
+
+<p>class MEikStatusPaneObserver
+{
+public:
+virtual void HandleStatusPaneSizeChange() = 0;
+}</p>
+
+<p>任何实现MEikStatusPaneObserver接口的类都必须实现HandleStatusPaneSizeChange()函数。</p>
+
+<p><strong>1. 变量命名规范</strong></p>
+
+<ul>
+<li><p>    成员变量以“i”开头</p></li>
+<li><p>    参数以“a”开头</p></li>
+<li><p>    动态变量随便，以小写字母开头</p></li>
+<li><p>    常量以“K”开头</p></li>
+<li><p>    尽量不要使用全局变量，不能使用全局静态变量。</p></li>
+</ul>
+
+
+<p><strong>2. 函数命名规范</strong></p>
+
+<ul>
+<li><p>    函数以大写字母开头，如AddFileNameL();</p></li>
+<li><p>    以D结尾表示deletion of an object</p></li>
+<li><p>    以L结尾表示函数可能leave</p></li>
+<li><p>    以C结尾表示一个item被放到cleanup stack</p></li>
+</ul>
+
+
+<p><strong>Casting</strong></p>
+
+<p>    Casting用于在类（classes）和类型（types）之间作转化，Symbian中仍然可以使用C中语法。</p>
+
+<p>    dynamic_cast：不支持，Symbian中没有RTTI。</p>
+
+<p>    static_cast：把一个基类转化为一个继承类。</p>
+
+<p>                   TInt intValue = 0xff;
+TUint8 byteValue = static_cast<TUint8>(intValue);</p>
+
+<p>    reinterpret_cast：把一个指针类型转化为另外一个指针类型，如integer转化为point类型或者相反。</p>
+
+<p>                   TUint32 fourBytes = 0;
+TUint8<em> bytePtr = reinterpret_cast&lt;TUint8</em>> (&amp;fourBytes);
+bytePtr++;
+*bytePtr = 0xFF;</p>
+
+<p>    const_cast：移除一个类的const属性。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e7949fe6b4bbe59ca8e588abe5a484/">生活在别处</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:59:39+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>来上海已经有一个多月了。</p>
+
+<ol>
+<li><p> 很早以前有个日本作家来上海“放荡形骸”了一番，回岛国后写了本叫《魔都》的书，记录了那段时间在上海的各种腐败体验。于是现在上海不情不愿地被冠以了“魔都”的称号。相对于魔都上海，我们还有帝都北京、妖都广州。我居住过的另一座城市南京也有个叫魔都的称号，所以一般称南京为小魔都，上海为大魔都。而无锡又不情不愿地被称为“小上海”，所以我从无锡滚到南京，再从南京滚到上海，就是从小小魔都滚到小魔都再滚到大魔都的过程。</p></li>
+<li><p> 网上流传着一篇很长的叫《魔都生存指南》的东西。作为一个标准吃货的作者，花了百分之四十的篇幅介绍了上海的公厕、语言、建筑、交通、气候、治安、休闲、购物等方面，剩下百分之六十的文字都用来介绍各种边边脚脚的腐败去处。作为一名偏居魔都东部小镇的IT民工兼吃货，只能含泪将网页收下，放入“以后再看”的文件夹中。有个地方我倒是天天可以经过，可以去试试：</p></li>
+</ol>
+
+
+<blockquote><p>魔都生存指南：张江地铁站美食点评特别篇&mdash;好吃的芝士蛋糕和面包“毂屋”其实真不需要多介绍了网上对他家的芝士蛋糕好评太多了，中午的意面或者三明治套餐也非常棒。特别推荐袋包装的野生酵母面包，发的不是很蓬松特别好吃，下班顺便带一袋回去吧</p>
+
+<p>魔都生存指南：张江地铁站美食点评特别篇&mdash;地道的台湾小炒“龙门客栈”算是地铁站里比较精致的一家饭店了，比费尼阁要好吃不知道多少，基本上在张江中餐也就百草的味道可以和他比一比了，但是价格就划算大多了。我特别推荐一个菜单上没有的&mdash;九层塔菜圃蛋</p></blockquote>
+
+<ol>
+<li><p> 我住的那地方和生存指南没什么关系。周围有跟你同样的一大群人，和你揣同样的梦想，同样的早起，去同一个包子铺买肉包，挤同一辆公车，盯着同一个漂亮姑娘看，脸上都写着牛逼或装逼，流同样多的汗，进满是IT民工的企业，对着同样尺寸的显示屏，吃同样价格的便当，加同样时间的班。偶尔会坐地铁去趟城里或回趟家，偶尔错过了最末班公车跟人拼车打的或坐小黑车，偶尔去小饭馆腐败下，偶尔自己买三两小菜小试牛刀。这里不需要什么生存指南，生活在这里，就好像是你站在原地不动，人群也会带着你去买包子挤公交上班，而你如果稍不留神的话，会发现，咦，自己又满身臭汗地回到家了。人群会指着你一路向南的。</p></li>
+<li><p> 说到生活，其实我想说“生活在拉稀，而我在便秘”。用这两个吸引眼球的词语无他意，只是想说生活节奏有点快，我有些不适应，思维有些阻塞。也许原来在南京懒散惯了，享受惯了上班只要走五分钟的轻松，可以打一天酱油毫无愧疚感的惬意。其实现在这样真是好事，要学游泳还是要去深水区学，在儿童区打打闹闹是学不会的。王朔的小说《橡皮人》描述过这样一群在都市生活的年轻人，他们如同工艺品，“被高高在上的观赏者轮流捏拿玩弄，被生活的泥匠用压力捏成各种形态”。我想我是不会成为橡皮人的，要做就做弹簧人。</p></li>
+<li><p> 如果每个人都是在自己的那条船上漂，如果那些点点滴滴的小事那些说过的云飞雪落不经意却记得的话是海上的风，那么一个人不属于平静的情绪便是由风吹起的浪花了。如果浪涛的拍打让坐船的你左右摇摆翻江倒海，如果你架起双桨劈风斩浪，如果你足够幸运很快迎来风平浪静，你拍拍胸脯骄傲地说，也就这样嘛。这时候你转过身发现，自己早就不在原来的地方，那些风和那些景一去不复返。然后你笑了，站在船头高唱“两岸猿声啼不住，轻舟已过万重山”。唱完，然后你泪流满面。</p></li>
+<li><p> 一个人一生到底会有百分之多少的时间花在路上。去学院自习室的路上，去厕所的路上，去汇杰广场的路上，去张江高科地铁站的路上，去喜欢的姑娘楼下的路上，去火车站北广场的路上，去玉兰四期家乐福买烤鸡的路上，去孟猪家蹭饭的路上，去茶水间泡杯饮料的路上，去超市买柠檬的路上，去邮局拿家里寄过来的被子的路上。知道了这个比例，我估计自己会蛋疼菊紧发誓珍惜时间云云。可是人活着并不是目的而是个过程，在路上也是属于这个过程的一部分，而不仅仅是为了达到一个目的。身体在赶路，脑子不一定要跟着赶路。</p></li>
+<li><p> 我想成为什么样的人。人傻，钱多，很多很多的钱。和人讨论PS3, iPhone, iPad, iMac, Wii, 蓝光，背投，机械鼠标，概念鼠标，GFW，宽带山。穿大裤衩人字拖，读GReader南方周末上推特，去哪都扛个iPad N代。征婚时介绍：人傻，钱多，速来。</p></li>
+<li><p> 毕业之前我想我会一个人出去旅行一次。要去就去远一点的地方，问谁借个单反装下样子，抓个破一点的包，要是iPad 2已经出了，买了塞包里，再塞两件衣服。多走路，多看，多拍，多吃。想想就来感。</p></li>
+<li><p> 没想到米兰昆德拉30多年前就帮我拟好了文章的题目。拿来一用，倒也切合现在的生活。现在是生活在别处，我希望将来能够变成生活在别墅。等到风景都看透，也许会最后回去看看细水长流。</p></li>
+</ol>
+
+
+<p>　　胸中那可爱的洪水猛兽们，拿早点醒过来好伐啦~</p>
+
+<p>　　<a href="mailto:njuxjy@2010.08">njuxjy@2010.08</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e794b5e99da2e58786e5a487/">电面准备</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:53:12+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>电面过很多次，无外乎问这么几块内容：英语自我介绍、英语介绍项目、项目相关、实习经历、技术问题。项目经历和实习经历说过无数遍了，不需要特别准备了，除非做更多的大项目，否则把现有的那些不起眼的小项目说得再熟也加不了多少分。技术问题面太广，且各公司重点都不一样，因此只能靠平时积累，不过关于设计模式的东西有的公司喜欢问，并且这玩意就那么点东西，所以这个可以准备下。所以下面写的东西我打算打印出来放身边，以便电面时参考。包括英文自我介绍、英文项目介绍和设计模式。</p>
+
+<p>====================================================================</p>
+
+<p><strong>英文自我介绍<br/>
+</strong>My name is Xiaojiayi. I’m now a graduate student in my first year in Software Institute, Nanjing University for my master’s degree. My major is software engineering. I got my bachelor’s degree also in software institute, Nanjing University in July, 2009. I have strong interest in c++ now, and I wanna devote myself to the development of c++ applications. In my spare time, I like basketball, reading and blogging. Ok, that’s all.</p>
+
+<p><strong>英文项目介绍<br/>
+</strong><strong>1) Android Exam Review System<br/>
+</strong>I’ll say something about the Android exam review system. The system is designed for those who want to do tests on their mobile phones at any time and anywhere. The test type includes GRE, TOFEL, IELTS and so on. Function modules of the system include practice mode, test mode, error problem mode, and history analysis. I got familiar with the development of the Android machine man interaction application through this project. <strong>2) Movie Tickets Booking System Based on Java Web<br/>
+</strong>I’ll say something about the Movie Tickets Booking System Based on Java Web. The project is completed on my own as my graduation project, which took me several months to finish it. It’s used for demo only without any commercial value. Function modules of the system include booking tickets online, browsing film information, back-stage management and so on. It is developed by Ajax, integrated with Struts framework and Hibernate framework. Through this project I got familiar with the developing process of J2EE applications.</p>
+
+<p><strong>设计模式</strong></p>
+
+<p><em>1. __简单工厂模式</em></p>
+
+<p>一个Simple Factory生产成品，而对客户端隐藏产品产生的细节。实作时定义一个产品介面，并透过特定静态方法来建立成品</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image002.jpg" alt="clip_image002" /></p>
+
+<p><em>2. __抽象工厂模式</em></p>
+
+<p>将具体的Product封装在具体Factory实现中，而客户仍只要面对Factory与Product的抽象介面，避免依赖于具 体的Factory与Product，由于Factory封装了所必须的Product，所以要更换掉所有的元件，只要简单的抽换掉Factory就可以了，不用修改客户端的代码</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image004.jpg" alt="clip_image004" /></p>
+
+<p>如果要更换所有的视感元件，就只要抽象掉具体的Factory就可以了，例如：</p>
+
+<p>CustomDialog windowsDialog =<br/>
+new CustomDialog(new WindowsWidgetFactory());<br/>
+windowsDialog.showDialog();<br/>
+CustomDialog macDialog =<br/>
+new CustomDialog(new MacWidgetFactory());<br/>
+macDialog.showDialog();</p>
+
+<p>在CustomDialog类中保存IButton和ITextField两个引用，在其构造函数中调用setWidgetFactory函数：</p>
+
+<p>public void setWidgetFactory(IWidgetFactory widgetFactory) {<br/>
+setButton(widgetFactory.getButton());<br/>
+setTextField(widgetFactory.getTextField());<br/>
+}</p>
+
+<p><em>3. __工厂方法模式</em></p>
+
+<p>在一个抽象类中留下某个创建元件的抽象方法没有实现，其它与元件操作相关联的方法都先依赖于元件所定义的接口，而不是依赖于元件的实现，当成品中有一个或多个元件无法确定时，您先确定与这些元件的接口，然后用元件的抽象接口先完成其它的工作，元件的实现则推迟至实现元件接口的子类完成，一旦元件加入，即可完成您的成品。</p>
+
+<p>假设要完成一个文件编辑器，希望这个编辑器可以适用于所有类型的档案编辑，例如RTF、DOC、TXT等等，尽管这些文件有着不同的格式，先确定的是这些文件必然具备的一些接口，例如储存、开启、关闭等等，您用一个IDocument类型来进行操作，这么一来这个框架就无需考虑实 际的储存、开启等细节是如何进行的。</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image006.jpg" alt="clip_image006" /></p>
+
+<pre><code>public void newDocument() { &lt;br&gt;         document = createDocument(); &lt;br&gt;         document.open();&lt;br&gt;     }&lt;br&gt;     public void saveDocument() { &lt;br&gt;         if(document != null) &lt;br&gt;             document.save(); &lt;br&gt;     }
+</code></pre>
+
+<p><em>4. __单件模式</em></p>
+
+<p>public class Singleton {<br/>
+private static Singleton instance = new Singleton();<br/>
+private Singleton() {<br/>
+// &hellip;.<br/>
+}<br/>
+public static Singleton getInstance() {<br/>
+return instance;<br/>
+}<br/>
+} //可以避免多线程问题</p>
+
+<p><em>5. __组合模式</em></p>
+
+<p>将对象表示成树形结构来表示整体-部分的层次结构，使得用户对单个对象和组合对象的处理具有一致性。</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image008.jpg" alt="clip_image008" /></p>
+
+<p><em>6. __装饰者模式</em></p>
+
+<p>动态地给一个对象增加一些额外的职责。</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image009.jpg" alt="clip_image009" /></p>
+
+<p><strong>public abstract class Decorator extends VisualComponent {</strong><strong><br/>
+protected VisualComponent component;<br/>
+public Decorator(VisualComponent component) {<br/>
+this.component = component;<br/>
+}<br/>
+public void draw() {<br/>
+component.draw();<br/>
+}<br/>
+}<br/>
+public class ScrollDecorator extends Decorator {<br/>
+public ScrollDecorator(VisualComponent component) {<br/>
+super(component);<br/>
+}<br/>
+public void draw() {<br/>
+super.draw();<br/>
+scrollTo();<br/>
+}<br/>
+public void scrollTo() {<br/>
+// &hellip;.<br/>
+}<br/>
+}</strong></p>
+
+<p><strong>ScrollDecorator scrollDecorator =</strong><strong> </strong><strong><br/>
+new ScrollDecorator(new TextView());</strong></p>
+
+<p><em>7. __策略模式</em></p>
+
+<p>定义一系列的算法，把它们一个个封装起来，并使它们可互相替换，使算法可以独立于使用它的客户而变化。</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image010.jpg" alt="clip_image010" /></p>
+
+<pre><code>public abstract class TextStrategy { &lt;br&gt;     protected String text;&lt;br&gt;     public TextStrategy(String text) { &lt;br&gt;         this.text = text; &lt;br&gt;     }&lt;br&gt;     public abstract String replace(); &lt;br&gt;
+} 
+
+public class LinuxStrategy extends TextStrategy { &lt;br&gt;     public LinuxStrategy(String text) { &lt;br&gt;         super(text); &lt;br&gt;     }&lt;br&gt;     public String replace() { &lt;br&gt;         preOperation(); &lt;br&gt;         System.out.println(&lt;br&gt;              text = text.replaceAll("@r@n", "@n")); &lt;br&gt;         postOperation(); &lt;br&gt;         return text; &lt;br&gt;     }&lt;br&gt;     private void preOperation() { &lt;br&gt;         System.out.println("LinuxStrategy preOperation"); &lt;br&gt;     }&lt;br&gt;     private void postOperation() { &lt;br&gt;         System.out.println("LinuxStrategy postOperation"); &lt;br&gt;     } &lt;br&gt;
+} 
+
+public class TextCharChange { &lt;br&gt;     public static void replace(TextStrategy strategy) { &lt;br&gt;         strategy.replace(); &lt;br&gt;     } &lt;br&gt;
+}
+</code></pre>
+
+<p><em>8. __命令模式</em></p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image012.gif" alt="clip_image012" /></p>
+
+<ol>
+<li><p><strong>public</strong> <strong>class</strong> Invoker {</p></li>
+<li><p><strong>private</strong> Command command;</p></li>
+<li><p><strong>public</strong> <strong>void</strong> setOrder(Command command) {</p></li>
+<li><p><strong>this</strong>.command = command;</p></li>
+<li><p>}</p></li>
+<li><p><strong>public</strong> <strong>void</strong> ExecuteCommand() {</p></li>
+<li><p>command.ExecuteCommand();</p></li>
+<li><p>}</p></li>
+<li><p>}</p></li>
+<li><p><strong>public</strong> <strong>abstract</strong> <strong>class</strong> Command {</p></li>
+<li><p><strong>protected</strong> Receiver receiver;</p></li>
+<li><p><strong>public</strong> Command(Receiver receiver){</p></li>
+<li><p><strong>this</strong>.receiver = receiver;</p></li>
+<li><p>}</p></li>
+<li><p><strong>public</strong> <strong>abstract</strong> <strong>void</strong> ExecuteCommand();</p></li>
+<li><p>}</p></li>
+<li><p><strong>public</strong> <strong>class</strong> ConcreteCommand <strong>extends</strong> Command {</p></li>
+<li><p><strong>public</strong> ConcreteCommand(Receiver receiver){</p></li>
+<li><p><strong>super</strong>(receiver);</p></li>
+<li><p>}</p></li>
+<li><p>@Override</p></li>
+<li><p><strong>public</strong> <strong>void</strong> ExecuteCommand() {</p></li>
+<li><p>receiver.Execute();</p></li>
+<li><p>}</p></li>
+<li><p>}</p></li>
+<li><p><strong>public</strong> <strong>class</strong> Receiver {</p></li>
+<li><p><strong>public</strong> <strong>void</strong> Execute(){</p></li>
+<li><p>System.out.println(&ldquo;Receiver excute!&rdquo;);</p></li>
+<li><p>}</p></li>
+<li><p>}</p></li>
+<li><p><strong>public</strong> <strong>class</strong> Client {</p></li>
+<li><p><strong>public</strong> <strong>static</strong> <strong>void</strong> main(String[] args) {</p></li>
+<li><p>Receiver r = <strong>new</strong> Receiver();</p></li>
+<li><p>Command c = <strong>new</strong> ConcreteCommand&reg;;</p></li>
+<li><p>Invoker i = <strong>new</strong> Invoker();</p></li>
+<li><p>i.setOrder&copy;;</p></li>
+<li><p>i.ExecuteCommand();</p></li>
+<li><p>}</p></li>
+<li><p>}</p></li>
+</ol>
+
+
+<p><em>9. __适配器模式</em></p>
+
+<p>将一个类的接口转换成客户希望的另外一个接口，使得原本由于接口不兼容而不能一起工作的类可以一起工作。</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image013.gif" alt="clip_image013" /></p>
+
+<p><em>10. <strong>Façade</strong>模式</em></p>
+
+<p>为子系统中的一组接口提供一个一致的界面，定义了一个高层接口，此接口使得这个子系统更加容易使用</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image015.jpg" alt="clip_image015" /></p>
+
+<p>Façade：为调用方法定义简单的调用接口</p>
+
+<p>Client：通过Façade接口调用提供某功能的内部类群</p>
+
+<p>Package：提供功能的模块或子系统</p>
+
+<p><em>11. __模板方法模式</em></p>
+
+<p>定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/clip_image016.jpg" alt="clip_image016" /></p>
+
+<pre><code>public abstract class AbstractClass { &lt;br&gt;    public void templateMethod() { &lt;br&gt;        // step by step template to solve something         // implementor should follow those step         opStep1();         opStep2();         opStep3();     &lt;br&gt;    }     public abstract void opStep1(); &lt;br&gt;    public abstract void opStep2(); &lt;br&gt;    public abstract void opStep3(); 
+} 
+
+public class ConcreteClass extends AbstractClass { &lt;br&gt;    public abstract void opStep1() {         // implement the real operation     }     public abstract void opStep2() { &lt;br&gt;        // implement the real operation &lt;br&gt;    }     public abstract void opStep3() { &lt;br&gt;        // implement the real operation &lt;br&gt;    } &lt;br&gt;}
+</code></pre>
+
+<p>对于一些程序而言，我们希望规定一些处理的步骤、流程或骨架，就像是上例中的step1到step3一样，至于流程中的step1到step3如何实现并不规定，而留给实现的人自行决定，这就是Template Method模式的目的</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e8afb4e782b9e69585e4ba8b/">说点故事</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:51:05+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>元旦回去姐夫跟我聊起汪峰，说他原来是搞乐队的，名字叫鲍家街43号，是他大学的门牌号。然后我开玩笑说我以后也弄个乐队，叫汉口路22号。他一听乐了说那他的叫张家村40号，专搞乡村音乐。好吧，汉口路22号以后是肯定要写的，现在想说点在创业新村住那会儿的故事，应该是5幢12单元401。前几天在卓越上买书的时候这个地址刚被我从地址簿里面删除了，记得以前每次网购东西都特方便，快递员直接送到门口，我总是一边提着裤子，一边喊来了来了，然后签字画押感谢关门转身拆封一气呵成，一来二去，这个地址不可避免地让我留下了很深刻的印象，就像小区超市的营业员mm、生意可以不做牌不能不打的超市老板、脸部分辨率很低的韩国人、门口饭店的肥肠炒饭加两个蛋、周边的小吃摊、旁边中学每天喇叭里的广播体操眼保健操和熟女房东丰满的胸部一样，迄今记忆犹新。我想，这个地方这辈子是不会再去了，手机里房东的号码也删除了，这个人这辈子也不会再联系了。<br/>
+我想了下我这个博客更新速度如此慢的原因，可能是下面的几点：一、生活匆匆向前，虽然空闲发呆扯淡无聊的时间很多，但这些时间号称努力奋斗的我并没有打算用在停下来思考人生这件事上，而是原本打算用来多看两本专业书、多写两行代码、多积累一些装逼资本，然而落得两手空空的我不仅和自己的梦想渐行渐远，也没有工夫留下点思考的痕迹，总是急着去陷入下一个恶性循环里；二、目前居住条件所限，和同学蜗居在很小的房间内，连我看个毛片的私人空间也没有，更别说很注重隐私的我想写点隐私的东西了；三、滞后性，当时不写，喜欢拖一阵子再说，拖的时间长想想算了吧，也没啥热情了，等到以后想写的什么时发现经历了那么多事不知从何写起。今天同学跑回家过寒假去了，我一个人独占十几平米豪宅，私人空间和寂寞都回来了，晚上躺床上听歌，听得眼泪哗哗，心想，操！这不就是我在创业新村那会儿吗？只不过那会儿我听一会歌流一会眼泪以后还得爬起来捡起那本翻烂了的高数开始啃，现在可以在床上肆意翻滚，让寂寞在体内肆意翻滚，老子就不起来。<br/>
+我记得我是08年的4月份跟zt两人为了考研在那租的房，70多平米，二室一厅一厨一卫，每个月房租400。现在只能感慨乡下的房子太便宜了，同样是400，我在这里只能住10几平米，还是合租。我们两个用了一个礼拜配齐了所有的设备，包括碗、筷、铁锅、铲子、菜刀、电饭煲、电热水壶、打气筒、油盐酱醋葱蒜辣椒、床上用品等等等，把一个几乎什么都没的毛坯房整成像模像样可以住人的地方。这个地方离浦口大学骑车不过10分钟，我们隔三差五会去学校里转转，去学院里上上课。小区挺安静，有篮球场，超市饭店菜场报亭小吃都有，这里住着各种外地人，韩国人尤其多。是不是韩国人不用开口就能看出来。他们不管男的女的，都喜欢戴个帽子，弄副黑框眼镜，大冬天喜欢穿短裤拖鞋，头发肯定是长的，出现肯定是一群的，说话肯定是红萝卜青萝卜的。<br/>
+我经常在一家现在记不起名字的饭馆吃炒饭，那家饭馆和旁边的超市是连着的，是同一个老板开的，老板娘偶尔会穿着高跟鞋噔噔从身边走过，老板会在老板娘不在的时候和几个女员工打打小情骂骂小俏摸摸小手。很欣慰我喜欢的那个超市mm没有被摸过，或者没在店里摸过。我第一次见她是我第一次去超市里买废纸篓拖把，姑娘年纪与我相仿，淡妆，穿那种很俗的裤袜，牛仔裙，声音偏硬，但长的水灵，付钱时看了我几眼，我也看了她几眼，没说话。有时候我在隔壁吃午饭她蹦跶进来聊天，我吃一口炒饭，抬头瞄她两眼，有时候我感觉她也瞄我两眼，不过可能是错觉。我吃完就擦擦嘴回去看书，所以我和她说过的话不超过10句，多是这样的对话，“就拿这些”“一共23块钱”，“有蓝色笔芯么”“有，你要几支”。作为一个闷骚且单身的男性，对话是如此简洁，简洁得都让我蛋疼，我一蛋疼就想写诗给她。我还真写了首诗，不过是自己写着玩的，没啥内容，也全忘了，但我记得里面有“今夜”和“精液”两个蠢蠢欲动的词，代表当时对她的喜欢只是一种朦胧的考研中的男人的身体的一部分的寂寞而已。后来我再也没有见过她。<br/>
+zt的老婆基本每两个礼拜来这住几天，zt住的大房间，我一个人住一间小一点的。他们每次来都自己做饭吃，我有幸蹭了他们好多次饭，有时候把猴子及其夫人一起叫来吃饭，两对情侣加一光棍，倒也其乐融融。zt和夫人很会做菜，并且享受一起下厨的每一分钟。他们总是白天一起去图书馆看书，下午两三点坐公交去离江大桥不远的苏果买各种菜和各种调料，回来夫唱妇随做饭炒菜，有时候还会哼点小曲。他说他们云南做菜调料很讲究，从我的观察来看是放调料放的比这里多很多，换句话说是口味挺重的。云南人喜欢吃辣，自己家里会做点调味酱。据猴子说zt带的自己家做的酱很好吃。zt做菜不管原料多简单，哪怕只有土豆和肉丝，他给你捣鼓个很赞的土豆泥出来，再来点青椒，就又多了一道青椒炒土豆丝，弄点挂面，煎两鸡蛋，一顿中饭可以吃的很饱了。这些都他一个人弄的，我一般负责吃和洗碗。 <br/>
+在创业新村的日子可以分为两段，分水岭是09年1月10号这天，确切说是下午5点平静走出考场笑说要去找工作了的那一刻，后来阅卷中心没有给我这个机会，我丢盔弃甲几个月后又重新做回了学生，从乡下的学生做到了城里的学生，从每年捐一万六稍微上点课到无偿捐两万几乎没上课，当然这都是后话了。1月10号以前，过着折腾中求稳定的生活，1月10号以后，过着稳定中求折腾的生活。我现在记得最清楚的是暑假上文登考研的情景。我和zt每天6点就要起床，骑车15分钟到浦大后门，等那里6点55分的班车接送。第一个接的是我们，所以上车都有位子坐。由于大四出了我们院都搬去了鼓楼，所以这里要考研的只有我们院和三本的没几个人。大多上了车就开始打一会盹。车子沿途会经过好几个院校接人，后来上车的比我们还不幸，都站着，而且很挤。我和zt基本都坐最后排，好看看美女。现在还记得当时在车上以及在班上经常看到的一对情侣，女的长不错。zt跟我说，不知他们上冲刺班的时候会不会还是一起来一起走，我说那时候天冷，他们穿上了衣服就认不出来了。车子可能会在江大桥上堵一会车，这是常事，也是南京人的常识，过了江大桥，一路向东南方向的东南大学奔去，到那正好上课。上课地点是东大的礼堂，三层楼，听有幸坐一楼的同学说底下的空调打巨冷，我们迟到的都坐三楼，三楼没一点冷气，纯蒸桑拿。座位是电影院那种，记笔记只好弯着腰翘个腿本子放上面写，上午三个多小时，下午三个多小时。中午学校门口随便吃点盒饭，回去干坐着用本子猛扇。对于一个午后必睡午觉、颈椎极度敏感、讨厌出汗以后发粘的皮肤的人，一边竖中指一边使大脑真空状聊以自慰。当时反而希望一直出汗，好感觉像在蒸桑拿，用新一轮的汗液冲掉那种浑身黏黏的感觉。一开始的10天全是数学，基本每天做的事情就是往那一坐，开始抄老师幻灯片下的每一道题，一天7小时手从没停过，笔每两天要换一支，压根不想他在讲什么，抄下来再说，想也想不懂，因为那会数学书还没看过，抄这些只是为了以后复习的时候看看。实际上那个暑假拼死抄回来的一本多的笔记后来从来没有翻过。考研班全是shit，但他愿打你也愿挨，钱就这么赚，不用指望他们会像开源软件一样把他们的源代码公开。zt很猛，发了39度的烧还坚持一边记笔记一边思考，所以考虑到他后来的事还挺为他惋惜的。这段时间还去宁波和上海玩了两趟。虽然跟很多人比，我复习远谈不上认真二字，但两个月的闭关依然让我有窒息的感觉。这期间的唯一的出口也许就是每天23点以后校内上发发牢骚装装逼，看到别人回复我才感觉到自己和这个世界是连在一起的，而笔记本屏幕在那些个漆黑的夜里就像一个光明的出口，闷骚如我也需要通过这个出口用一串串0和1交换一些别人对我的关注，比如看毛概实在无聊时候发个“一边看《墓碑：中国六十年代大饥荒纪实》一边看毛概的感觉真爽，就像被人轮了还夸人技术好一样。”，那时候还没用twitter，只能当校内日志发，企图说些荤段子吸引别人跟我聊聊天，无奈很快被删帖了。又比如临考前两天发张这样的图壮壮胆</p>
+
+<p><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/12.jpg" alt="1" /></p>
+
+<p>无奈也被删帖了。比如跟人发誓说一定7点起床，出于道德约束这招还挺管用的。关于这段时间的一些体会，以前写过，会贴在文章最后。 <br/>
+我又开始拖了，09年的流水账以后再写，累了，打打睡了，附上《挑研之初体验》。</p>
+
+<p>======================================================================</p>
+
+<p>从 11号下午将专业课的卷子小心放进密封袋交给pp的监考mm开始，到现在已经打了整整4天酱油了。在第四天的半夜，想继前年寒假的那篇游记之后，第二次认 真地总结下一些日子。对于这段日子，我有过彷徨，有过崩溃，有过麻木，快乐也有，不多。一路的中指竖下来，最后自己也累了，老老实实地看书和崩溃，竟也活 着过来了。如今还敝帚自珍地将它分享，哎怎么说呢，大家多半是高考过的，明白这种感觉。<br/>
+这篇文章里，你不会看到关于某门课的复习攻略，不会看到具体复习方法指导；你可以看到的是，一个并不成功的考研er在讲述他并不牛逼的经历以及他从中获得的东西。<br/>
+我不知道该从何写起，我脑子里只有不停闪过的一些关键词，和一条时间推进的主线。那么，不妨就用基于时间顺序特性的意识流手法来完成它罢。<br/>
+============分割线一条================================<br/>
+首先要解释下什么叫考研。她包含两个部分，第一个是准备考试，第二个是考试。这与大学里的专业课考试有所不同，后者通常只包含第二个部分。正是由于当初对 第一部分过于乐观的估计，我迷糊地走上了考研这条路。考研考4门，政治100分，英语100分，数学150分，专业课150分。<br/>
+考研的动机。引用同学的话，没有办法才考研。也有同学认为这是一种理想。我并没有独立自主地做决定，我尊重了家长的意思。<br/>
+原有印象。在我脑中的一个牛逼的考研er的形象应该是这样的：每天6点半起床，背个书包拿个水杯，匆匆去食堂吃早饭，争取7点半前到教室开始看书，然后除 了吃饭时间一直看书至晚上10点半回宿舍再看一个小时书然后睡觉。于是我选择了报自己院，传说中只要一个月就能考上，我采纳了辅导员的意见，准备9月份开 学开始复习。考研难度递增的顺序是本校本系到本校跨系到外校本系到外校跨系。我作了最偷懒的选择。同学说你考自己院那是相当轻松，我现在的回答是，吃得苦 是一样多的，轻松只体现在考上的可能性上。<br/>
+总的历程。3月份做完决定，4月份和同学租房，到6月底为止每天打酱油比在宿舍还过得还醉生梦死，7月份有20天的政治和数学的强化班，熬过后8月回家玩了一个月，9月份开始看数学，月底回去玩了大半个月，真正认真看是从10月中旬开始。<br/>
+============分割线一条================================<br/>
+以下是一些关键词。<br/>
+关键词之一，“<strong>非智力因素的决定作用</strong> ”。如同做其他所有事情一样，一个人的思维习惯在考研中的作用不容小觑。1.考研是体力活，不是技术活。它体现的是付出与收获的正比关系。我自己不是少数 极有天赋的声称能一个月搞定的人，因此我只有老老实实地看书。2.考研比较适合单细胞的人，他们做事容易投入和持久，而对于想法很多的人，很难专注地从事 长时间的系统工程，那就让自己的意志去发挥作用吧。3.在需要理解记忆的环节，如数学中的定理公式，政治的大题等，从小养成的记忆习惯是影响效率的重要因 素。从小我背课文都是要求一字不差的背下来，然后才能得到家长“已背”的签字，我在准备考研政治大题的时候觉得很吃力，我知道应该背层次而不是背逐个句 子，但我很难改正我的背书方法。这也是为什么有的人政治看个一遍就行，而我看下来觉得脑子里空的，尤其对于邓论部分需要大量记忆的东西。平时注重思维训 练，记忆先从整体上把握，其余的细枝末节，吹罢，写作文还不会么。4.性格因素。有人乐观，有人悲观。这决定了你会不会老想考不上怎么办，会不会因为谁谁 谁今天看了100页书而你只看了30页而懊恼不已，会不会因为今天去修车胎耽误了一小时而郁闷，会不会因为某天的计划没有完成而焦虑，会不会考前紧张得失 眠等等。5.自律能力。这决定了你今天下午是看三部电影还是做30道题，吃完午饭晚饭是直接跑教室还是先去机房上个百合校内，闹钟7点响是拔了电池板继续 睡还是揉着双眼去冲咖啡，心里翻江倒海的时候是抓起电话找人倾诉还是安静地在床上躺会，看到别人拿了牛offer在机房dota会不会仍然保持微笑。<br/>
+关键词之二,“<strong>慢就是快</strong>”。这句开车以及搞经济需要注意的话在考研上同样适用。我们不要企图“大跃进”。当初我片面追求速度的增长，忽视了质量和效益的提高，造成的结果是一遍李 永乐下来，该忘的全忘了，不该忘的也差不多了。第一遍做的时候囫囵吞枣，课后习题没做，这样一天下来虽然看着几十页心里挺有成就感，但记忆效果很不好。两 遍下来的效果跟慢慢地做一遍基本相当，花的时间要多好多。数学就是该做题做题做题，一条一条，必做细，必做透，然后才做多。<br/>
+关键词之三，“<strong>有挑战的目标</strong>”。将目标设定成需要尽全力才能达到，强迫自己用全力，并且达到后有更大的成就感。这一点体现在报名的时候可以报外校和外系。<br/>
+关键词之四，“<strong>奥卡姆剃刀</strong>”。这个原理大意是化简你的生活，能简则简。但是，贪婪的我始终没有勇敢地拿起这把剃刀来简化自己。我最大的心里障碍是拿得起，放不下。“我们试图占有一 切，而这往往把我们弄得精疲力竭。”长期以来我的思维习惯都是追求利益的最大化，比如每天总是为明天列下长长的to do list，唯恐漏掉一件，如若只列一两件，会觉得明天肯定会过得特空洞。这是TDL带来的负面效果，仿佛离开了TDL人就不会做事了，实际上抹杀了人的主 观能动性，把生活当程序来机械处理。比如放了一堆书在旁边作为明天的任务，同时还窃喜，明天看完就牛逼了。结果无一例外&mdash;看不完，累到死，心情很不好。 冗杂的任务会让你无法集中精力到手边的事情，旁边一坨没看的书压在心头滋味不好受。“何不把悲哀感觉假设是来自你虚构”。这些焦虑的产生并非你要实现的目 的本身带来的，是你人为造成的。用一天时间尝试下简化后的生活，恩，胃口好了，脑子也不短路了，吃嘛嘛香。<br/>
+关键词之五，“<strong>改革、发展与稳定</strong>”。稳定是改革与发展的基础和保证。所谓稳定，即在同一处看书，同一时刻吃饭睡觉起床，每天保证稳定的学习时间。我的考研生活过得很不稳定。一眼看过去， 一路的动荡和不安。我看过书的地方有6处，租房、软院自习室、机房、图书馆、教学楼、自己家里，没有哪处是坚持满一个礼拜的。期间我还跟随找工作的大军在 城乡间来回参加了若干次笔试和一次面试，拿了我的处女offer并拒之。由于没有长期占座，在期末临近时候在透不过气的软院自习室找座位。考研班的来回奔 波。就这样把部分能量花在了这些进程的切换上。我经历的考研和我理想中的差距很大。<br/>
+关键词之六，“<strong>拔掉你的网线</strong>”。以前有同学到快考试的时候会大喊“我再不玩魔兽世界啦”，然后把游戏删掉，当时暗笑他过两天自己肯定又装了。不过我在需要用电脑看课件的时候发现这是 有一定效果的。当我电脑插着网线时候，每隔几分钟不自觉地就会去双击火狐的图标，打开来看几张网页，或者点开电驴，看看速度怎么样，然后再看几张课件。然 后我拔网线试试，我发现自己每次有开网页的念头时，都会因为“懒得去插网线”这个可笑的念头而终止自己的行为。同样的例子在吃瓜子的时候也出现，眼睛盯着 屏幕看电影，手从袋子里一颗接一颗地捻起瓜子往嘴里送。也没什么特别的欲望非要吃瓜子，但就是吃完一颗接着一颗，吃得嘴皮子都要破了还不停，然后发誓说这 是最后一颗了，马上再不吃了，过五分钟手又去抓了吃。然后就把袋子对折一下放进抽屉里。结果自己就“懒得”打开抽屉去拿了。可能的原因是：人类潜意识里会 将做一件事的成本与其价值进行比较，然后作出更有利于自身需要的决定。对于那些本无所谓做与不做的事情，其价值稍微不及我们做它所需要的成本，于是我们就 “懒得”去做了。<br/>
+关键词之七,“<strong>写下要做的</strong>”。好处一是第二天比较省力，可以不去想过会要干什么。好处二是不会忘记要做的事。坏处是如果执行力差没完成，心情受影响，并且会让自己怀疑这样做到底有 没有价值。考前一个月我写下了当天要准备下英语作文的模板，当天没完成，第二天又写了一下，又没完成。最后我英语模板是在1月8号晚上弄好的，拖了一个 月。其实也就4个小时的工作量而已。<br/>
+============分割线一条================================<br/>
+考研，这个古老而神秘的字眼在我很小时就进入了我视野，伴随而来总有她神奇的令人“为伊消得人憔悴”的魔力。如今自己亲自揭开了她的面纱，一品其独特风味， 虽然不能用来装B，但也能自豪地说出“咱也是经历过考研的人了”这样的“豪言壮语”，人生不可避免地又完整了一些。。。<br/>
+絮絮叨叨讲了半天， 自己也累了，还好跑题跑得不算太远。理论上考研还没有结束，现在盖棺定论未免过早。因此我只能说些自己的经历和体会，至于怎样复习和准备，比我有发言权的 大有人在，我也不好意思献丑。我还是自己的风格，写不了高深莫测的东西，咱就说点实话，也算为自己留下点东西。<br/>
+njuxjy @ 09.01.15</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e58fa5e5ad90e4bbacefbc8808-e69f90e69c88-e69f90e697a509-12-07efbc89/">句子们（08.某月.某日~09.12.07）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:47:49+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>来源：互联网</p>
+
+<ol>
+<li> 上联： 空姐走光，是否有机可乘<br/>
+下联1：姨妈上岗，能否后门通融<br/>
+下联2：护士加班，早晚虚位以待</li>
+<li> 大爷，给妞笑一个</li>
+<li> 谜面：相亲。打一软件术语。谜底：面向对象</li>
+<li> 谜面：吻。猜一软件术语。谜底：接口</li>
+<li> 多年前我曾提案3月7日为少女节，理由是3月7日跟3月8日只差一日，少女和妇女也只差一日。</li>
+<li> 做为裆的干部,手先要深入裙中,撩解裙中,想裙中之所想,急裙中之所急 办事时深入浅出,要真抓湿干,遇湿俱进,玩枪姘勃。只有善解人衣,把握鸡遇,急鸡进取,坚持不泄 与裙中同进出共性福,才能最终掀起裙中性运动高潮,让裙中满意,让裆放心</li>
+<li> 看到如此雄壮的尾巴，终于明白女生为何爱养猫了</li>
+<li> 要固执地、一个劲地让自己出丑，直到习以为常&mdash;&mdash;萧伯纳</li>
+<li> 恐惧皆衍生于无知和不确定</li>
+<li>. 甲：“听说经济学家总在说谎。你能否告诉我，如何判定他在说谎？” 　　<br/>
+乙：“经济学家大都比较诚实，很少掩饰。你只要注意他的嘴就行了，嘴一动，他就在说谎。”</li>
+<li>. 有一天微软拼音被人打伤了，警察询问他事情的经过，微软拼音激动地说：当时搜狗拼音实在打得太快了……</li>
+<li>. 偷爸妈的安全套，打一歇后语 回答：装孙子</li>
+<li>. 厕所墙上“向前一小步，文明一大步！”用英语怎么翻译？ 　　答: Fire in the hole</li>
+<li>. 一群伟大的科学家死后在天堂里玩藏猫猫，轮到爱因斯坦抓人，他数到100睁开眼睛，看到所有人都藏起来了，只有牛顿还站在那里。<br/>
+爱因斯坦走过去说：“牛顿，我抓住你了。”<br/>
+牛顿：“不，你没有抓到牛顿。”<br/>
+爱因斯坦：“你不是牛顿你是谁？”<br/>
+牛顿：“你看我脚下是什么？”<br/>
+爱因斯坦低头看到牛顿站在一块长宽都是一米的正方形的地板砖上，不解。<br/>
+牛顿：“我脚下这是一平方米的方块，我站在上面就是牛顿/平方米，所以你抓住的不是牛顿，你抓住的是帕斯卡。”</li>
+<li>. 是这样的张总：你在家里的电脑上按了CTRL+C，然后在公司的电脑上再按CTRL+V是肯定不行的。即使同一篇文章也不行。不不，多贵的电脑都不行。</li>
+<li>. “恋”是个很强悍的字。它的上半部取自“变态”的“变”，下半部取自“变态”的“态”。</li>
+<li>. I wanna 弄爆你 弄爆你 爆菊</li>
+<li>. 眼睛蛇和大象约会，寒暄一番后说：“来就来吧，还牵这么大头猪，客气了。”</li>
+<li>. 我已经把你们包围了~~~</li>
+<li>. 结婚就是从无妻徒刑改判有妻徒刑的过程</li>
+<li>. 我喜欢一只动物并非取决于它的毛色、品种什么的，而是取决于佐料和火候。</li>
+<li>. 从前有一只熊猫，它到一家饭店点了菜就开始吃，吃完之后掏出一把枪乱放几枪走了。饭店的老板就问它，你为什么要这样做？熊猫就说，你查一下字典。老板发现字典上写着: Panda:an animal,eats shoots and leaves.</li>
+<li>. 焦点访谈认为：google，g代表g点，oo代表双乳和睾丸，l代表男性生殖器，e代表英文西化，念起来是“股沟”，它是彻底的低俗、反动、色情。</li>
+<li>. 西游记告诉我们：凡是有后台的妖怪都被接走了，凡是没后台的都被一棒子打死了。</li>
+<li>. 单位就像一棵爬满猴子的大树，向上看全是屁股，向下看全是笑脸，左右看全是耳目。</li>
+<li>. 我是白领：今天领了薪水，交了房租水电，买了油米泡面，摸了口袋，感叹一声，这个月工资又白领了…</li>
+<li>. 某日在丹佛机场的一班联合航空班机因故停飞，<br/>
+机场柜台人员必须协助大批该班机旅客转搭其它飞机。<br/>
+柜台前排满了办手续的人，这时有一位老兄从排队的人群里一路挤到柜台前，<br/>
+将机票甩在柜台上并说：“我一定得上这班飞机而且是头等舱！”<br/>
+服务的小姐很客气的回答：“先生，我很乐意替您服务，但我得先替这些排在你前面的人服务。”<br/>
+此时这位仁兄很不耐烦的说：“你知道我是谁吗？”<br/>
+只见那位柜台小姐从容的拿起麦克风广播道：“各位旅客请注意，23号柜台前有一位先生不知道自己是谁，如果有哪位旅客能帮他辨识身份的话，烦请到联合航空23号柜台，谢谢！”<br/>
+此时排在后面的旅客都忍不住笑了出来。<br/>
+(还没完………………..！)<br/>
+这位仁兄把脸一摆，瞪着那位小姐，并说：“Fuck you!”<br/>
+只见那位柜台小姐露出和气的微笑回答说：“那您也得先排队才行！”</li>
+<li>. 在职场中就应该像柯南那样，有一种我走到哪就让别人死到哪的霸气</li>
+<li>. 一老外想去故宫，不知道怎么走，找人问路，但把故宫、紫禁城两个词儿弄混了：“请问，紫宫怎么走？”第一个人瞪他一眼，没理他，第二个人说“你没病吧？”，第三个人用手一指：“你妈逼。走到头儿。”</li>
+<li>. 据说，古书上记载：“丰润少年精液最滋补身子，可常驻容颜。”</li>
+<li>. 某人欲拜师学武，至恒山某处，见门前牌匾大书“恒山派”，大为兴奋。近前细看，底下还有“出所”二字</li>
+<li>. 傻老五意外瞧见老三撒尿，颠儿颠儿地跑回去对老四说：老四老三老二老大了</li>
+<li>. 我做饭还行，基本上吃过的人活下来的都说好</li>
+<li>. 唉，其实我也曾青春逼人，可惜现在青春没了，就剩这么个逼人了</li>
+<li>. 某哥们儿头天晚上跟女友房事过多，第二天早上起来感叹——囊中羞涩……</li>
+<li>. 臣对巨说：别看一样的面积，咱是三室两厅……</li>
+<li>. 早听说有句话叫“摸着石头过河”，可最近才知道，是有些人只负责摸石头，另一些人负责过河。</li>
+<li>. “直升机不用来了，我骑自行车回去。”——看见一篇叫“人多的地方突然接了个手机，说句什么话能让大家都觉得你很有钱？”的东西。这是其中一句</li>
+<li>. 现在你骂我，是因为你还不了解我，等你以后了解了我，你一定会动手打我的。</li>
+<li>. 上了年纪最大的好处就是：年轻时得不到的东西，现在你不想要了。</li>
+<li>. 女人结婚有什么用？ &ndash; 有个鸟用。 男同性恋结婚有什么用？ &ndash; 有个屁用。男人为什么结婚，因为想通了。女人为什么结婚，因为想开了。</li>
+<li>. 体贴的男友—男生带着女友散步，路过餐馆。女友赞叹道：“真香啊！”囊中羞涩的男生很绅士地说：“如果你喜欢，我们再从饭馆门前走一次。”</li>
+<li>. 作为一个怪兽，我的愿望是至少消灭一个奥特曼。</li>
+<li>. 诸葛亮出山前也没带过兵啊，你们凭啥要我有工作经验。</li>
+<li>. 泡妞就像挂QQ，每天哄她2个小时，很快就可以太阳了。</li>
+<li>. 悟空，为师今夜想要，请速速变成女妖精</li>
+<li>. 某党高级干部因经济问题外逃，搞得上级很被动。未料几年后，此干部在外生活困顿，萌回国之意，遂托人问讯组织是否批准回国。肯定回复于法不容，否定回复有碍情理。组织接讯反复研究后回复：出国没有经组织审批，回国亦不需组织审批</li>
+<li>. 女：你有房么？男：没问题，我老舅有钱，他可以给我买房子。女：你有车么？男：没问题，这个我老舅也可以帮我买。女：你老舅的手机号是多少？</li>
+<li>. 谢天谢地谢亚龙<br/>
+信神信鬼信兰成<br/>
+横批：足篮打水</li>
+<li>. 村里二傻子老婆长得漂亮。毛主席逝世后，晚上安排社员守灵，支书每天都安排二傻子，他觉得面上很有光。有天别人讲，你夜夜守灵，回去看看你老婆在干嘛！二傻子回家一看支书正同他老婆睡觉。二傻子指着支书哭喊：狗日的，主席都逝世了，你还有心思睡觉，中央禁止一切娱乐活动！</li>
+<li>. 一女工家里房屋漏水，请假一天修房。次日，她托人捎假条给单位，领导一看，吓软双腿，假条写到：房事未完，流水太多，无法控制，特请假再搞一天。</li>
+<li>. 为什麽别人见我就说操？-因为你太能装B</li>
+<li>. 经验就是：当你累积到足够丰富的时候，你发现已经用不上它们了。</li>
+<li>. 《换位思考》黄山旅游不见猴子，管理员解释：都在洞里交配。游客抱怨：放些吃的啊，不就出来了。管理员：换成你，肯出来吗？</li>
+<li>. 周一早上上班在公司电梯里， 一哥们儿从包里掏出手机看时间，然后嘟囔了一句“我艹!” 大家目光都朝他看去，以为他迟到了。结果发现 他手里拿着一个空调遥控器&hellip;</li>
+<li>. 读书时一直暗恋她，但没勇气表白，更没胆量碰她。毕业后，她已经结婚了，老公跟我是同学。那天下午，她抱着娃娃在喂奶，我找了个很好的借口。我走到她面前，一把两手按住她的MIMI，然后跟她娃娃说，喊叔叔，不喊不给吃!</li>
+<li>. 绅士无非就是耐心的狼</li>
+<li>. 嘉宾：我当时都有去跳楼的想法了 鲁豫：那后来跳了么？</li>
+<li>. 美国总统奥巴马荣膺2009诺贝尔和平奖，古巴、越南、北韩、利比亚、伊朗、中国领导人向诺贝尔奖委员会发去了感谢电，均称“谢谢你们套牢了他，这下我放心了！”</li>
+<li>. 两个中药世家联姻,男姓龙,女姓陈。婚夜两人对联:男出上联:龙骨一根,退烧止痒又生津；女对下联:陈皮两片,化痰消肿还解渴;横批:一日见效。</li>
+<li>. 拥挤的北京银行，一女长时间占据取款机，不时打出一张张凭条。我挤在后面的长龙里，等得实在不耐烦，伸头看了一眼，发现屏幕显示“余额不足”，此女仍不停按“取款”钮，收集打出来的凭条。五分钟后，此女手拿厚厚一叠凭条，向洗手间方向走去…自水木社区</li>
+<li>. “刘惜君，你唱得太好了，我一定要把你留在10强。但是我投给曾轶可，因为你这么<br/>
+强，一定可以有机晋级的。”</li>
+<li>. 等余震的心情，就像初恋的少女等情人，既怕他不来，又怕他乱来</li>
+<li>. 当时我正在和女朋友一起查资料，突然蹦出一个窗口，很黄很暴力，我们赶快把灯给关<br/>
+了。</li>
+<li>. 从前，有个小孩说，打死我也不睡觉。然后他被打死了。</li>
+<li>. 4年没见到老婆了，她去年给我生了个大胖小子……真想回家看看啊。</li>
+<li>. 我朋友的老婆怀孕了,我姓马,求孩子的名字</li>
+<li>. 上联：上海自来水来自海上<br/>
+下联1：日照老年人年老照日<br/>
+下联2：大波美人鱼人美波大<br/>
+下联3：黄山落叶松叶落山黄<br/>
+下联4：明天到操场操到天明</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e58e8be6a0b9e5b0b1e4b88de698afe4b880e7af87e69687e7aba0/">压根就不是一篇文章</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:47:00+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h4>疑的问</h4>
+
+<ol>
+<li> 为什么人在哼歌时发d这个音节的居多<br/>
+我们偶尔会一边做事一边哼着随机想到的歌曲，并会蹦出一些词来搭配这熟悉的曲调，我记得自己一般都是de, deng, di, du这几个音，有时会伴随一些la, le之类的音节。于是我想全世界有那么多种的音节可以让我随机的发，为什么我偏偏下意识抽中了那有限的几种呢？为什么我不能选一些诸如nuo, kao, sou之类的音节呢？原因很简单，发音方便呗。</li>
+<li> 电梯里的蚊子问题<br/>
+我们都坐过升降电梯，设想你在一楼进了一部电梯想去七楼，进去的时候一只蚊子尾随你一块进来搭个便车去5楼平台上透透气。你站地上，它在空中飞着，然后电梯上升了。会有两种情况：一、这蚊子在观察电梯内部结构呢，没注意到，于是它就砰地一声撞到了地板，被托着往上走。二、它一看形势不对，地板追过来了，于是拼命往上面逃，正好跟电梯处于相对静止状态，眼看到了5楼停了，气喘吁吁飞出去说，妈的，赶啥时髦坐电梯，还不如自己飞上来呢。或者它飞累了会扒在墙上休息一会呢？</li>
+<li> 梦更像电影还是更像美剧<br/>
+我以前写过，梦是没有结果的过程。然而这个过程是设计好了剧本来执行还是一边执行一边设计呢？</li>
+<li> 语言与寿命的关系<br/>
+如果一个国家的人用的语言如吴侬软语般轻巧且发音不费力，那么这个国家的人的寿命跟另外一个使用一种发音大多类似“啊”“扒”“闹”等需要把嘴张得老大且“吃了么”要讲上十秒钟的语言的国家的人的寿命相比，会不会长一些呢？这个疑问源于我本科讲了多年的bebao话（不解释），觉得此语言讲来颇耗精力，常常讲得殚精竭虑欲仙欲死。</li>
+</ol>
+
+
+<h4>思的维</h4>
+
+<ol>
+<li> 道理都懂，欲望也强烈，可为什么不去做</li>
+<li> 听说的，死后冷冻遗体，待未来科技发展了再复活自己。噢，未来。</li>
+<li> 不说“仅此而已”这种限定住事物无限可能性的话。</li>
+<li> 我喜欢这样被描述，“他不<strong>，不</strong>”，而不喜欢“他是个<strong>、</strong>、**的人”，因为后者让我觉得整个人生一下子被几个鸟字给束缚住了，前者否定了一些，但留下了无垠的空间。概括是残忍的。</li>
+<li> 好歌的标准是能让我感到时间的重量（红豆、后来、换季）。</li>
+</ol>
+
+
+<h4>说的话</h4>
+
+<ol>
+<li> 终于知道王小波为什么叫小弟弟为小和尚了，因为他们头上都没有头发。</li>
+<li> 正在看毛片。同学过来嘲问：“你怎么那么不正直呢？”我看看下面：“我不正直着呢嘛。”</li>
+<li> 今天一个女人对我说了对不起。她说“对不起，您拨打的电话暂时无人接听。”</li>
+<li> 今天过得很失败，只有口是干的，其他什么都没干。</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e4baa4e9809ae8a784e58899/">交通规则</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:37:42+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>考试类型相当于当时的DB2认证，也是给本题库你背背，全考选择和判断。下面仅记录一些需要留意下的题。类似如下这种题就不记录了：<br/>
+　　　　雾天对安全行车的主要影响是：<br/>
+　　　　　　A. 发动机易熄火<br/>
+　　　　　　B．易发生侧滑<br/>
+　　　　　　Ｃ．行驶阻力增大<br/>
+　　　　　　Ｄ．能见度低，视线不清<em>　<br/>
+</em>　　　　答案：　Ｄ</p>
+
+<p>从13题开始用人话简略的写了下。<br/>
+１.　机动车经过<strong>公安机关车辆管理所</strong>登记上牌以后，方可上道路行驶。　<br/>
+２.　尚未登记的机动车，需要临时上道路行驶，应当<strong>取得临时通行牌证</strong>。<br/>
+３.　驾驶人在道路上驾驶机动车时<strong>必须携带驾驶证，行驶证和强制保险标志</strong>。<br/>
+４.　公安机关交通管理部门对累积计分达１２分的机动车驾驶人，扣留驾驶证，　<strong>进行道路交通安全法律法规教育</strong>。<br/>
+５.　没有划分机动车道，非机动车道和人行道的道路，机动车<strong>在道路中间通行</strong>。<br/>
+６.　机动车遇到交警和交通信号不一致时候，应当按照<strong>交警的指挥</strong>通行。<br/>
+７.　机动车在道路上发生故障，需要停车排除时，驾驶人应当立即开启危险报警闪光灯，<strong>并将机动车移至不妨碍交通的地方停放</strong>。<br/>
+８. 机动车在道路上发生故障，难以移动的，首先应当持续开启危险报警闪光灯，<strong>并在来车方向设置警告标志</strong>。<br/>
+９.　高速公路没有限速标志，最高时速不得超过<strong>１２０公里</strong>。<br/>
+１０.　在道路上发生交通事故，仅造成轻微财产损失，并且基本事实清楚的，当事人<strong>应当先撤离现场再进行协商处理</strong>。<br/>
+１１.　饮酒后驾驶机动车的，处<strong>１５日以下拘留</strong>，暂扣<strong>１个月以上３个月以下驾驶证</strong>，并处２００元以上５００元以下罚款。<br/>
+１２.　在道路上行驶的机动车，有未悬挂机动车号牌，未放置检验合格标志，未放置保险标志以及未随车携带行驶证的情况时，公安机关交通管理部门应当<strong>扣留机动车</strong>。<br/>
+１３.　非法安装报警器什么的，<strong>强制拆除</strong>。<br/>
+１４.　没拿到驾驶证或者吊销了还开的，<strong>２００元以上２０００元以下罚款，还可以并处15日以下拘留。</strong><br/>
+１５.　把车借给14题这种人的，<strong>受同样处罚</strong>。<br/>
+１６. 逃逸但没构成犯罪的，除罚款以外还可以并处<strong>15日以下拘留</strong>。<br/>
+17. 违反交通管制规定，强制通行的，<strong>跟16题受同样处罚</strong>。<br/>
+18. 机动车行经交叉路口，不得超车。（对）<br/>
+19. 货车车厢内载客必须设有座椅。（错）<br/>
+20. 小汽车自注册日起6年以内每<strong>2年</strong>检验1次。<br/>
+21. 上题中超过6年不满15年的，每<strong>1年</strong>检验1次。<br/>
+22. 初领驾驶证后的<strong>1年</strong>为实习期。<br/>
+23. 实习期内不得驾驶<strong>营运出租车</strong>。<br/>
+24. 驾驶证有效期分为<strong>6年</strong>，10年和长期。<br/>
+25. 计分周期为<strong>1年</strong>。<br/>
+26. 计分到12分还老卵不参加学习考试的，<strong>公告其驾驶证停止使用</strong>。<br/>
+27. 机动车在无限速标志标线，没有道路中心线的城市道路规定最高时速为<strong>30公里</strong>。<br/>
+28. 机动车在无限速标志标线，没有道路中心线的公路规定最高时速为<strong>40公里。<br/>
+</strong>29. 能见度在50米以内，最该时速不能超过<strong>30公里</strong>。<br/>
+30. 汽车驶入驶出非机动车道时，最高时速不能超过<strong>30公里</strong>。<br/>
+31. 汽车铁道路口急转弯窄道等等乱七八糟都是<strong>30公里</strong>。<br/>
+32. 会车中道路一方有障碍的，双方车辆应做到<strong>有障碍的一方让对方</strong>先行。<br/>
+33. 机动车在窄桥上会车时，应当<strong>减速靠右通行</strong>。<br/>
+34. 夜间会车远光灯会炫目，应在距离相对方向来车<strong>150米以外</strong>改用近光灯。<br/>
+35. 机动车通过没有交通信号的交叉路口，应当<strong>让右方道路来车</strong>先行。<br/>
+36. 机动车通过没交通灯和交警的交叉路口，相对方向行驶的<strong>右转弯车让左转弯车先行</strong>。<br/>
+37. 比较小的载货汽车高度不得超过<strong>2.5米</strong>。<br/>
+38. 小型载客汽车可以牵引<strong>旅居式挂车，且挂车内不得载人</strong>。<br/>
+39. 用绳牵引时两车距离应<strong>大于4米小于10米</strong>。<br/>
+40. 转向，照明，信号装置失效的故障机动车，应当使用<strong>专用清障车拖拽</strong>。<br/>
+41. 下陡坡时，<strong>不得空挡或熄火</strong>滑行。<br/>
+42. 连续驾车超过<strong>4小时</strong>的，应当休息不少于20分钟。<br/>
+43. 机动车距离交叉路口弯路陡坡隧道等<strong>50米内</strong>不准停车。<br/>
+44. 公交车外的其他车子在公交车站<strong>30米</strong>以内路段不准停车。<br/>
+45. 上高速最低时速不低于每小时<strong>60公里</strong>。<br/>
+46. 高速上超过每小时100公里时，应与前车保持<strong>100米</strong>以上的距离。<br/>
+47. 高速上特殊天气能见度小于100米时，与前车保持<strong>50米</strong>以上的距离。<br/>
+48. 高速上特殊天气能见度小于50米时，车速不超过每小时<strong>20公里</strong>。<br/>
+49. 高速上特殊天气能见度小于200米时，车速不超过每小时<strong>60公里</strong>。<br/>
+50. 欺骗贿赂混到驾照的，<strong>3年内不得</strong>申请驾照。<br/>
+51. 被扣留的车子没人来处理，<strong>可以依法拍卖</strong>。<br/>
+52. 一个记分周期内未达到12分，所处罚款已缴纳的，计分予以清除。（对）<br/>
+53. 一个记分周期内未达到12分，计分予以清除。（错）<br/>
+54. 高速上限速标志标明的车速与法规规定的不一致时，应按照法规规定的行驶。（错）<br/>
+55. 因肇事<strong>逃逸致人死亡的</strong>，处7年以上15年以下有期徒刑。<br/>
+56. 因肇事逃逸的，处7年以上15年以下有期徒刑。<br/>
+57. 非本辖区违法记录可移至<strong>机动车号牌核发地</strong>处理。<br/>
+58. 对酒后行为失控的驾驶人，交警可以<strong>使用约束性警械</strong>。<br/>
+59. 对非现场处罚，当事人在车辆号牌核发地接收处理有异议的，可向本人驾驶证核发部门申诉。（错）<br/>
+60. 当事人未在事故现场报警，事后请求交管部门处理，应在请求提出后<strong>10日内</strong>提供证据。<br/>
+61. 调解参加人不能按时参加调解的，应在预定调解时间<strong>24小时</strong>前通知承办的交警要求改时间。<br/>
+62. 当事人对交警事故认定有异议的，可向人民法院提起行政诉讼。（错）<br/>
+63. 吊销驾照后<strong>未满两年不得</strong>申请驾照。<br/>
+64. 驾照期满前<strong>90日内</strong>申请换证。<br/>
+65. 超过驾驶证1年以上没换证的，应<strong>注销其驾驶证</strong>。<br/>
+66. 计分达12分的，接收教育后要进行科目一理论考试。<br/>
+67. 60岁以上或其他身体不太好的应每<strong>一年</strong>提交一次身体条件证明。<br/>
+68. 满60周岁，可以持有C1 C2准驾驾驶证。<br/>
+69. 满70周岁，只能持有F准驾驾驶证。<br/>
+70. 机动车驾驶人可以委托代理人办理驾驶证的换证补证业务。（对）<br/>
+71. 持有C2准驾驾驶证的驾驶人可以驾驶各类小型汽车。（错）<br/>
+72. 下肢残缺的人可以申领C2类驾驶证。（错）<br/>
+73. 已登记车子有<strong>小型汽车加装前后防撞装置</strong>变动，不必到车管所登记。<br/>
+74. 机动车用作抵押，由抵押人负责办理抵押登记手续。（错）<br/>
+75. 在我国境内开的车的<strong>所有人和管理人</strong>，要强制保险。<br/>
+76. 保险掏钱的人是<strong>本车人员和被保险人以外的受害人</strong>。<br/>
+77. 发生多次事故或重大事故的被保险车，保险公司应当<strong>提高</strong>保险费率的幅度。<br/>
+78. 事故中被保险人无过错的，保险公司应当<strong>不提高</strong>其保险费率。<br/>
+79. 签订保险合同后，应将保险标志<strong>放置在被保险车上</strong>。<br/>
+80. 保险期间为<strong>1年</strong>。<br/>
+81. 对没投保<strong>机动车交通事故责任强制保险</strong>的人，可对其两倍于保险费罚款。<br/>
+82. 未按规定投保上述险种的，可扣留其车。（对）<br/>
+83. 通过高速收费站时，时速不超过<strong>5km</strong>。<br/>
+84. 禁止在高速<strong>垮江大桥</strong>和隧道内检修车辆。<br/>
+85. 驾驶禁止驶入的车子进入高速的，<strong>二百元</strong>罚款。<br/>
+86. 每漏检一次，处以<strong>伍佰元</strong>罚款。<br/>
+87. 除<strong>公路客运车辆</strong>和接送中小学生的小车外，其他车子不准在公交专用车道内行驶。<br/>
+88. 在高速上停车上下或装卸货物，<strong>五百元以上二千元以下</strong>罚款。<br/>
+89. 驾驶自动挡汽车起步时，<strong>踏下制动踏板</strong>，从p挡换入其他挡位。<br/>
+90. 停放自动挡汽车时，变速器操纵杆放应<strong>在P挡</strong>拔下钥匙。<br/>
+91. 自动挡汽车启动发动机时，应将变速器操纵杆放在<strong>P挡</strong>位置。<br/>
+92. 自动挡汽车在陡坡行驶时使用“2”挡。（错）应用“L”挡。<br/>
+93. 泥泞道路对安全行车影响是<strong>车轮极易滑转和侧滑</strong>。<br/>
+94. 谨慎驾驶三条基本原则是集中注意力，仔细观察和<strong>提前预防</strong>。<br/>
+95. 驾驶车辆驶出环岛前，应开启<strong>右转向灯</strong>。<br/>
+96. 驾驶车辆进入环岛时，<strong>不用开启转向灯</strong>。<br/>
+97. 在路边停车时，右侧车轮与路肩的距离不超过<strong>30厘米</strong>。<br/>
+98. 进入高速加速车道后，应尽快将车速提到每小时<strong>60公里</strong>以上。<br/>
+99. 因故障在高速上停车，需要在车后<strong>150米</strong>处设置故障警告标志。<br/>
+100. 驶入高速减速车道后，进入匝道前将车速降到<strong>标志规定车速</strong>以下。<br/>
+101. 车行道分界线一实一虚长为<strong>15米</strong>。<br/>
+102. 驶离高速前，距出口<strong>1公里</strong>处，不得超车。<br/>
+103. 驶离高 速前，应在<strong>进入减速车道后</strong>减速后进入匝道驶出。<br/>
+104. 车辆应靠公路右侧的路肩上行驶。（错）<br/>
+105. 在高速上遇分流交通管制时，可不驶出高速公路，就地靠边停靠等待管制结束后继续前行。（错）<br/>
+106. 下长坡时，<strong>用发动机制动</strong>控制车速最有效。<br/>
+107. 行驶入双向行驶隧道前，应开启<strong>示廓灯或近光灯</strong>。<br/>
+108. 夜间行车中，如果灯光照射<strong>离开路面</strong>，有可能是车辆前方出现急转弯或者大坑。<br/>
+109. 夜间通过无交通信号控制的交叉路口时，不得变换远、近光灯。（错）<br/>
+110. 车辆涉水后，<strong>间断轻踏</strong>制动踏板，以恢复制动效果。<br/>
+111. 浓雾天气能见度低，开启远光灯会提高能见度。（错）<br/>
+112. 雾天行车多用喇叭，听到对方喇叭也用喇叭回应。（对）<br/>
+113. 爆胎，应用“<strong>抢挡</strong>”方法使车缓慢减速。<br/>
+114. 爆胎应急措施是<strong>紧握转向盘，尽快平稳停车</strong>。<br/>
+115. 行车中当驾驶人意识到车辆爆胎时，应在控制住方向的情况下采取紧急制动，迫使车辆迅速停住。（错）<br/>
+116. 当车辆失控行驶方向偏离，应<strong>尽快减速，尽快停车</strong>，而不是迅速向无障碍一侧转向躲避。<br/>
+117. 制动防抱死装置系统可以防止<strong>紧急制动</strong>时车轮抱死。<br/>
+118. 制动突然失灵，应<strong>利用“抢挡”或驻车制动</strong>进行减速。<br/>
+119. 下坡路制动突然失效不可采用的办法是<strong>拉紧驻车制动器操纵杆或越二级挡位减挡</strong>。<br/>
+120. 安装ABS的车制动时，可用例踏制动板。(对)<br/>
+121. 安装ABS的车制动时，制动距离没有变化。（错）<br/>
+122. 车在泥泞路上发生侧滑时，应<strong>向侧滑的一侧转动转向盘适量修正</strong>。<br/>
+123. 已经不可避免要撞上了，应<strong>紧急制动</strong>。<br/>
+124. 车子向深沟连续翻滚时，身体应该迅速躲向座椅前下方，<strong>抓住转向盘管</strong>将身体稳住。<br/>
+125. 感到车辆不可避免要倾翻时，应尽力稳住身体，迅速跳车。（错）<br/>
+126. 发动机着火，错误的做法是<strong>开启发动机罩灭火</strong>。<br/>
+127. 车子落水可选择的自救方法是<strong>敲碎侧窗玻璃</strong>。<br/>
+128. 汽车机油压力表指示的压力是发动机<strong>主油道中</strong>的机油压力。<br/>
+129. 汽车制动时，如果前轮单侧制动器起作用，会引起汽车<strong>跑偏</strong>。<br/>
+130. 转向盘用以控制<strong>转向轮</strong>实现车辆的转向。<br/>
+131. 离合器用以控制<strong>发动机</strong>与传动系动力的接合与分离。<br/>
+132. 制动踏板是<strong>行车制动器</strong>的操纵装置。<br/>
+133. 变速器的作用是使发动机与传动系平稳接合或彻底分离，便于起步和换挡。（错）<br/>
+134. 发动机舱的日常检查与维护的项目有<strong>机油、冷却液、制动液量</strong>。<br/>
+135. 检查轮胎外表有无破损，并<strong>清除胎纹间杂物</strong>。<br/>
+136. 从轮胎表面到沟槽底部的橡胶厚度应不低于<strong>1.6毫米</strong>。<br/>
+137. 检查离合器踏板时，应将踏板踏到底，检查踏板与车厢板之间的间隙是否合适。（错）<br/>
+138. 为了避免爆胎，要定期进行轮胎换位，适当降低轮胎气压。（错）<br/>
+139. 关节扭伤的伤员，应<strong>避免活动</strong>。<br/>
+140. 伤员较大动脉出血时，可用指压止血法，用拇指压住伤口的<strong>近心端</strong>动脉。<br/>
+141. 上肢或小腿出血，且没有骨折和关节损伤时。可采用<strong>屈肢加垫止血法</strong>。<br/>
+142. 抢救脊柱骨折的伤员应<strong>用三角巾固定</strong>。<br/>
+143. 移动脊柱骨折的伤员，切勿扶持伤者走动，可用软担架运送。（错）<br/>
+144. 伤员上肢骨折固定时，肢体要伸直捆绑。（错）<br/>
+145. 大中型载客汽车<strong>不得牵引</strong>挂车。<br/>
+146. 喝酒后驾驶营运机动车的，暂扣三个月驾驶证，处<strong>500元</strong>罚款。<br/>
+147. 醉酒后驾驶营运机动车的，罚款2000元。<br/>
+148. 一年内醉酒被处罚两次以上的，吊销驾驶证。<strong>5年</strong>内不得驾驶。<br/>
+149. 客运车辆载客超过额定乘员但没超过额定乘员20%的，处<strong>200元以上500元以下</strong>罚款。<br/>
+150. 客运车辆载客超过额定乘员20%或者违反规定载货的，处<strong>500元以上2000元以下</strong>罚款。<br/>
+151. 大中型非营运载客汽车自注册日起，<strong>10年</strong>内每年检验1次。<br/>
+152. 大客车下长坡时，先以<strong>发动机牵阻</strong>控制车速。<br/>
+153. 载客汽车行李架从地面起高度不得超过<strong>4米</strong>。<br/>
+154. 要申请开大客车，要最近连续<strong>3个</strong>计分周期内没有满分记录。<br/>
+155. 取得驾驶牵引车准驾车型资格<strong>2年以上</strong>，并在申请前最近1个计分周期内没满分记录，可申请增加大型客车。<br/>
+156. 持有大客车、公交车和中客车准驾车型机动车驾驶证的，在一个计分周期结束后，<strong>1年</strong>内未提交身体检查结果的，车管所注销其驾驶证。<br/>
+157. 实习期间不得驾驶<strong>公共汽车</strong>。<br/>
+158. 大客车定点停靠，以大客车的<strong>车头</strong>作为对应目标。<br/>
+159. 重型、中型载货汽车，半挂车载物，高度从地面起不得超过<strong>4米</strong>。<br/>
+160. 汽车列车起步时，由于车辆质量比单车大，一般采用<strong>一挡</strong>起步。<br/>
+161. 一年内有醉酒后驾驶营运机动车行为的，被处罚<strong>2次以上</strong>的，吊销驾驶证。<br/>
+162. 货运机动车超过核定载质量，但没有超过核定载质量30%的，处<strong>200元以上500元以下</strong>罚款。<br/>
+163. 哪些车辆不准载人行驶？<strong>货运汽车挂车</strong>。<br/>
+164. 载运集装箱的车辆高度从地面起不得超过<strong>4.2米</strong>。<br/>
+165. 货运机动车在留有安全位置的情况下，车厢内可以附载临时作业人员1人至<strong>5人</strong>。<br/>
+166. 载货汽车载物高度超过<strong>车厢栏板</strong>时，货物上不得载人。<br/>
+167. 载货汽车、半挂牵引车、拖拉机<strong>只允许牵引1辆</strong>挂车。<br/>
+168. 高速上载货汽车最高车速不得超过每小时<strong>100公里</strong>。<br/>
+169. 申请增加<strong>大客车、牵引车、中型客车</strong>准驾车型的，不得有在造成人员死亡的事故中承担全部不或主要责任的记录。<br/>
+170. 汽车列车上坡一旦感到乏力，应及时<strong>减挡</strong>。<br/>
+171. 连接半挂车时，将锁止杆置于“<strong>锁止</strong>”位置。<br/>
+172. 禁止货运机动车载客。（对）<br/>
+173. 挂车车厢内在留有安全位置的情况下，可以附载临时作业人员1人至5人。（错）<br/>
+174. 已持有大型货车驾驶证三年以上，并在申请前最近连续1个记分周期内没有满分记录，可以申请增加牵引车准驾车型。（错）<br/>
+175. 报考大型货车准驾车型科目三考试的，在取得驾驶技能准考证明满30日后预约。（错）<br/>
+176. 报考牵引车准驾车型科目三考试的，在取得驾驶技能准考证明满40日后预约。（错）<br/>
+177. 报考低速载货汽车、三轮汽车、普通三轮摩托等准驾车型的，在取得驾驶技能准考证明满<strong>20日</strong>后预约考试。<br/>
+178. 电瓶车进出非机动车道，通过窄路窄桥时，最高时速不得超过每小时<strong>15公里</strong>。<br/>
+179. 汽车吊车及其他轮式专用机械车<strong>不得牵引车辆</strong>。<br/>
+180. 轮式专用机械车，<strong>不得载人</strong>。<br/>
+181. 叉车门架与滚轮的配合间隙不得大于<strong>1.5毫米</strong>。<br/>
+182. 起重机构的滚轮转动应灵活，滚轮及轴应无裂纹、缺损，轮槽磨损量不得大于原尺寸的<strong>10</strong>%。<br/>
+183. 达原尺寸的<strong>20%</strong>时报废。<br/>
+184. 卷扬筒上的钢丝绳应保留<strong>3圈</strong>以上。<br/>
+185. 汽车起重机滑轮轮槽不均匀磨损量达到<strong>3毫米</strong>时应报废。<br/>
+186. 叉车货叉根角不得大于<strong>93度</strong>。<br/>
+187. 轮式专用机械车、电瓶车转弯时最高时速不得超过每小时20公里。（错）<br/>
+188. 轮式专用机械车在冰雪道路等上行驶时最高时速不得超过每小时30公里。（错）<br/>
+189. 吊车、装载机、挖掘机等车辆的作业灯应能照清前方场地情况。（错）<br/>
+190. 叉车多路换向阀操纵手柄应能迅速有效的开通或切断电路。（错）</p>
+
+<p>总之主要的原则是：<strong>哪个答案显得安全，基本就选哪个</strong>。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e9a1bae588a9e9809ae8bf87e69f90jiae88081e5b888e8aebae69687e5aea1e69fa5e68c87e58d97/">顺利通过某jia老师论文审查指南</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:35:31+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>　　由于这个神奇国度先进的教育制度，教育部对本科生毕业论文有着非常严格的质量要求。我们的老师义不容辞地肩负起把好这第一关的重任，可谓任劳任怨，感激之情我已在论文结尾的“致谢”章节中做了深刻表述，这里便不再赘述。只是论文写作和改动，哦，主要是改动期间本人有一些心得体会想在这里记录一下，一来对前段日子做个总结，二来如果文章得幸被某位学弟或学妹读到，并且学弟或学妹得幸在某jia老师的指导点拨下完成自己的毕业论文的话，或许这篇文章对你们减轻自身负担，更重要的是对减轻某jia老师工作上的重压会有一定的帮助。<br/>
+　　我准备首先简短地讲下内容上的小要求，接着就开始逐条列出可能让你一趟趟去办公室打扰某老师工作的格式上的要求。</p>
+
+<p>一、内容上</p>
+
+<ol>
+<li> 论文题目叫“××系统的设计与实现”</li>
+<li> 文章的整体结构如下图所示：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/image.png" alt="image" /></li>
+<li> 每章内部章节结构如下图所示：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/image14.png" alt="image" /></li>
+<li> 摘要和第五张写满一页，可超出。</li>
+<li> 废话一定要多，要使得文字看着有血有肉，“不要写的像技术文档，要像论文，但也不能写的像博客”&mdash;原话。</li>
+</ol>
+
+
+<p>二、格式上</p>
+
+<ol>
+<li> 每年都会发毕业论文格式标准，按照上面写的做（页眉、页脚、行间距、字体、章节编号等）。</li>
+<li> 正文（从第一章开始）写个三四十页差不多了。</li>
+<li> 每张图片都要居中，大小不可多于半页，图片下面都要标好图几点几以及图片名称是什么，如“××模块用例图”。</li>
+<li> 图片拉伸时不要让里面文字走样，保持字原来的长宽比。</li>
+<li> 图片里的文字不能大于正文中的字，也不能小得看不清。</li>
+<li> 每张图都要有说明，图片用来说明文字，最不要出现的情况是某一个标题下就一张图，没任何文字。</li>
+<li> 图片不要太靠页面的边缘。</li>
+<li> 不要出现一章之内大面积留白的情况。会出现这种情况，大部分是因为有图片要放在那块空白区却放不下，只好移到下一页去。可以考虑把下面的文字提上来补全这块空白，然后下面放图片，在上面的文字中用图几点几指示一下图片的位置。</li>
+<li> 不要有不加任何标注的短语。举个例子，不能出现以下情况：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/image8.png" alt="image" /><br/>
+而应该写成以下样子：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/image11.png" alt="image" /><br/>
+即要给它们加上标注，按照原话说是“不加像技术文档，不像论文”。</li>
+<li>. 所有要贴的代码不能用截图的方式，应该用文本框，在框内黏贴。</li>
+<li>. 注意所有的图、表、代码框等带框的东西和上面下面的文字之间的距离要保持一致。</li>
+<li>. 段落的首行要缩进，英文写的摘要也要缩进。</li>
+<li>. 所有句子或图片等明显不是自己写的地方要标好引用，用上标。</li>
+<li>. 不需要内容和下面的标题之间加空格。</li>
+<li>. 致谢章节里，请将所有需要替换老师姓的地方都换上。我一朋友拷贝了某丁姓指导老师带的学生的致谢，结果没把丁老师都替换成某老师，止增笑耳。</li>
+</ol>
+
+
+<p>　　论文做成这样，答辩基本就是个过场了。因为你用论文表明了你的态度，而你的<strong>表现在纸上的态度</strong>是他们看重的唯一一点而已。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/7/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/5/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="APUE上关于fork的使用有段比较经典的代码： if ((pid = fork()) &lt; 0) { err_sys(&ldquo;fork error&rdquo;); } else if (pid == 0) { / child / execlp(buf, buf, (char )0 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e585b3e4ba8efork/">(旧文迁移) 关于fork()</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:08:37+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>APUE上关于fork的使用有段比较经典的代码：   <br/>
+if ((pid = fork()) &lt; 0) {    <br/>
+err_sys(&ldquo;fork error&rdquo;);    <br/>
+} else if (pid == 0) { /<em> child </em>/    <br/>
+execlp(buf, buf, (char <em>)0);    <br/>
+err_ret(&ldquo;couldn&rsquo;t execute: %s&rdquo;, buf);    <br/>
+exit(127);    <br/>
+}    <br/>
+/</em> parent */    <br/>
+if ((pid = waitpid(pid, &amp;status, 0)) &lt; 0)    <br/>
+err_sys(&ldquo;waitpid error&rdquo;);    <br/>
+一开始看这段代码会有疑惑，比如说else if(pid==0)执行子进程代码那块，字面上理解这段代码就是说进程号为0则判断其为子进程，则执行里面的代码，可是，子进程号为0，这怎么可能？ 因此我觉得这里将fork的返回值取名为pid有误导读者的影响，改为fRetValue或者干脆叫i会不会好点？    <br/>
+下面是网上摘的一段fork的解释：    <br/>
+<strong>调用方法</strong></p>
+
+<h1>include</h1>
+
+<h1>include</h1>
+
+<p>pid_t fork(void);    <br/>
+正确返回：在父进程中返回子进程的进程号，在子进程中返回0    <br/>
+错误返回：-1    <br/>
+子进程是父进程的一个拷贝。即，子进程从父进程得到了数据段和堆栈段的拷贝，这些需要分配新的内存；而对于只读的代码段，通常使用共享内存的方式访问。fork返回后，子进程和父进程都从调用fork函数的下一条语句开始执行。    <br/>
+父进程与子进程的不同之处在于：fork的返回值不同——父进程中的返回值为子进程的进程号，而子进程为0    <br/>
+关于fork，还有个问题，就是print缓冲区被子进程复制的问题，如果执行下面这段代码：    <br/>
+pid_t fRetValue;    <br/>
+printf(“fork!”);    <br/>
+fRetValue=fork();    <br/>
+if (fRetValue &lt; 0)    <br/>
+printf(“error in fork!”);    <br/>
+else if (fRetValue == 0)    <br/>
+printf(“i am the child process, my process id is %d”,getpid());    <br/>
+else    <br/>
+printf(“i am the parent process, my process id is %d”,getpid());    <br/>
+父子进程都会打印出fork!，而如果将printf(“fork!”)改为printf(“fork!\n”)就只会打印出一个fork!，同样摘了段解释如下：    <br/>
+主要的区别是因为有了一个\n回车符号这就跟Printf的缓冲机制有关了,printf某些内容时,操作系统仅仅是把该内容放到了stdout的缓冲队列里了,并没有实际的写到屏幕上但是,只要看到有 n 则会立即刷新stdout,因此就马上能够打印了.运行了printf(“AAAAAA”) 后, AAAAAA 仅仅被放到了缓冲里,再运行到fork时,缓冲里面的 AAAAAA 被子进程继承了因此在子进程度stdout缓冲里面就也有了 AAAAAA.所以,你最终看到的会是 AAAAAA 被printf了2次!!!!而运行 printf(“AAAAAAn”)后, AAAAAA 被立即打印到了屏幕上,之后fork到的子进程里的stdout缓冲里不会有 AAAAAA 内容因此你看到的结果会是 AAAAAA 被printf了1次!!!!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89/">(旧文迁移) 为什么Windows7那么贵？（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:06:59+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://www.cringely.com/2009/10/why-windows-7-costs-so-much/">http://www.cringely.com/2009/10/why-windows-7-costs-so-much/</a></p>
+
+<p>我用Windows7已经好几天了，跟Vista和Xp比起来它当然进步许多，相比之下，它需要更少的资源（比Vista少得多），启动的更快，可用性非常好。恩，但它为什么那么贵呢？我知道原因。</p>
+
+<p>为了形成鲜明对比，让我们比较Windows7和可能的竞争对手Mac OS X10.6雪豹。我在这里并非要争论他们谁将谁视为竞争对手，还是两者皆是。然而在市场上，雪豹的升级版是49.95美元 29.95美元（对于五台机器的家庭装来说是99.95美元 49.95美元），而可供用户选择的20种不同的Windows7的版本里最流行的一种（Windows7家庭高级版）要119.95美元。</p>
+
+<p>Windows7是真的要比雪豹贵70美元90美元吗？</p>
+
+<p>（这价格定的明显是在扯淡嘛——Bob说）</p>
+
+<p>问得更好一点应该是为什么微软要把价格设定在以往那么高的标准上？这个问题的答案非常简单：微软压根就没想要你升级到Windows7。</p>
+
+<p>微软是想要你去买一台全新的装有Windows7的电脑。</p>
+
+<p>把价格设定在119.95美元是微软一次成功的运作。他们不希望用户来升级系统，所以通过将价格定得很高这一手段，微软实质上将Windows7的升级税强加在了用户头上。在斯台普斯买一台新的Windows7电脑，软件价格便降到了49.95美元，跟雪豹一样。</p>
+
+<p>从Windows7的税来看，微软热衷于赚钱，但他们将价格定那么高的主要原因是能让我们都去买新电脑。那会使得微软在每个小单元上收入减少一些，但是在整体业务上会带来跟多的收入，例如用户将会决定升级为新电脑上的整套Office软件，而不是单单为了一个新软件在每台机上花费119.95美元。对微软来说，卖一台新的电脑比零售一个软件升级在支持服务上花费少得多。这种定价策略使得微软受到广泛欢迎，同样受益的还有其原始设备制造商，像惠普、戴尔以及其他上百家厂商。</p>
+
+<p>这里还有一个证据可以说明微软的意图：你确实做过Windows7的升级吗？我升级用了七个钟头！这原本不应该要花那么长时间，除非这其中有一部分意图是要阻碍用户升级。雪豹的升级花了我20分钟，但是苹果公司没有取悦任何一家员原始设备制造商（这是关键），并且甚至定价在49.95美元的情况下还是在升级上赚了很多钱。</p>
+
+<p>当Windows95刚刚引进的时候（那时我正在拍摄《书呆子的胜利》），比尔盖茨和杰雷诺那天的部分表演是将一台486/66机器从Windows3.1升级到Windows95。升级过程用了半个钟头。而如今有了更为现代的处理器、内存、磁盘驱动器和声称精简而平凡的新型操作系统，为什么升级Windows7要比其他的多花那么多时间？</p>
+
+<p>不应该是这样的，除非一开始并没有把升级的速度放在特性列表上加以考虑。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89/">(旧文迁移) 只要这些人中有百分之一…（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:06:34+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://sivers.org/1pct">http://sivers.org/1pct</a></p>
+
+<p>一个音乐家邀请我的朋友来帮他做一间发送CD邮件的大房间。   <br/>
+这个音乐家已经堆放了一万份他CD的拷贝，预计着通过那个礼拜可以收到一万份的订单。    <br/>
+他在一份拥有一百万忠实读者的杂志的封底买下了四分之一版的广告。    <br/>
+他不停的说：“<strong>只要这份杂志的读者中有百分之一买了我的</strong><strong>CD…</strong><strong>那么就有一万份了！而且这仅仅只是百分之一！</strong>”    <br/>
+他买了一万个带衬垫的邮包和邮件标签，把他的车库变成了一个大的邮寄中心。    <br/>
+他不停的说：“可能会有百分之十呢！那就是十万份！但最坏的情况，如果只有百分之一的话…那还是棒极了！”    <br/>
+杂志出版了，并且… 什么也没发生。他买了一本。上面有他的广告。但却没有收到任何订单！难道出什么错了么？没有。他检查了一遍，一切都很正常。    <br/>
+在接下来的几个星期里，他一共收到了<strong>四份</strong>订单。CD一共卖出了：四份。    <br/>
+跟我说这个故事的朋友最后加了一句最好的注解：    <br/>
+“<strong>他忘了还有比百分之一更小的数字</strong>。”    <br/>
+每当我听到商业计划里这样说道”只要卖出了超过三千万台iPhone，我们的应用程序铁定能…”的时候，我总会想起这个故事。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89/">(旧文迁移) 尖端项目和时间管理（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:06:06+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://www.joelonsoftware.com/items/2009/10/26.html">http://www.joelonsoftware.com/items/2009/10/26.html</a></p>
+
+<p>令人吃惊的是，现在的学生要顺利从一所顶尖大学拿到计算机学位是多么的容易，他们没有学习过如何使用软件开发人员的基本工具，没有在团队里工作过，没有上过一门需要团队合作的课。许多计算机系还是用80年代的老套路，老是教那么几个一样的课程，这些课在现在看来已经完全和现代软件开发脱离开来了。   <br/>
+学生们该在哪里学习版本控制、缺陷跟踪、团队协作、时间安排、估算、调试、可用性测试和写文档呢？他们要在哪才能学写超过20行的程序呢？    <br/>
+许多大学已成功地说服自己，课程越是和现实世界脱钩，它们就越牛。这是在走文科学习的路子。就把确确实实在产出程序员的任务留给那些技术职业学院、红砖大学和各地的小学校（“北西南佛罗里达大学”）吧。全世界的长春藤联盟大学要教的是线性代数、计算理论和哈斯科尔编程，所有努力地提升他们层次的计算机系都这么做，从课程体系里去除掉那些需要实践的部分，取而代之的是更多的理论。    <br/>
+不要误会我的意思，这并不一定是件坏事。至少他们正把教Java换成教Scheme语言，仅仅是因为“MIT就是这么做的”。（太晚了！）他们也在教学生们用某种方式思考。但即使一个计算机系教授对现实世界软件开发懂得再多，我也情愿让我的孩子们通过在Fog Creek公司里实习来学习那些知识。    <br/>
+多伦多大学的助理教授Greg Wilson在多伦多举行的StackOverflow开发者日会议上发表了演说，他的报告有趣，信息量丰富，很有影响力。我们聊了一会，他跟我说了他最新的创意UCOSP，代表的含义是“所有的好名字都被人取了”。    <br/>
+有一个由15个大学组成的财团，这些大学大多数来自加拿大，这个财团正在为所有的高年级学生筹备一个尖端项目。他们从各类学校中挑选出本科生，让他们六个人一组来合作完成一个开源项目，作为荣誉也作为成绩。我一听说有这么一个项目便自愿赞助了其中一个团队来为Mercurial项目做出贡献。赞助某个团队包括支付组织这些本科生到多伦多的旅途的费用，以及提供一名程序员来指导该团队。    <br/>
+在UCOSP博客上浏览的时候，我想起了一篇文章：《为什么学生的项目受到赞扬却还是常常没有什么用途》。“这门课中一个关键点是让你有机会去发现要设置什么样的目标，然后实现你自己的目标。”Greg写道，“明白了这一点，最终的结果是很明显的：在很多情况下，学生们每周花在这门课上的时间比以前花在同样内容的一门更有条理的课程上的时间更少了。”    <br/>
+大学里的毕业生大约有16年的做短期作业并且喜欢拖到截止日期最后才做的经验。直到你成了大学里的高年级生，你还没有碰到过有哪个作业是你熬夜做不完的。    <br/>
+比较典型的计算机科学作业都只要求学生完成作业里写代码这一比较“有趣”的活（用这个词的学术意义来说）。作业其余的百分之九十对于本科生从不作要求，因为改错和处理真实世界的情况并无乐趣，大多数的计算机系教职人员也从来没有真刀真枪地做过软件，他们几乎不知道怎样才能做出能满足用户需求的软件，然而正是这百分之九十无趣的工作可以将代码带到一个“有实际用途，成为现实世界中的代码”的层次。    <br/>
+时间管理也是遭受非议的一个方面。在一个四名学生组成的小组中，即使有一到两个有进取心的学生想要早点开始项目，其他学生很有可能拖他们后腿，因为他们有着更为紧急的其他课的任务等着明天要交。有进取心的学生（们）必须作出选择，是他（们）自己先做起来并且做比他（们）应分担的任务更多的工作，还是和其他人一起等到要交项目的前夜，猜猜他会怎么选择。    <br/>
+学生对于长期的以团队为基础的时间安排表完全没有经验。因此，一旦接到了一个长期的项目并且被告知他们自己管理自己的时间时，他们几乎总是做不出什么像样的东西。    <br/>
+如果真要这些项目有什么有益的东西产出，你就必须按照星期制定最后期限，并且你必须意识到在每周期限到来的前夜，该项目的所有工作都要完成。如果不把完成项目的这段时间分成一个个短期里程碑的话，极少能在最后期限前完成这个项目，这似乎是人的固有性质决定的。    <br/>
+这可能是一个使用Scrum的好机会。每周一次整个团队会聚在一起，无论是亲自到场还是虚拟会议，他们会审查上一周的工作。然后他们会决定下周要完成哪些部分和任务。FogBugz在跟踪方面做的不错：如果你正在做一个尖端项目需要访问FogBugz，请让我们知道，我们很乐意免费为你安装。我们还能为你安装kiln的测试版本，这是Mercurial的托管版本，包括代码审查的功能。    <br/>
+我在这里抱怨学生们缺少在某个时间段里做长期项目的训练，而并非他们故意拖拉耽搁，但这个问题在非学生群体中当然也存在。我花了一定时间，但最终还是明白了长期的期限（或根本没有期限）对职业程序员来说没有效果，在这么长一个时间段里，你要有一个定期经常发布有益产品的时间表。现实世界正确地做到了这点，而所有的大学生团队失败了，其原因是在现实世界里有经理，他们可以设置最后期限，而在学生团队中，大家都是平等的，不能这样做。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89/">(旧文迁移) 实时搜索究竟能走多远？（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:05:25+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文网址：<a href="http://www.nytimes.com/2009/10/25/business/25ping.html?_r=1&amp;hpw">http://www.nytimes.com/2009/10/25/business/25ping.html?_r=1&amp;hpw</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image0011.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb1.jpg" alt="clip_image001" /></a></p>
+
+<p>当一架美国航空公司的飞机一月份降落在哈德逊河畔的时候，Twitter上第一张图片诞生了。在六月份，Twiiter的用户赶在各大新闻媒体报导迈克尔杰克逊的死讯之前就已经开始为他哀悼了。就在这个月，随着全国大多数人的目光聚焦在一个载着6岁男童的热气球上，这起事件每一次的转折瞬间都会在Twitter上掀起一番“推”和”转推”的浪潮，几乎将网站上其他所有的信息都淹没了。</p>
+
+<p>随着大事件的发生，Twitter,Facebook和其他相似的服务正越来越成为这个国家的虚拟水冷却器(译者注：许多公司都有水冷却器，员工喜欢在工作之余在旁边讨论一些问题)。它们能快速传播信息，有时能赶在大众媒体之前，并且他们爆发增长文字和链接瞬间记录下了美国人集体的当务之急。</p>
+
+<p>难怪学者和投资者对有一种有效的手段来<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>这类信息的前景会如此垂涎三尺了。当然Twitter有它自己的搜索引擎，但还有其他一些如OneRiot、Collecta和Topsy也在竞争成为实时搜索领域的Google。</p>
+
+<p>为了不被淘汰，谷歌和微软分别在上周与Twitter达成协议，将Twitter发布的信息融合到他们的<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>引擎中去。</p>
+
+<p>在纷繁的讨论声中，然而有一个问题始终没有得到解答：到底实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>转变成现金有多难呢？</p>
+
+<p>没有人会怀疑帮助用户在网上发现新鲜、最新的内容是有价值的。但许多其他有价值的Web服务——包括内容网站、免费的Web电子邮件以及社交网络——也在挣扎着寻找有效的商业模式。</p>
+
+<p>分析家说Twitter也许可以寻找除了<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>以外的其他方法来从流经它的系统的海量数据中盈利。</p>
+
+<p>但是Twitter的总裁Evan Williams说收入并非它与谷歌和微软签订协议的重点。</p>
+
+<p>还有，这两家公司都没有马上计划在Twitter<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>上投放广告，尽管他们以后可能会这么做。并且Facebook上周也称自己并有从与微软签订的把一些用户的更新放到实时搜索中的协议里赚到钱。</p>
+
+<p>“我们不知道到底能从实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>里赚到多少钱。”资深搜索行业分析师、搜索引擎大陆的编辑、行业博客写手Danny Sullivan说。</p>
+
+<p>传统的Web<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>是个实践中能赚钱的生意，有两个原因。其一，如果没有谷歌、雅虎、必应或Ask，Web就是一坨不可思议的比特的混杂。这些服务极为重要，以至于根据comScore的统计结果，单单在美国一天就要被使用超过四亿五千万次。</p>
+
+<p>其二，同样重要的一点是，<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>引擎广告也许是曾发明过的最有效的市场营销形式了。因为搜索查询精准地泄露了用户的意图，这使得在对的时间用对的广告吸引用户成为了可能。其结果是，登广告的人愿意出大笔钱在那些在谷歌里输入“iPhone交易”或者“毛伊酒店”的人面前兜售他们的商品。</p>
+
+<p>为了使得商人们能准确找出用户的兴趣，在网络上跟踪用户需求的技术已经花费了数十亿美元，所有形式的在线广告——或者相对的离线广告——在有效性方面跟<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>引擎广告比起来都差了一大截。</p>
+
+<p>如果实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>要取得同样神奇的成果，首先就需要有大量的查询结果，还需要可以跟搜索引擎广告相匹敌的用广告来满足用户需求的能力。Sullivan先生说他希望实时搜索查询结果更一般的搜索结果比起来数量更少，内容更专一。</p>
+
+<p>内容更为专一，有可能就意味着不那么好赚钱。实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>还是个新技术，与之相关的信息很难获得。但是最近的检查报告显示，仅有一小部分实时的交谈是明显关于商业的。举个例子，在最近的某个早晨，Twitter上10个话题里仅有两个——万圣节前夕和苹果笔记本电脑——是关于商业的。</p>
+
+<p>实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>企业家们对此意见并不一致。</p>
+
+<p>Collecta的总裁Gerry Campbell说，最多只有所有流经系统的百分之二十的查询可以轻易转为收入来源。举例来说，这个月Collecta查询中有一个激增的关键词，那就是Viper——一款新的iPhone应用，它能够远程启动一辆汽车。</p>
+
+<p>还有人说查询跟广告匹配的例子比比皆是：在<a href="http://www.yeeyan.com/articles/tag/twitter"><em>twitter</em></a>里搜下雪情况，可能意味着对滑雪胜地来说是个广告的机会；搜关于手机信号差的内容，可能会吸引到网络竞争对手的广告；搜关于饭店的内容，可能会和某个显示地方熟食店最新座位情况的广告相匹配。</p>
+
+<p>“很明显用户在显露他们的意图，那样你就有机会来匹配他们。”Campbell先生说。</p>
+
+<p>微软<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>技术的总经理Sean Suchter说，他期待实时搜索最终能赚大钱。但他现在加了这么一句，“我们的目标就是要驱动用户的价值。”</p>
+
+<p>与之类似的，谷歌说实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>很有价值，尽管并非不可或缺，因为普通的搜索也能赚同样多的钱。</p>
+
+<p>“我们并不清楚人们针对实时数据会做出什么样的查询，所以并不了能赚多少钱。”谷歌<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>产品部和用户体验部的副总裁Marissa Mayer说。</p>
+
+<p>谷歌需要Twitter的数据主要是由于谷歌的任务是要获得全面的数据：谷歌想要整合全世界所有的信息，包括网络上短暂的实时交谈。</p>
+
+<p>“我们很清楚全面性对于我们业务会带来商业上的好处。”她说。换句话讲，全面性使得人们始终在谷歌上进行<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba/">(旧文迁移) Nook——一款新型的电子阅读器进入了市场（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:04:43+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文网址：<a href="http://www.nytimes.com/2009/10/21/technology/21nook.html?em">http://www.nytimes.com/2009/10/21/technology/21nook.html?em</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup_thumb.jpg" alt="popup" /></a></p>
+
+<p>由美国书商Barnes &amp; Noble推出的Nook这款电子阅读设备在昨天揭开了它神秘的面纱，与Kindle正式展开了竞争。</p>
+
+<p>正如众人所期盼Barnes &amp; Noble在周二的一次引人注意的新闻发布会上展示了它的Nook电子阅读设备赢得了出版界普遍良好的反映并就人们私下议论的借阅功能提供了一些细节信息。</p>
+
+<p>最重要的是出版商对于Barnes &amp; Noble这个操控着全国最大的连锁书店的书商生产出了亚马逊Kindle的可靠替代品这件事似乎松了一口气。Nook售价为259美元，于周二下午在 nook.com上开始发售，价格跟最新版的Kindle不相上下。Nook将于11月下旬全面上市。</p>
+
+<p>亚马逊公司目前在电子阅读器市场上占有绝对优势。尽管各种销量估计值不尽相同，但根一家据对出版业的咨询公司Codex Group的数据，亚马逊公司已经卖出了945000台，而与之相比索尼公司仅卖出了525000台索尼阅读器。</p>
+
+<p>Barnes &amp; Noble公司在七月份开了一家电子书店，它的出版物可以再ePub上获取到，是Adobe PDF格式的，可以在多种不同设备上阅读，包括苹果的 iPhone、黑莓、Mac和PC。Barnes &amp; Noble公司将继续支持这些设备，同时也会支持即将到来的iRex公司和Plastic Logic公司的电子阅读器。</p>
+
+<p>但是该公司很明显要在Nook上巩固电子书的销量。Nook的特征是有一个六英尺长的灰白的阅读屏和一个彩色的触摸屏控制面板。在连锁的1300家商店的任一家里，顾客都可以通过Wi-Fi网络下载电子书。在商店外面，顾客可以通过访问AT&amp;T公司的3G网络来下载。</p>
+
+<p>Nook与众不同的因素之一便是顾客可以把书“借”给朋友。但是顾客一次只可以把任一本书借出去14天，并且在书外借期间他们不能在自己的Nook上阅读它。</p>
+
+<p>在一次采访中，Barnes&amp;Noble.com的总裁William Lynch说，公司将在有营业场所的商店里不遗余力地推销Nook。Nook也自带软件可以检测到一个顾客走进了一家商店，这样它便可以跳出优惠券信息和其他促销信息，像即将到来的书的摘要或者新书阅读建议。当在商店的时候，Nook的主人可以通过流媒体软件阅读任何电子书。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89/">(旧文迁移) 为什么人人都爱Twitter（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:04:16+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文网址：<a href="http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html">http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb.jpg" alt="clip_image001" /></a>    <br/>
+Twitter的实时搜索功能给人一种在线谈话的感受</p>
+
+<p>硅谷的许多顶尖和优秀的企业都参加了在旧金山举行的Web2.0会议，但这场盛会上最亮眼的明星无疑是Twitter。</p>
+
+<p>如果还需要证据来证明微博客服务确实已经飞速成名了，你只需要看看昨天下午从诸如微软和谷歌这样的技术中坚传来的潮水般的新闻就可以了。他们两家都争相宣称自己和Twitter签订了协议来在他们的网站上增强新的实时搜索功能，以在竞争中胜过对方。</p>
+
+<p>甚至于Facebook这样的Web2.0运动的典范都发现，自己和微软签订的将Facebook状态更新整合到Bing的搜索结果中的新闻跟Twitter提供的盛宴比起来仅仅是一道开胃菜而已。</p>
+
+<p>微软和谷歌在最近几个月里都承认他们需要在将实时搜索整合到他们的结果页面里这方面做得更好。Twitter最强大的能力便是能展现出世界上任何地 方的人们当下正在讨论些什么的快照。和这些流动的超地域数据相比，Bing和谷歌的搜索结果如此固定以至于他们看起来不会变化。</p>
+
+<p>就在我写这篇文章的时候，举个例子，英国国民党领袖Nick Griffin在今晚出现在“质询时间”之前已经摆平了在BBC电视中心外面的抗议者。在Google里迅速搜索下“Nick Griffin”抛出了一些有趣的结果，其中包括了一份在BBC网站上的简介和一篇来自卫报的社论。但在Twitter里搜同样的内容能看到关于成百上千 个人的愤怒的更加丰富、详细和引人注意的内容。</p>
+
+<p>某些类型的搜索，诸如关于一些事件、新闻或者股票和证券的，越是最近的和最新的消息越是有价值。Twitter本身有野心成为“地球的脉搏”。</p>
+
+<p>Web用户所梦想的场景是有这么一种搜索引擎，它能提供那种我们期望从我们喜欢的Bing和谷歌那里能得到的事实和背景信息，并且带有一种在Web社区里进行全球化交谈的氛围。</p>
+
+<p>微软和谷歌非常渴望“买进”这些实时搜索功能，而不是他们内部开发一套自己的解决方案。但是这明显是个最明智的选择；与Twitter合作使得这两个网站从Twitter数百万的活跃用户那里增强自己的数据，只要鼠标轻轻一点便展现出一个实时的看法和意见的现成的图景。</p>
+
+<p>当然，所有这些最大的赢家是Twitter自己。尽管微软和谷歌都尚未透露这项交易的财务条款，基本上可以确定这已经成为了Twitter的第一个 真正的收入来源。迄今收到过约一亿美元风险投资资金的微博客网站，为这项服务打拼出了一个商业模式；这些协议和合作伙伴能潜在地给网站带来可观的收入，通 过给它金融安全网，而同时它可以尝试其他业务建议，包括要求公司和企业为Twitter上的企业账户而付费。</p>
+
+<p>TechCrunch的行业分析师Michael Arrington表示现在还不清楚这些实时的更新是怎样“融合”到搜索结果中区的，但他设想那些不出名的在Web社区里广为议论的博客文章或网站可能会 在相关搜索的结果列表里排名上升一些。同样地，当这些来源淡出了网络的讨论，它们将会在结果排名上跌回来，其他热门的观点和意见便泡沫一样浮出表面。</p>
+
+<p>本周的会议上清楚的一点是，Twitter喜欢在技术社区里不断增长实力和影响力。它的这种在网上发布和分享信息的新鲜的方法已经迫使其他的像谷歌这样的技术中坚放弃游戏转而继续围绕搜索平台进行创新。那样，最终受益的是我们所有人。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89/">(旧文迁移) Emily Howell: 一个会创作古典音乐的计算机程序（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:03:44+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文网址：<a href="http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html">http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html</a></p>
+
+<p>Emily Howell，这个会创作原版古典音乐的计算机程序已经签订了唱片协议，并将于明年发行她的第一张原创唱片。    <br/>
+这个程序由来自加州大学圣克鲁斯分校的音乐教授David Cope在工作将近四十载后设计和完成。    <br/>
+她的第一张唱片《黑暗中的光明》将于春季发行。是由人们在两架钢琴上通过六个动作演奏出来的。    <br/>
+Cope教授告诉《时代》杂志他原打算写一个程序，它能够复制类似于莫扎特和贝多芬这样的成百上千个古典作家的风格。    <br/>
+但是他说他决定还是要创造出一个不仅能模仿其他人，同时也能以自己的风格原创音乐的东西。    <br/>
+“我致力于创造出一个独一无二的作曲者，它能创作出有趣而引人注目的当代的古典音乐，但是风格却是独树一帜的。”他说。    <br/>
+但他的工作一直是有争议的，一些作曲家和管弦乐队拒绝演奏他的作品。Cope教授说许多大牌的古典演奏家的经纪人援引业界对他作品的争议而拒绝让他们的客户演奏该程序创作的音乐。    <br/>
+许多专家对这个项目持怀疑态度。“对我而言，音乐主要是关于人的情况，”古典音乐评论家Hilary Finch说，“而机器与人不同，我不确定这能否使人满意。”    <br/>
+Cope教授主张Emily Howell的音乐仍然主要是由人来创作的。“计算机并不是单独的一样东西，”他说，“计算机是人造的。程序本身也是人造的。数据库里的音乐也是人为的。那么多相关的东西都是人造的。现在相比往常有更多的人已经参与到这个项目中来了。”</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/">(旧文迁移) 商业大厦停车场上坡处的栏杆机被第一天开车的我一个溜坡撞烂了</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:03:12+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RT</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/">(旧文迁移) 搭完，标记下</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:02:19+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这是用live writer写的第一篇日志。   <br/>
+在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：</p>
+
+<ul>
+<li><p>用live writer连空间的时候会有XML RPC错误，是因为wp里没开启，解决方法是在控制面板Setting-Writing中某选项勾下。</p></li>
+<li><p>解决wp日志编辑器以及live writer中按回车会多一个空行的问题：按shift+enter。</p></li>
+<li><p>解决在live writer中全角空格不缩进问题：在live writer中 日志-编辑日志设置-高级，将XHTML改为HTML。</p></li>
+<li><p>live writer中本地日志的保存地址在\My Documents\My Weblog Posts\Recent Posts</p></li>
+</ul>
+
+
+<p>在这之前，通过了本科的答辩。   <br/>
+在这之前，用５０块买了个godaddy域名，用40块买了个美国主机，256M/5G。对其数据没什么概念，能用就行。    <br/>
+在这之前，算了一下一年费用１００，用到９０岁也不过７０００块左右。用一个月工资做一件一辈子不会后悔的事情，有什么可犹豫的。    <br/>
+在这之前，在琢磨着咱也整个独博玩玩？</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

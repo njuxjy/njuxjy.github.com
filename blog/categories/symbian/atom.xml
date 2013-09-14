@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: symbian | 不可卷也]]></title>
+  <link href="http://njuxjy.github.io/blog/categories/symbian/atom.xml" rel="self"/>
+  <link href="http://njuxjy.github.io/"/>
+  <updated>2013-09-14T11:10:37+08:00</updated>
+  <id>http://njuxjy.github.io/</id>
+  <author>
+    <name><![CDATA[njuxjy]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[图像滤镜之程序实现]]></title>
+    <link href="http://njuxjy.github.io/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0/"/>
+    <updated>2011-11-13T23:43:28+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0</id>
+    <content type="html"><![CDATA[<p>前段时间做了一段时间塞班平台的图像处理研究，想要做出类似于instagram、Q拍那样的滤镜特效，在手机拍完照后可以用我们提供的滤镜对照片进行美化处理（有空再做个ios版的）。看了一些instagram、Q拍、美图秀秀、可牛快拍等软件做出来的效果，对于图像处理零基础的我表示鸭梨很大。从RGB通道、alpha通道、位图结构、灰度图、图层、颜色表等概念看起，然后了解基本的图像处理方法如锐化、柔化、扩散、雕刻、黑白、反色等基本特效的原理，到高斯模糊、图像混合、柏林噪声等进阶的玩法，到最后总结出了一套做图像特效的方法，给我一个.psd的photoshop源文件，我便可以根据里面的拆分步骤用程序去实现该效果。其中参考了不少国外站点的东西，尤其是StackOverflow上找到了很多有用的东东，东拼西凑组成了我图像处理这块的一些心得。先上图吧。</p>
+
+<p>原图如下：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/Nostalgia1.bmp"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/Nostalgia1.bmp" alt="" /></a></p>
+
+<ol type="a">
+<li>基础效果</li>
+</ol>
+
+
+<p>这里说基础是因为这些效果不涉及图像混合等更加复杂的东东，只是对每个像素的RGB通道做一些处理。 有的算法一行代码就能解决了，有的稍微复杂些，不过基本国内的网上都能找得到。</p>
+
+<ol>
+<li><p> 黑白
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/blackwhite.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/blackwhite.png" alt="" /></a></p></li>
+<li><p> 浮雕
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/emboss.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/emboss.png" alt="" /></a></p></li>
+<li><p> 素描
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/sumiao.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/sumiao.png" alt="" /></a></p></li>
+<li><p> lomo
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/lomo.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/lomo.png" alt="" /></a></p></li>
+<li><p> 马赛克
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/mosaic.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/mosaic.png" alt="" /></a></p></li>
+<li><p> 扫描线
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/scanline.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/scanline.png" alt="" /></a></p></li>
+<li><p> 波普
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/bopo.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/bopo.png" alt="" /></a></p></li>
+<li><p> 鱼眼
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/fisheye.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/fisheye.png" alt="" /></a></p></li>
+<li><p>进阶效果</p></li>
+</ol>
+
+
+<p>这里仅作了图像混合，并没有用函数去处理每个RGB分量，毕竟不是专门搞ps的，不知道怎么弄算好看.. 不过貌似可牛快拍里有些效果就是做了图像混合，然后稍做了些处理。这种做法比较没技术含量.. 不适合单独作为产品级的效果，可以作为复杂特效的某些步骤。</p>
+
+<ol>
+<li><p> 早晨
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/morning.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/morning.png" alt="" /></a></p></li>
+<li><p> 星光
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/star.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/star.png" alt="" /></a></p></li>
+</ol>
+
+
+<p>这里就放出两张图了，因为做法其实都一样，最多传的参数不同罢了。当然图像混合也是有学问的，可以参考国外一哥们的系列文章：<a href="http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/">http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/</a></p>
+
+<p>c.高级特效</p>
+
+<p>下面两个效果挺花时间的，主要要知道怎么做比较费时间，做的过程的话第二个效果也比较复杂，是根据.psd文件的拆分步骤一步步做出来的，所以在移动平台上跑有些慢&hellip;</p>
+
+<ol>
+<li><p> 老照片
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/old-photo.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/old-photo.png" alt="" /></a></p></li>
+<li><p> Nostalgia
+<a href="http://www.xiaojiayi.com/wp-content/uploads/2011/11/nostalgia.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/11/nostalgia.png" alt="" /></a></p></li>
+</ol>
+
+
+<p>做的方法受这个老外的影响很大：<a href="http://taptaptap.com/blog/creating-a-camera-plus-fx/">http://taptaptap.com/blog/creating-a-camera-plus-fx/</a></p>
+
+<p>这是个开发ios上滤镜app的老外设计师写的，而且是夫妻档，貌似老婆是设计师，她将做好的photoshop效果图给源文件给老公，然后老公根据.psd文件做成ios应用放到app store里去卖。我的Nostalgia特效就是模仿的他们的效果。不过老外没有把源代码放上来，就截了段核心函数，然后我自己摸索了好多天，不断的尝试，最后才搞成的效果。里面还涉及到了用Matlab模拟出曲线的函数，竟然用到了四次函数。。不过整个过程还是很享受的，很有乐趣。如果组内有需求，可以帮着搞一下。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[移植zlib到Symbian实现gzip内存流解压]]></title>
+    <link href="http://njuxjy.github.io/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b/"/>
+    <updated>2011-08-17T22:11:00+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b</id>
+    <content type="html"><![CDATA[<p>客户端（v3版本）原先在处理服务器端传回gzip数据时采用的策略是先将gzip流保存成.gz文件，再用解压文件的方式将数据解压出来。这种方式显然不如直接从内存中实现gzip解压来得高效，但由于Symbian SDK中zlib的版本过低（1.1.3）等原因，网上介绍的很多内存流解压方法并不适用于此：</p>
+
+<ul>
+<li><p><a href="http://apps.hi.baidu.com/share/detail/8355062">http://apps.hi.baidu.com/share/detail/8355062</a></p></li>
+<li><p><a href="http://blog.sina.com.cn/s/blog_4d6f62190100md6k.html">http://blog.sina.com.cn/s/blog_4d6f62190100md6k.html</a></p></li>
+<li><p><a href="http://blog.sina.com.cn/s/blog_65db99840100kwh9.html">http://blog.sina.com.cn/s/blog_65db99840100kwh9.html</a></p></li>
+<li><p><a href="http://www.devdiv.com/thread-8625-1-1.html">http://www.devdiv.com/thread-8625-1-1.html</a></p></li>
+<li><p><a href="http://www.developer.nokia.com/Community/Discussion/showthread.php?155614-GZip-and-RReadStream-problem">http://www.developer.nokia.com/Community/Discussion/showthread.php?155614-GZip-and-RReadStream-problem</a></p></li>
+</ul>
+
+
+<p>在解决过程中遇到了一些困难，开始使用<a href="http://apps.hi.baidu.com/share/detail/8355062">http://apps.hi.baidu.com/share/detail/8355062</a> 中的方法，并且将服务器返回的gzip数据去掉开头的10个gzip header，但程序始终卡在第13行：</p>
+
+<ol>
+<li><p> CBufFlat* CETNetOperator::DeCompressMemL(const TDesC8&amp; aData)   </p></li>
+<li><p>      {   </p></li>
+<li><p>      TInt nBufferSize = 128;   </p></li>
+<li><p>      HBufC8* nSrc = NULL;   </p></li>
+<li><p>      HBufC8* nTemp = aData.Mid(10).Alloc();   //去掉开头10个字节   </p></li>
+<li><p>      nSrc = nTemp;   </p></li>
+<li><p>      CleanupStack::PushL(nSrc);   </p></li>
+<li><p>      CBufFlat* nBufFlat = CBufFlat::NewL(nBufferSize);   </p></li>
+<li><p>      CleanupStack::PushL(nBufFlat);   </p></li>
+<li><p>.      CBufferManager<em> nBufferManager = CBufferManager::NewLC(</em>nSrc, *nBufFlat,   </p></li>
+<li><p>.                  nBufferSize);   </p></li>
+<li><p>.      CEZDecompressor<em> decompressor = CEZDecompressor::NewLC(</em>nBufferManager);   </p></li>
+<li><p>.      while (decompressor->InflateL())   </p></li>
+<li><p>.            {// loop here until the file is compressed   </p></li>
+<li><p>.            }   </p></li>
+<li><p>.      //    nBufFlat->Ptr(0);   </p></li>
+<li><p>.      CleanupStack::PopAndDestroy(3);   </p></li>
+<li><p>.      return nBufFlat;   </p></li>
+<li><p>.      }   </p></li>
+</ol>
+
+
+<p>然后尝试使用Symbian SDK自带的zlib库，include &lt;ezlib.h>，代码如下：</p>
+
+<ol>
+<li><p> int ungzip(char<em> source, int len, char</em> des)   </p></li>
+<li><p>     {   </p></li>
+<li><p>     int ret, have;   </p></li>
+<li><p>     int offset = 0;   </p></li>
+<li><p>     z_stream d_stream;   </p></li>
+<li><p>     Byte compr[KETNET_BUFFER_SIZE] ={0}, uncompr[KETNET_BUFFER_SIZE * 4] ={0};   </p></li>
+<li><p>     memcpy(compr, (Byte*) source, len);   </p></li>
+<li><p>     uLong comprLen, uncomprLen;   </p></li>
+<li><p>     comprLen = len;   </p></li>
+<li><p>.     uncomprLen = KETNET_BUFFER_SIZE * 4;   </p></li>
+<li><p>.     strcpy((char*) uncompr, "garbage");   </p></li>
+<li><p>.     d_stream.zalloc = Z_NULL;   </p></li>
+<li><p>.     d_stream.zfree = Z_NULL;   </p></li>
+<li><p>.     d_stream.opaque = Z_NULL;   </p></li>
+<li><p>.     d_stream.next_in = compr;   </p></li>
+<li><p>.     d_stream.avail_in = comprLen;   </p></li>
+<li><p>.     ret = inflateInit2(&amp;d_stream,47);   </p></li>
+<li><p>.     if (ret != Z_OK)   </p></li>
+<li><p>.         {   </p></li>
+<li><p>.         return ret;   </p></li>
+<li><p>.         }   </p></li>
+<li><p>.     do  </p></li>
+<li><p>.         {   </p></li>
+<li><p>.         d_stream.next_out = uncompr;   </p></li>
+<li><p>.         d_stream.avail_out = uncomprLen;   </p></li>
+<li><p>.         ret = inflate(&amp;d_stream, Z_NO_FLUSH);   </p></li>
+<li><p>.         switch (ret)   </p></li>
+<li><p>.             {   </p></li>
+<li><p>.             case Z_NEED_DICT:   </p></li>
+<li><p>.                 ret = Z_DATA_ERROR;   </p></li>
+<li><p>.             case Z_DATA_ERROR:   </p></li>
+<li><p>.             case Z_MEM_ERROR:   </p></li>
+<li><p>.                 (void) inflateEnd(&amp;d_stream);   </p></li>
+<li><p>.                 return ret;   </p></li>
+<li><p>.             }   </p></li>
+<li><p>.         have = uncomprLen - d_stream.avail_out;   </p></li>
+<li><p>.         memcpy(des + offset, uncompr, have);   </p></li>
+<li><p>.         offset += have;   </p></li>
+<li><p>.         }   </p></li>
+<li><p>.     while (d_stream.avail_out == 0);   </p></li>
+<li><p>.     inflateEnd(&amp;d_stream);   </p></li>
+<li><p>.     memcpy(des + offset, "\0", 1);   </p></li>
+<li><p>.     return ret;   </p></li>
+<li><p>.     }  </p></li>
+</ol>
+
+
+<p>发现程序始终在第17行返回-2，即流初始化Z_STREAM_ERROR错误，zlib1.1.3的zlib.h中说原因是参数设置不正确，stream为空或者windowBits为负。而inflateInit2（）要求windowBits在8~15之间，在其他范围内的值会造成初始化错误。随后改成了15，但是在第26行inflate进行解压时返回值为-3，即Z_DATA_ERROR错误，原因是"the input data is corrupted (input stream not conforming to the zlib format or incorrect adler32 checksum)&ldquo;。</p>
+
+<p>于是怀疑是Symbian自带的zlib的版本问题，刚哥说得自己移植zlib库进去。由于没移植过程序，一开始犯了个错误，原地绕了个圈子：我从网上下了个人家已经编译好的1.2.3版本的zlib.lib文件和几个头文件放到项目工程中去，以为光更换了zlib版本就行了，结果还是那两个错误。最后才走移植的路子，并编译运行成功，现将步骤记录如下：</p>
+
+<p>从网上下载1.2.3的源代码，将下面这些.h .c文件放入工程下面（全部放进去会使工程太大，由于只需要用zlib的解压功能，所以删除了部分没用的文件和函数，还可以继续减减肥，这个以后再做吧）：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/2.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/2.jpg" alt="" /></a></p>
+
+<p>使用zlib提供的uncompress函数进行解压缩：</p>
+
+<ol>
+<li> ZEXTERN int ZEXPORT uncompress OF((Bytef <em>dest, uLongf </em>destLen, const Bytef *source, uLong sourceLen));  </li>
+</ol>
+
+
+<p>这个函数的实现其实就是上面的ungzip函数。在inflateInit2（）的时候使用了47，在1.2.3版本的zlib.h中有这么一段话，是1.1.3版本中没有的：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/21.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/21.jpg" alt="" /></a></p>
+
+<p>难怪1.1.3版本的不行，因为在1.1.3版本中的inflateInit2()中对gzip只字未提，只有gzopen()等函数能对.gz的文件进行解压。因此1.1.3版本不支持内存流的gzip解压。</p>
+
+<p>这样以后，一般的项目就算是可以大功告成了。下面的步骤仅针对于自己参与的这个项目，没兴趣的可以跳过：） 由于它在其他地方用到了Symbian SDK自带的系统文件ezlib.h，而这一部分代码没法更改为使用新移植进去的zlib库，所以只能在系统中保持两个库的并存，这样就会造成很多函数名和类、结构体声明重复，无法通过编译。唯一想到的办法就是将新加入的zlib源文件中与老版本的zlib冲突的部分全部重命名，但这是一个巨大的工作量，因为宏定义特别多。那就先给zlib减减肥吧，仅保留需要的解压缩的那部分。过程就不详说了，总之多尝试吧，也不是个容易的活。</p>
+
+<p>在这过程中产生了些副产品：</p>
+
+<ol>
+<li><p> Carbide的断点调试，比打日志好多了，f6单步, f8执行</p></li>
+<li><p> 明白了移植是怎么回事</p></li>
+<li><p> 最好服务端过来的数据头部有gzip数据包的大小信息，可以减少客户端动态分配的内存</p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[symbian学习笔记三（内存管理）]]></title>
+    <link href="http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89/"/>
+    <updated>2011-08-01T20:12:48+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89</id>
+    <content type="html"><![CDATA[<p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><strong>二阶段构造</strong></p>
+
+<p>问题1：为什么需要二阶段构造？</p>
+
+<p>首先考虑如下的语句：</p>
+
+<ol>
+<li> CClassName* ptr = new (ELeave) CClassName();  </li>
+</ol>
+
+
+<p>在内存有足够空间的情况下，代码首先在堆上分配一个CClassName类型的对象，并将地址赋给ptr指针，然后调用类的构造函数初始化这个对象。</p>
+
+<p>这样，如果类的构造函数出现了异常，则会发生问题，这种异常发生时没有任何指针指向成功分配给CClassName对象的内存区域，因此这些内存成为孤立内存，发生内存泄漏。这就引出了symbian内存处理的一个重要规则：构造函数绝对不能异常退出。</p>
+
+<p>问题2：为什么二阶段函数能够避免内存泄漏？</p>
+
+<p>二阶段构造函数，顾名思义就是将一个对象的构造分为两个阶段：</p>
+
+<p>第一个阶段是常规的的构造函数，在该构造函数中，没有可能导致异常退出的代码；</p>
+
+<p>第二个阶段是可能会产生异常的构造阶段，实现为函数ConstructL()；</p>
+
+<p>这样，对象的构造过程就应当包括了如下的代码：</p>
+
+<ol>
+<li><p> CClassName* self = new (ELeave) CClassName();   </p></li>
+<li><p> CleanupStack::PushL(self);   </p></li>
+<li><p> self->ConstructL();   </p></li>
+<li><p> CleanupStack::Pop(self);  </p></li>
+</ol>
+
+
+<p>这样的构造方式为什么就能够避免内存泄漏呢？下面我们来逐行分析代码：</p>
+
+<ol>
+<li> CClassName* self = new (ELeave) CClassName();  </li>
+</ol>
+
+
+<p>重载的运算符new首先将内存分配给新的self实例，如果分配失败，那么程序异常退出，如果成功给新的对象分配了内存，那么接着执行不会异常退出的第一阶段构造函数；</p>
+
+<ol>
+<li> CleanupStack::PushL(self);  </li>
+</ol>
+
+
+<p>接着我们将本地指针self推入清除栈，因为下面要调用可能发生异常的退出函数。</p>
+
+<ol>
+<li> self->ConstructL();  </li>
+</ol>
+
+
+<p>如果该二阶段构造函数在执行时异常退出，那么新的CClassName的指针由清楚栈负责清楚，避免了内存泄漏；另外，如果该函数没有异常退出，则拥有了一个完全构造的CClassName实例。</p>
+
+<ol>
+<li> CleanupStack::Pop(self);  </li>
+</ol>
+
+
+<p>安全的将本地指针从清除栈中弹出；</p>
+
+<p>每实例化一个对象就要写上述代码确实有些啰嗦了，Symbian OS为了简化实例化的步骤，又引入了NewL(),NewLC()两个函数(其实也可以写成一个NewL(),然而大家都比较推崇同时创建NewL()和NewLC())，其具体的实现方式见问题3；</p>
+
+<p>问题3：如何在新的类中创建二阶段构造函数？</p>
+
+<p>.h头文件：</p>
+
+<ol>
+<li><p> Class CClassName : public CBase   </p></li>
+<li><p> {   </p></li>
+<li><p> public:   </p></li>
+<li><p>        static CClassName* NewL();   </p></li>
+<li><p>        static CClassName* NewlC();   </p></li>
+<li><p>        ~CClassName();   </p></li>
+<li><p> private:   </p></li>
+<li><p>        CClassName(); //第一阶段构造   </p></li>
+<li><p>        void ConstructL(); //第二阶段构造   </p></li>
+<li><p>. ……   </p></li>
+<li><p>. }  </p></li>
+</ol>
+
+
+<p>cpp源文件:</p>
+
+<ol>
+<li><p> CClassName* CClassName::NewL()   </p></li>
+<li><p> {   </p></li>
+<li><p>        CClassName* self = CClassName::NewLC();   </p></li>
+<li><p>        CleanupStack::Pop(self);   </p></li>
+<li><p>        return self;   </p></li>
+<li><p> }   </p></li>
+<li><p> CClassName* CClassName::NewLC()   </p></li>
+<li><p> {   </p></li>
+<li><p>        CClassName* self = new (ELeave) CClassName();   </p></li>
+<li><p>.        CleanupStack::PushL(self);   </p></li>
+<li><p>.        self->ConstructL(); //二阶段构造   </p></li>
+<li><p>.        return self;   </p></li>
+<li><p>. }   </p></li>
+<li><p>. void CClassName::ConstructL()   </p></li>
+<li><p>. {   </p></li>
+<li><p>. /<strong><strong><strong><strong><strong><strong>**可能产生异常的代码</strong></strong></strong></strong></strong></strong>/  </p></li>
+<li><p>. }  </p></li>
+</ol>
+
+
+<p><strong>Why Memory Management</strong></p>
+
+<p>    <a href="http://www.sf.org.cn/symbian-os.html">Symbian OS</a>本身就是为<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=2473&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.zfjd.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=802405&amp;k=%E5%86%85%E5%AD%98">内存</a>和<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5143&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=210306&amp;k=%E8%B5%84%E6%BA%90">资源</a>受限的设备开发的，应用<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4744&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cnzz.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=436188&amp;k=%E7%A8%8B%E5%BA%8F">程序</a>运行过程中很可能碰到内存用光，或者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=6038&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.weibo800.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=638529&amp;k=%E7%A1%AC%E4%BB%B6">硬件</a>资源不可用的情况。而这种exceptions是通过修改程序无法解决的，所以遵守以下几条：</p>
+
+<ul>
+<li><p>尽量不要<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5383&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//biyela.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=167752&amp;k=%E4%BD%BF%E7%94%A8">使用</a>不必要的RAM</p></li>
+<li><p>尽早释放资源，如文件server等</p></li>
+<li><p>当你每次申请内存时，都须准备处理out-of-memory错误</p></li>
+<li><p>当 out-of-memory错误发生时，返回到<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5373&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.hongniang.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=378695&amp;k=%E4%B8%80%E4%B8%AA">一个</a>stable的状态，并释放所有期间申请到的资源</p></li>
+</ul>
+
+
+<p><strong> Stack and Heap</strong></p>
+
+<p>    Stack：默认大小8kb，自动删除，如 TInt i = 0;</p>
+
+<p>    Heap ：至少０.5Mb，由程序员手动删除，如 CMyObj* obj = new (ELeave) CMyObj;</p>
+
+<p><strong>Leaves</strong></p>
+
+<p>    首先介绍Conventional C++ Memory Management，在Symbian看来，这是非常低效率的。</p>
+
+<ul>
+<li><p>NULL Pointer Checking  if ((myObj = new CMyObj( ) ) == NULL) { //Error Handling }</p></li>
+<li><p>ANSI C++ Exeption Handling   try { //throw an Exception } catch (int e) { //Error Handling }</p></li>
+</ul>
+
+
+<p>    在Symbian中<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5301&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//bbs.21our.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=465235&amp;k=%E6%8E%A8%E8%8D%90">推荐</a><a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=755&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cntvs.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=260104&amp;k=%E9%87%87%E7%94%A8">采用</a>Leave，如果内存或者资源不能分配到，这个<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4864&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.llf535.com/&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=198436&amp;k=%E4%BB%A3%E7%A0%81">代码</a>就会Leave，沿着Call Stack，直到操作系统或者在某个函数中被Handle掉。</p>
+
+<p>    所有可能Leave的函数最好以L结尾，保证该函数的用户知道这个函数可能Leave。</p>
+
+<p>    Leave的例子：</p>
+
+<ul>
+<li><p>动态内存分配： return new (ELeave) TUint8[1000];</p></li>
+<li><p>产生一个Leave：User::Leave(KErrNotFound);</p></li>
+<li><p>内存不足时Leave：User::LeaveNoMemory();</p></li>
+<li><p>NULL的时候Leave：User::LeaveIfNull(aNotify);</p></li>
+<li><p>当发生错误时Leave：RFs fs; TInt err = fs.Connect(); User::LeaveIfError(err);</p></li>
+</ul>
+
+
+<p>    处理Leave：</p>
+
+<p>    操作系统有默认的处理Leave的方式：</p>
+
+<ul>
+<li><p>在程序启动过程中：直接关闭应用程序。</p></li>
+<li><p>应用程序启动后：显示一个错误消息。</p></li>
+</ul>
+
+
+<p>    开发者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5145&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=858573&amp;k=%E5%8F%AF%E4%BB%A5">可以</a>通过trap装置来处理Leave。TRAP(<em>r, </em>s)和TRAPD(<em>r, </em>s)，其中：</p>
+
+<ul>
+<li><p>_r：是一个TInt类型的leave code，默认值为TErrNone。</p></li>
+<li><p>_s：一系列可能Leave的C++ Statements。</p></li>
+<li><p> TRAPD(err, DoFunctionL());   </p></li>
+<li><p> if (err != KErrNone)   </p></li>
+<li><p>     { //Error Handling }   </p></li>
+<li><p> else  </p></li>
+<li><p>     { //Everything is well }  </p></li>
+</ul>
+
+
+<p><strong>  The Cleanup Stack</strong></p>
+
+<p>    Cleanup stack用于存储在leave发生后需要deallocating的局部变量(指针)。即：当一个函数leave了，所有在cleanup stack上的对象会被全部删除掉。</p>
+
+<p>    Cleanup Stack的使用方法：</p>
+
+<p>CleanupStack::PushL(ptr) ：当发生leave时所有内存都会被释放
+CleanupClosePushL(handle)：当发生leave时这个句柄（handler）会被关闭</p>
+
+<p>CleanupStack::Pop(pointer)：第一个元素出栈
+CleanupStack::PopAndDestroy(pointer)：第一个元素出栈并释放内存</p>
+
+<p>    如果一个函数可能leave，检查一下两种情况：</p>
+
+<ul>
+<li><p>如果leave了，是否所有在堆（heap）上的元素都在cleanup stack中了</p></li>
+<li><p>如果没有leave，你是否自己恰当地将他cleanup了</p></li>
+<li><p> CMyClass* CMyClass::NewL(TInt aBufSize)   </p></li>
+<li><p>    {   </p></li>
+<li><p>    CMyClass* self = new (ELeave) CMyClass;   </p></li>
+<li><p>    CleanupStack::PushL(self);   </p></li>
+<li><p>    self->ConstructL(aBufSize);   </p></li>
+<li><p>    CleanupStack::Pop(self);   </p></li>
+<li><p>    return self;   </p></li>
+<li><p>    }  </p></li>
+</ul>
+
+
+<p>    如果某个函数会在cleanup stack上留下一个对象，那么他必须以C结尾。</p>
+
+<p><strong>Two Phase Construction</strong></p>
+
+<p>    C++构造函数一定不能leave。所有内存和资源的分配应该在第二阶段构造函数ConstructL( )中完成。</p>
+
+<p>编码指南，所有用户定义的C类必须：</p>
+
+<ul>
+<li><p>定义NewL和NewLC函数为public static</p></li>
+<li><p>定义ConstructL和C++ Constructor为private</p></li>
+</ul>
+
+
+<p><strong>Best Practise</strong></p>
+
+<p>     Construction的规则：</p>
+
+<ul>
+<li><p>默认的C++构造函数中不能含有可能leave的代码</p></li>
+<li><p>可能发生leave的函数必须在ConstructL中被调用</p></li>
+<li><p>如果基类也有ConstructL，必须首先调用，不要忘了explicit scoping</p></li>
+</ul>
+
+
+<p>    Destruction的规则：</p>
+
+<ul>
+<li><p>C类必须在析构函数中删除它自己所包含的对象</p></li>
+<li><p>在删除一个对象后，把它的指针设为NULL</p></li>
+<li><p>不要删除不是本类所拥有的对象</p></li>
+<li><p>在reallocation前首先删除对象，并且将其指针设为NULL</p></li>
+</ul>
+
+
+<p>    Further Discussion：</p>
+
+<ul>
+<li><p>Preserve Stack Memory：每个进程只有8K，以引用的方式传递参数，大的对象放在堆上</p></li>
+<li><p>Preallocation vs last moment allocation：一般的原则是只在使用前分配资源并且在使用后马上释放。但是preallocation的好处是节约处理时间，并且在没有内存的情况下照常运行（资源已经分配到了）</p></li>
+<li><p>where to put trap harness：最基本的情况是依靠GUI应用程序的框架。根据应用的不同，可以自定义粒度。</p></li>
+<li><p>Error Code Returns vs. leaving functions：在执行某个处理前检测是否会出现问题，如下代码：</p></li>
+</ul>
+
+
+<p>                                    User::LeaveIfError(fs.Connect());</p>
+
+<p><strong>Memory Leaks</strong></p>
+
+<p>    如果你的程序有内存泄露，在模拟器上关闭时会crash。尽早发现并解决你的内存泄露，因为你可以追查到你可能导致内存泄露的代码改动。如果实在找不到，可用下面方法：</p>
+
+<p>    Heap Balance Checking：</p>
+
+<ul>
+<li><p>_UHEAP_MARK</p></li>
+<li><p>_UHEAP_MARKEND</p></li>
+</ul>
+
+
+<p>    用上述这两个宏放在你要检查的代码的开头和结尾，如果发生panic，则说明这段代码中发生了内存泄露。可以嵌套使用。</p>
+
+<p><strong>Panics </strong></p>
+
+<p>    Panic是一个未经处理的exception，暗示着一个无法解决的错误。</p>
+
+<p>一般程序有以下三类错误：</p>
+
+<ul>
+<li><p>程序错误：如引用一个超过数组范围的元素</p></li>
+<li><p>环境错误：内存、磁盘空间不够，或缺少其他资源等</p></li>
+<li><p>用户错误：输入错误数据</p></li>
+</ul>
+
+
+<p>    可以使用trap和cleanup stack技术来解决环境和用户错误，但是对于第一类的程序错误，我们无法恢复，最好是使用User::Panic()函数，它带有两个参数，第一个是string，第二个是Tint。</p>
+
+<p>内存管理的二十二条军规</p>
+
+<p>1、C类必须有析构函数，这是CBase的一个虚函数。
+2、C类的构造函数和ConstructL()必须为protect或private类型的成员函数
+3、在C class中必须有一个NewLC()函数，除非它是嵌套类。NewL()是可选的，并且总是根据NewLC()来实现。
+4、NewL()和NewLC()在c class中必须是static函数。
+5、C类通过指针和引用来传递。
+6、拷贝构造函数在symbian中没有用。
+7、不要一定在析构函数中删除类的成员对象。（生命期结束即可删除）
+8、析构函数中必须对对象进行if检查。即</p>
+
+<ol>
+<li> if(iObject) delete iObject;iObject = NULL;  </li>
+</ol>
+
+
+<p>9、R类没有明确的构造、析构或拷贝构造函数以及赋值操作。
+10、delete a;a=NULL;a=b;标准重新分配过程。
+11、任何可能导致异常退出的函数皆加L后缀。
+12、不要删除非拥有对象（也就是，那些仅仅只使用的对象）
+13、分配动态数组前定义一个合适粒度。
+14、把new换成new(ELeave).
+15、if(函数不能异常退出&amp;&amp;要自己处理错误时)使用TRAP&amp;&amp;不要过多嵌套。
+16、if(aObject被一个自动变量指针引用&amp;&amp;将进行一个可能在aObject生存期内Leave的操作）
+CleanupStack::PushL(aObject);
+17、决不能把一个i前缀的成员变量PushL入清理栈。
+18、构造函数决不能Leave，把可能异常退出的语句放到ConstructL()中去。
+19、Symbian的默认栈容量为8k，小心使用递归。
+20、TBuf的长度最好不超16，必要的情况下用HBufC代替TBuf.
+21、使用__UHEAP_MAEK 宏来检测你的内存状况。
+22、尽可能早的删除一切失去使用价值的东西，不要等到函数尾部（自动变量）或在析构函数中才删除（成员变量）。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[symbian学习笔记二（字符串）]]></title>
+    <link href="http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2/"/>
+    <updated>2011-08-01T16:18:15+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2</id>
+    <content type="html"><![CDATA[<p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/cfdb8e3b00aa7e6fb9998fd9.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/cfdb8e3b00aa7e6fb9998fd9.jpg" alt="" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/a3b3aa30c8e67cb31b4cffa13.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/a3b3aa30c8e67cb31b4cffa13.jpg" alt="" /></a></p>
+
+<ul>
+<li><p>8位：（TDesC8），用于二进制数据或者ASCII字符串</p></li>
+<li><p>16位：（TDesC16），默认，Unicode</p></li>
+</ul>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/32.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/32.jpg" alt="" /></a></p>
+
+<p>描述符可以分为五类：</p>
+
+<ol>
+<li><p> 抽象类（Abstract）：（TDes、TDesC、Tdes8、TdesC8），其他描述符的基类，仅提供接口和基本功能，不能被实例化，一般只用作函数的参数。</p></li>
+<li><p>  文字常量（Literal）：（TlitC、<em>LIT()），用于存储文字字符串（literal string），即C中字符串常量，通常使用</em>LIT()这种方式（当然还有<em>L()和</em>L8()的描述方式，但都不提倡用）。</p></li>
+<li><p>  栈类（Buffer）：（Tbuf、TbufC、 Tbuf8、TbufC8），数据存储于栈上，最基本的描述符变量类型，大小在编译时确定，包含描述符本身数据，使用最为普遍</p></li>
+<li><p> 堆类（Heap）：（HbufC、HbufC8），数据存储于堆上，大小在运行时确定，也就是是用来处理动态申请的描述符类。</p></li>
+<li><p> 指针类（Pointer）：（TPtr、TPtrC、TPtr8、TPtrC8），本身不包含描述符数据，但是包含长度数据，而且还包含一个指向位于描述符之外数据的指针。</p></li>
+</ol>
+
+
+<p>1、  文字描述符常量</p>
+
+<ol>
+<li> LIT(KMyFile, "c:\System\Apps\MyApp\MyFile.jpg");  </li>
+</ol>
+
+
+<p><em>L()可以生成一个指向字符值的地址（TPtrC），它经常被用来传递字符串到函数中（包括描述符的构造函数和格式化函数）；同理</em>L8()则可以生成一个指向二进制数据的地址（TPtrC8）举例如下：</p>
+
+<ol>
+<li><p> NEikonEnvironment::MessageBox(_L(&ldquo;Error: init file not found!&rdquo;));   </p></li>
+<li><p> //数字转字符串   </p></li>
+<li><p> TBuf16<20> buf;   </p></li>
+<li><p> TInt iNum = 20;   </p></li>
+<li><p> buf.Format( _L( "%d" ) , iNum  );  </p></li>
+</ol>
+
+
+<p>2、  栈描述符</p>
+
+<ol>
+<li><p> LIT(Ktext , "Test Text");   </p></li>
+<li><p> _LIT(Ktext1 , "Test1 Text");   </p></li>
+<li><p> _LIT(KXtraText , "New:&ldquo;);   </p></li>
+<li><p> _LIT(NewText , "New1");   </p></li>
+<li><p> _LIT(NewText1 , "New2");   </p></li>
+<li><p> TBufC<10> Buf1 ( Ktext );//Buf1长度为9 内容 “Test Text”   </p></li>
+<li><p> TBufC<10> Buf2 ( Ktext1 );//Buf2长度为10 内容 “Test1 Text”   </p></li>
+<li><p> // 通过赋值的方式改变数据   </p></li>
+<li><p> Buf2 = Buf1; //Buf2长度变为9 内容 “Test Text”   </p></li>
+<li><p>. //通过使用Des()生成指针改变TBufC的数据   </p></li>
+<li><p>. TPtr Pointer = Buf1.Des();   </p></li>
+<li><p>. // 删除后四个字符   </p></li>
+<li><p>. Pointer.Delete(Pointer.Length()-4, 4 ); //Buf1长度变为5 内容“Test ”//但是内存应该没变   </p></li>
+<li><p>. // 增加新的数据   </p></li>
+<li><p>. Pointer.Append(KXtraText);//Buf1长度为9 内容为“Test New：”   </p></li>
+<li><p>. // 也可以使用下列方式改变数据   </p></li>
+<li><p>. TBufC<10> Buf3(NewText);   </p></li>
+<li><p>. Pointer.Copy(Buf3);//Buf1长度为4，内容为New1   </p></li>
+<li><p>. // 或直接从字符串里获得数据   </p></li>
+<li><p>. Pointer.Copy(NewText1);//Buf1长度为4，内容为New2  </p></li>
+</ol>
+
+
+<p>    以上介绍的是不可修改的栈描述符，而可修改的描述符就不用通过那么复杂的方法来实现修改，它直接可以用Copy、Delete等方法，但是无论可修改的还是不可修改的，一旦指定最大的数据长度后，最大长度就不能进行修改了。</p>
+
+<p>在内存中如下所示:</p>
+
+<ol>
+<li> TBuf<16> helloWorld = KHelloWorld; TInt len = KHelloWorld().Length(); helloWorld[len-1]=&lsquo;?&rsquo;;  </li>
+</ol>
+
+
+<p>TBufC的用法如下：</p>
+
+<ol>
+<li> _LIT(KHelloWorld, "Hello World"); const TInt maxBuf = 32; TBufCbuf; TInt currentLen = buf.Length(); // == 0 buf = KHelloWorld; currentLen = buf.Length(); // == 11 TText ch = buf[2]; // == 'l'  </li>
+</ol>
+
+
+<p> TBuf的用法如下：</p>
+
+<ol>
+<li> const TInt bufLen = 6; TUInt8 objType = 1; TUInt8 objId = 1; TUInt8 xCoord = 128; TUInt8 yCoord = 192; &hellip;. TBuf8<bufLen> buf; buf.Append(objType); buf.Append(objId); &hellip; //we can now do something with the buffer such as writting it to a binary file or send via socket.  </li>
+</ol>
+
+
+<p>3、  堆描述符</p>
+
+<p>堆描述符虽然都是不可修改类型的，但是它仍然具有构造和修改，与栈描述符不同的是：首先对内存需要显示释放，其次是堆描述符没有最大长度的限制，任何时候都可以用ReAlloc（）函数重新申请分配。具体见示例：</p>
+
+<ol>
+<li><p> //例1、构造   </p></li>
+<li><p> //有两种方式来生成一个Heap Descriptor   </p></li>
+<li><p> //第一种方式用New(),NewL(),或NewLC()   </p></li>
+<li><p> //如下操作便可以构建一个存放数据的空间，空间为15，不过目前大小为0   </p></li>
+<li><p> HBufC * Buf = HBufC::NewL(15);   </p></li>
+<li><p> //第二种方式是采用Alloc()，AllocL()或AllcLC()来处理，   </p></li>
+<li><p> //不过这是已经存在的数据的管理方式。新的Heap Descriptor   </p></li>
+<li><p> //可以自动的根据这个内容来构造。   </p></li>
+<li><p> _LIT (KText , "Test Text");   </p></li>
+<li><p>. TBufC<10>  CBuf = KText;   </p></li>
+<li><p>. HBufC * Buf1 = CBuf.AllocL();   </p></li>
+<li><p>. CleanupStack::PushL(Buf1);   </p></li>
+<li><p>. //例2、修改   </p></li>
+<li><p>. //下面是通过赋值方式改变其数据的方法   </p></li>
+<li><p>. _LIT ( KText1 , "Text1");   </p></li>
+<li><p>. *Buf1 = KText1;   </p></li>
+<li><p>. // 通过可修改指针来改变数据的方式   </p></li>
+<li><p>. TPtr Pointer = Buf1->Des();   </p></li>
+<li><p>. //添加数据   </p></li>
+<li><p>. Pointer.Delete(Pointer.Length() - 2, 2);   </p></li>
+<li><p>. //删除数据   </p></li>
+<li><p>. _LIT ( KNew, "New:&ldquo;);   </p></li>
+<li><p>. Pointer.Append(KNew);   </p></li>
+<li><p>. //例3、重新申请内存   </p></li>
+<li><p>. Buf1 = Buf1->ReAllocL(KText().Length() + KNew().Length());   </p></li>
+<li><p>. CleanupStack::PushL(Buf1);   </p></li>
+<li><p>. //例4、释放内存   </p></li>
+<li><p>. //直接用delete   </p></li>
+<li><p>. delete Buf;   </p></li>
+<li><p>. Buf = NULL;   </p></li>
+<li><p>. //如果在使用NewL、ReAllocL等异常函数后我们使用清除栈压入的话   </p></li>
+<li><p>. //那么我们也可以用清除栈来释放内存   </p></li>
+<li><p>. CleanupStack::PopAndDestroy();   </p></li>
+<li><p>. Buf1 = NULL;  </p></li>
+</ol>
+
+
+<p>注：关于以上用清除栈的方式，个人只是猜测，因为对Symbian的异常处理三部曲，至今仍没有很好的掌握，所以如果有什么误用还望指点。</p>
+
+<ol>
+<li> HBufC<em> heapBuf = HBufC::NewL(KHelloWorld().Length()); </em>heapBuf = KHelloWorld(); delete heapBuf;  </li>
+</ol>
+
+
+<p>     在内存中的情况如下图所示：</p>
+
+<p>    HBufC通常在以下几种情况下使用：</p>
+
+<ul>
+<li><p> 在运行时从资源文件中加载字符串</p></li>
+<li><p> 从用户界面中接收用户输入的字符串</p></li>
+<li><p>从应用程序引擎中接收字符串，如contacts database中的名字</p></li>
+</ul>
+
+
+<p>     对HBufC中的内容进行修改：</p>
+
+<ol>
+<li> HBufC<em> heapBuf = HBufC::NewL(KHelloWorld().Length()); </em>heapBuf = KHelloWorld(); delete heapBuf;  </li>
+</ol>
+
+
+<p>4、  指针描述符</p>
+
+<ol>
+<li><p> //例1、用TBuf和TBufC构造出TPtrC对象   </p></li>
+<li><p> _LIT(KText , "Test Code");   </p></li>
+<li><p> TBufC<10> Buf ( KText );   </p></li>
+<li><p> //或者为 TBuf<10> Buf ( KText );   </p></li>
+<li><p> // Creation of TPtrC using Constructor   </p></li>
+<li><p> TPtrC  Ptr (Buf);   </p></li>
+<li><p> // Creation of TPtrC using Member Function   </p></li>
+<li><p> TPtrC     Ptr1;   </p></li>
+<li><p> Ptr1.Set(Buf);   </p></li>
+<li><p>. //例2、用TText*构造TPtrC   </p></li>
+<li><p>. const TText* text = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
+<li><p>. TPtrC ptr(text);   </p></li>
+<li><p>. // 或者   </p></li>
+<li><p>. TPtrC Ptr2;   </p></li>
+<li><p>. Ptr2.Set(text);   </p></li>
+<li><p>. //如果要存储TText的一部分数据，我们使用下列方法   </p></li>
+<li><p>. TPtrC   ptr4(text, 5);   </p></li>
+<li><p>. //例3、从另一个TPtrC中构造TPtrC   </p></li>
+<li><p>. const TText * text1 = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
+<li><p>. TPtrC Ptr3(text1);   </p></li>
+<li><p>. // 从一个TPtrC中获得另一个TPtrC   </p></li>
+<li><p>. TPtrC p1(Ptr3);   </p></li>
+<li><p>. // 或   </p></li>
+<li><p>. TPtrC p2;   </p></li>
+<li><p>. p2.Set(Ptr3);  </p></li>
+</ol>
+
+
+<p>以上是不可修改的TPtrC的构造，相对应的也有可修改的TPtr的构造，不过我们下面省略了用Set()函数的构造方法</p>
+
+<ol>
+<li><p>  //例1、通过TBufC,HBufC的Des()方法获取   </p></li>
+<li><p> _LIT(KText, "Test Data");   </p></li>
+<li><p> TBufC<10> NBuf ( KText );   </p></li>
+<li><p> TPtr Pointer = NBuf.Des();   </p></li>
+<li><p> //例2、通过指定内存区域和大小来生成   </p></li>
+<li><p> const TText * Text = _S(&ldquo;Test Second&rdquo;);   </p></li>
+<li><p> TPtr Pointer1((TText*)Text, 11, 12);   </p></li>
+<li><p> //例3、 通过另一个TPtr对象来生成   </p></li>
+<li><p> TPtr Pointer2 ( Pointer );  </p></li>
+</ol>
+
+
+<p>对于可修改的TPtr虽然前面用过，但是我们在这里在简单的添加两个例子加深下印象，并且说明指针修改的始终是它指向的描述符：</p>
+
+<ol>
+<li><p> //例1、改变已有TPtr数据的方式：赋值和Copy()方法   </p></li>
+<li><p> _LIT(KText, "Test Data");   </p></li>
+<li><p> _LIT(K1, "Text1");   </p></li>
+<li><p> _LIT(K2, "Text2");   </p></li>
+<li><p> TBufC<10> NBuf ( KText );//NBuf内容为“Test Data”   </p></li>
+<li><p> TPtr Pointer = NBuf.Des(); //Pointer指向NBuf的内容   </p></li>
+<li><p> Pointer = K1; // NBuf内容为“Text1”   </p></li>
+<li><p> Pointer.Copy(K2); // NBuf内容为“Text2”   </p></li>
+<li><p> //例2、直接通过修改长度改变数据内容   </p></li>
+<li><p>. Pointer.SetLength(2); // NBuf内容为"Te" 注：实际内存的内容应该没变   </p></li>
+<li><p>. const unsigned char KBuffer[ ] = {0x00, 0x33, 0x66, 0x99, 0xbb, 0xff}; TPtrC8 bufferPtr( KBuffer, sizeof(KBuffer)); iSocket.Write(bufferPtr, iStatus);  </p></li>
+</ol>
+
+
+<p>在内存中如下所示：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/4.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/4.jpg" alt="" /></a></p>
+
+<p>TPtr的用法：</p>
+
+<ol>
+<li> _LIT(KHelloWorld, "Hello World"); const TInt maxBuf = 32; TBufC<maxBuf> buf; buf = KHelloWorld; TPtr ptr = buf.Des(); ptr[7] = 'a';  ptr[8] = 'l';  ptr[9] = 'e';  ptr[10] = &rsquo;s'; CEikonEnv::Static()&ndash;>InfoMsg(ptr); // "Hello Wales"  </li>
+</ol>
+
+
+<p>5、  抽象描述符</p>
+
+<p>抽象描述符，没有什么好说的，正如前面所说，只用在函数的形参中，通常要强调参数是不可修改的，就用const TDesC&amp;表示，可修改的参数用TDesC&amp;表示。</p>
+
+<ul>
+<li><p>在函数参数中尽量使用基类</p></li>
+<li><p>使用中性的描述符，一般情况下使用TDesC而不是TDesC8或者TDesC16</p></li>
+<li><p>当描述符内容不应该改变时，使用const修饰符</p></li>
+<li><p>经典用法：void SetText(const TDesC&amp; aText);    TPtrC Text() const;</p></li>
+</ul>
+
+
+<p>描述符之间的转换</p>
+
+<p><strong>不可修改向可修改描述符的转换</strong></p>
+
+<p>原则1：通过不可修改描述符类内的Des()函数，将不可修改的描述符转换成可修改的指针描述符</p>
+
+<p>示例1：TBufC转换成TPtr</p>
+
+<ol>
+<li><p> _LIT(KText, "Test Data");   </p></li>
+<li><p> TBufC<10> NBuf ( KText );   </p></li>
+<li><p> TPtr Pointer = NBuf.Des();  </p></li>
+</ol>
+
+
+<p>示例2：HBufC转换成TPtr</p>
+
+<ol>
+<li><p> HBufC * Buf = HBufC::NewL(15);   </p></li>
+<li><p> _LIT (KText , "Test Text");   </p></li>
+<li><p> *Buf = KText;   </p></li>
+<li><p> TPtr Pointer = Buf->Des();  </p></li>
+</ol>
+
+
+<p>原则2：通过TPtr的构造函数或Set()函数可以将TPtrC描述转换为可修改的指针描述符</p>
+
+<p>示例3：TPtrC到TPtr</p>
+
+<ol>
+<li><p> const TText * text1 = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
+<li><p> TPtrC Ptr1(text1);   </p></li>
+<li><p> TPtrC Ptr2(Ptr1);   </p></li>
+<li><p> //可以通过构造函数   </p></li>
+<li><p> TPtr Ptr3((TUint16 *)(Ptr1.Ptr()), Ptr1.Length());   </p></li>
+<li><p> //也可以通过Set()函数   </p></li>
+<li><p> Ptr3.Set((TUint16 *)(Ptr1.Ptr()),Ptr1.Length(), Ptr1.Length());  </p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[symbian学习笔记一（基本数据类型及命名规范）]]></title>
+    <link href="http://njuxjy.github.io/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89/"/>
+    <updated>2011-07-27T11:16:17+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89</id>
+    <content type="html"><![CDATA[<p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><strong>基本数据类型</strong></p>
+
+<p> 在Symbian中，很多C++基本类型都被重新定义了，最好使用Symbian的，理由如下：</p>
+
+<ul>
+<li><p>所有Symbian API都是用的Symbianc重定义的</p></li>
+<li><p>将来Symbian OS由32位转为64位时，支持性更好</p></li>
+<li><p>这本身就是Symbian C++ Coding Standards所要求的</p></li>
+</ul>
+
+
+<p><strong>1.  Integers</strong></p>
+
+<p>    typedef signed int TInt;  C++中的signed int，32位，基本用法类似。</p>
+
+<p>    typedef unsigned int TUint;  一般用于计数器(Counter)或者标记(Flags)。</p>
+
+<p>    其他Int类型：TInt64， TInt32， TInt16，TInt8； 同时有一份TUint的版本。</p>
+
+<p><strong>2. Text</strong></p>
+
+<p> text类型在Symbian编程中基本不用，而一般采用描述符（descriptor）。TText默认是16位的。</p>
+
+<p><strong>3. Boolean </strong></p>
+
+<p>    typedef int TBool;有两个枚举值：ETrue和EFalse。TBool变量最好不要直接和ETure和EFalse比较。如下：</p>
+
+<p>TBool flag = ETrue;
+if (flag)  // if (!flag)
+{
+flag = EFalse;
+}</p>
+
+<p><strong>4.  Floating Point</strong></p>
+
+<p>    对浮点数的支持视处理器而定，如果没有FPU，效率非常低，所以最好是不要用浮点数。如果一定要用，尽量转化为整数操作。
+typedef float TReal32;  typedef double TReal64; typedef double TReal;</p>
+
+<p><strong>5. TAny</strong></p>
+
+<p>    typedef void TAny;</p>
+
+<p>    TAny一般只用作指针，其他情况下用void比较好。</p>
+
+<p>    TAny* MyFunction();     void MyOtherFn();</p>
+
+<p>    TAny* 在很多Symbian API中都用到了，如：</p>
+
+<p>    static TUint8<em> Copy( TAny</em> aTrg, const TAny* aSrc, TInt aLength);</p>
+
+<p><strong>5. Enumerations</strong></p>
+
+<p>enum TState {EOff, Eon, EInit};</p>
+
+<p>Enumeration类型应该以T开头，而枚举值应该以E开头。</p>
+
+<p>TState  state = GetState();
+if (state == EOn)
+{
+//Do something here
+}</p>
+
+<p><strong>命名规范</strong></p>
+
+<p>    <em>T类</em>：只包含值，而不包含指针以及外部的资源，在栈上分配空间。</p>
+
+<p>                TVersion osVersion = User::Version();</p>
+
+<p>    <em>C类</em>：所有需要分配内存的类都必须从CBase继承并且以C开头。</p>
+
+<p>class CExample : public CBase
+{
+private:
+CDesCArrayFlat* iArray;
+}</p>
+
+<p>CExample* example = new (ELeave) CExample;</p>
+
+<p>    <em>R类</em>：包含指向某个资源的handler。</p>
+
+<p>                RTimer timer;
+timer.CreateLocal();</p>
+
+<p>    <em>M类</em>：定义一个接口，一般只包含纯虚函数，不包含成员数据，减少类之间的依赖，用来接受回调消息。</p>
+
+<p>class MEikStatusPaneObserver
+{
+public:
+virtual void HandleStatusPaneSizeChange() = 0;
+}</p>
+
+<p>任何实现MEikStatusPaneObserver接口的类都必须实现HandleStatusPaneSizeChange()函数。</p>
+
+<p><strong>1. 变量命名规范</strong></p>
+
+<ul>
+<li><p>    成员变量以“i”开头</p></li>
+<li><p>    参数以“a”开头</p></li>
+<li><p>    动态变量随便，以小写字母开头</p></li>
+<li><p>    常量以“K”开头</p></li>
+<li><p>    尽量不要使用全局变量，不能使用全局静态变量。</p></li>
+</ul>
+
+
+<p><strong>2. 函数命名规范</strong></p>
+
+<ul>
+<li><p>    函数以大写字母开头，如AddFileNameL();</p></li>
+<li><p>    以D结尾表示deletion of an object</p></li>
+<li><p>    以L结尾表示函数可能leave</p></li>
+<li><p>    以C结尾表示一个item被放到cleanup stack</p></li>
+</ul>
+
+
+<p><strong>Casting</strong></p>
+
+<p>    Casting用于在类（classes）和类型（types）之间作转化，Symbian中仍然可以使用C中语法。</p>
+
+<p>    dynamic_cast：不支持，Symbian中没有RTTI。</p>
+
+<p>    static_cast：把一个基类转化为一个继承类。</p>
+
+<p>                   TInt intValue = 0xff;
+TUint8 byteValue = static_cast<TUint8>(intValue);</p>
+
+<p>    reinterpret_cast：把一个指针类型转化为另外一个指针类型，如integer转化为point类型或者相反。</p>
+
+<p>                   TUint32 fourBytes = 0;
+TUint8<em> bytePtr = reinterpret_cast&lt;TUint8</em>> (&amp;fourBytes);
+bytePtr++;
+*bytePtr = 0xFF;</p>
+
+<p>    const_cast：移除一个类的const属性。</p>
+]]></content>
+  </entry>
+  
+</feed>

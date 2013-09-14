@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="参考：http://senry.me/post/2012-10-25/40041673640 这篇中提到的获取某SDK方法列表的方法： int unsigned methodCount; Method *methods = class_copyMethodList([SDKCLASS class &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/e88eb7e58f96e4b880e4b8aae7b1bbe4b8ade68980e69c89e79a84e696b9e6b395e58897e8a1a8/">获取3rd SDK类中所有的方法列表</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T14:26:05+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考：<a href="http://senry.me/post/2012-10-25/40041673640">http://senry.me/post/2012-10-25/40041673640</a> 这篇中提到的获取某SDK方法列表的方法：</p>
+
+<pre><code> int unsigned methodCount;
+   Method *methods = class_copyMethodList([SDKCLASS class], &amp;methodCount);
+   for (int i = 0;i&lt;methodCount;i++){
+       NSLog(@"%@", NSStringFromSelector(method_getName(methods[i])));
+   }
+</code></pre>
+
+<p>不过这个方法只能取到所有实例方法，稍加改动就能取类方法：</p>
+
+<pre><code>    int unsigned methodCount;
+    Method *methods = class_copyMethodList(object_getClass([MainViewController class]), &amp;methodCount);
+    for (int i = 0;i&lt;methodCount;i++){
+        NSLog(@"%@", NSStringFromSelector(method_getName(methods[i])));
+    }
+</code></pre>
+
+<p>因为[SDKClass class]的返回值本身还是个class object，要通过object_getClass取得该class object的class。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/23/iose68a93e58c85e587a0e7a78de696b9e6b395/">iOS抓包几种方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-23T16:23:15+08:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ol>
+<li><p>在有以太网口的情况下， 可以打开mac的互联网共享，共享以下来源的连接选择“以太网”，用以下端口共享给电脑选“wifi”，然后设置共享密码，在iPhone上连接该共享wifi即可。然后mac上用Charles等工具来抓包</p></li>
+<li><p>由于air没有以太网口，可用tcpdump+Charles方法（可参考：<a href="http://res0w.com/?p=977%EF%BC%89%EF%BC%8C%E6%88%96%E8%99%9A%E6%8B%9F%E6%9C%BA+fiddler%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/974%EF%BC%89%EF%BC%8C%E6%88%96%E4%BB%85%E7%94%A8Charles%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/1272%EF%BC%89%E3%80%82%E6%9C%80%E5%90%8E%E4%B8%80%E7%A7%8D%E6%84%9F%E8%A7%89%E6%9C%80%E7%AE%80%E5%8D%95%E4%BA%9B%E3%80%82">http://res0w.com/?p=977%EF%BC%89%EF%BC%8C%E6%88%96%E8%99%9A%E6%8B%9F%E6%9C%BA+fiddler%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/974%EF%BC%89%EF%BC%8C%E6%88%96%E4%BB%85%E7%94%A8Charles%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/1272%EF%BC%89%E3%80%82%E6%9C%80%E5%90%8E%E4%B8%80%E7%A7%8D%E6%84%9F%E8%A7%89%E6%9C%80%E7%AE%80%E5%8D%95%E4%BA%9B%E3%80%82</a></p></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/09/iose79a84e5a48de69d82e680a7efbc88e8af91e69687efbc89/">iOS的复杂性（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-09T17:29:56+08:00" pubdate data-updated="true">Apr 9<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://multitasked.net/complexities-of-iOS-programming/">http://multitasked.net/complexities-of-iOS-programming/</a></p>
+
+<p>=====================================</p>
+
+<p>我做iOS开发已经有两年了。我很享受这个过程。我喜欢苹果所带来的流畅度和一流的用户体验，也喜欢编写应用带来的工程上的挑战。下面我们走马观花地来看一下iOS编程中有哪些难点。</p>
+
+<h4>流畅性</h4>
+
+<p>你需要考虑的首要约束是流畅性。就像我有次在Twitter上看到的那样，有条法则是“每秒60帧，不然就滚蛋”（我记得是@flyosity说的）。苹果在他们所有的（大部分）应用中都树立了流畅度的标准。iOS平台的滚动速度和响应速度仍然是其他系统所不能企及的。只要你的应用卡住超过半秒钟，你的大多数用户们便会不耐烦地开始点击设备。而在滚动列表时卡住更会降低你的应用在应用商店中的平均得分。</p>
+
+<h4>并发</h4>
+
+<p>为了保持流畅，方法众所周知：用主线程来更新应用界面。你要避免在主线程中做输入输出（磁盘或者网络）操作，以及耗时的计算，这些会使得界面卡住。</p>
+
+<p>换句话说，你得使你的程序并发：在后台开启耗时的任务，等待它们回调。问题在于，并发很困难，跟博士论文一样的难。很难去思考一个并发运行的程序，因为你不能用严格的顺序思维去思考，你很容易由于在不同线程中修改了相同的内存空间而遇到麻烦。</p>
+
+<p>这里的主要问题是，如果你在某个时刻忘了回到主线程中去更新界面的话，你的应用可能会崩溃（因为苹果的图形界面库UIKit不是线程安全的），但由于有并发，程序可能不会每次都崩溃，而且在调试环境里很难重现，因为假如设置了一个断点，可能会改变事件发生的顺序。</p>
+
+<p>如果你使用了Core Data（如果你需要结构化数据存储，这是一个解决方案）的话，问题会更加复杂，Core Data有它自己的限制。基本上，如果你在一个线程中创建了ManagedObject（Core Data的数据基类），然后又在另一个线程中操作它的话，就有崩溃的危险。可喜的是，iOS提供了一些不错的方法来将你的任务分发到不同的线程中，但这也让我不得不面对iOS平台的另一个难点了。</p>
+
+<h4>不止一种的解决方案</h4>
+
+<p>Perl的座右铭在iOS上体现地很充分：“不止一种的解决方案”。iOS中使用的技术可以追溯到1989年的NeXTSTEP时代，你仍然可以在代码库中找到这些古老的痕迹，这些古老的东西和它们的许多变种久而久之会妨碍我们的工作。你经常会发现相同概念的非常相似的几种实现，一个在Objective-C中，另一个在纯C的API中（比如UIFont vs CTFont），它们的差异很小。回到线程的例子，你至少有4种不同的方法在后台线程中开启任务：</p>
+
+<ol>
+<li><p> <code>使用NSObject的 </code>performSelectorInBackground:withObject:&#8220;</p></li>
+<li><p> 使用NSThread</p></li>
+<li><p> 使用Grand Central Dispatch C API</p></li>
+<li><p> 使用iOS4中引入的NSOperation</p></li>
+</ol>
+
+
+<p>你怎么知道该怎么选择？根据经验，你应该使用符合你需求且抽象程度最高的，但这也给我们带来了iOS的另一个难点。</p>
+
+<h4>文档</h4>
+
+<p>你会想去文档中查你需要用哪一种方式。不幸的是，苹果的文档并不适合初学者。我在某处读过但是确再也找不回来了：当你理解了某个话题的时候，你会觉得文档很清晰，所有方面都会解释，但不是用一种最直接明了的方式，有时，信息会隐藏在一些不起眼的角落。尤其是，当你有疑惑时，你得从苹果提供的第一个Xcode示例代码开始学习怎么使用某些API，但是请注意，其中一些已经严重过时了，那你就得去看WWDC视频。说实话，只能从视频这种格式去找某些信息（例如Core Data上下文合并的话题）的话使我很沮丧，这些信息没法被谷歌找到（尤其是你需要登录以后才能看到这些信息）。</p>
+
+<h4>网络</h4>
+
+<p>另一个使得iOS编程变难的地方在于你能以为你的网络连接永远是稳定的（这显然对所有移动平台都适用）。随着用户的移动，每个网络请求都可能会失败。这一点跟你做前端或者服务端开发很不同，这种情况下网络连接大多都很稳定。你得为那么多不同类型的问题提供优雅的软件行为。</p>
+
+<p>更为重要的一点在于，在web应用中，当用户发现页面卡住时候，自然而然就会去做刷新页面操作，与之相比，在移动端，用户在遇到问题时候不会习惯去重启他们的应用。如果你的应用卡在了一个很不好的状态，用户没法恢复到良好状态的话，他很可能就把你的应用卸载掉了。</p>
+
+<p>当你需要提供一些离线功能时，还有其他的难点（想象下用户在飞机上用你的程序）。这会带来同步的问题，一般来讲，和并发一样都是难点。倒不一定针对iOS平台，但确实是个头痛的地方。</p>
+
+<h4>资源</h4>
+
+<p>受限制的资源也应该被视为难点。你的应用超过了70M内存，就可能被系统杀掉（但不确定，取决于其他进程和设备的内存使用状况）。许多javascript的web应用用的内存都比这多！除了内存，CPU也远没有你的笔记本强大。这也需要考虑。</p>
+
+<p>内存管理以前是objective-c的一个主要麻烦点，但在2011年引入了自动引用计数后情况好很多了。你仍然需要理解哪些会被保留在内存中（所有那些你用强指针指向的对象），也需要了解ARC在block中怎么用，但你总算不需要花费几个小时的时间在你的应用中查找多余的release了。</p>
+
+<h4>和系统斗</h4>
+
+<p>iOS系统提供给开发者的自由度远没有Android的大。举例来说，在你的应用最小化以后，你无法使你的进程在后台一直运行（比如说下载文件）。如果你有一些类似工作要完成，在你最小化应用后，最多有十分钟的时间来执行任务。相似的，你也不能一直被动保持着跟服务器的链接，除非你是VOIP应用。在访问用户通讯录、开启GPS等等方面，也存在诸多限制。</p>
+
+<p>这些限制都源于苹果的出发点：不让别有用心的开发者破坏系统原汁原味的用户体验。但这些限制条件也不是不能被打破，从而找到变通的方法。</p>
+
+<h4>应用布局和文本操作</h4>
+
+<p>iOS和HTML的流式布局一点也不一样。如果你要展示一段文本，下面放一个按钮，你得计算文本的高度，然后把按钮放到合适的位置。这对web开发者来说是残忍的，也很难跟那些习惯于html和css的相对适应性的客户以及经理们解释。</p>
+
+<p>此外，并不是所有应用都适用。如果你需要像素完美的进行文本操作，就像我在checkthis应用中做的那样，你会遇到很多麻烦。要么你再用UITextView进行文本编辑时不能全权控制一些诸如行高、链接样式等东西，要么你拥有了CoreText提供的所用文本控制权限却没有编辑能力。编辑功能你只能编程实现。不过有个（付费）控件貌似可以解决这个问题，不过我没有测试过。如果你不需要文本编辑，只需要在布局和样式方面有更多控制权限，你可以用<a href="https://github.com/mattt/TTTAttributedLabel">TTTAttributedLabel</a>。</p>
+
+<p>对文本布局来说，许多人用UIWebView里面的HTML和CSS来解决，但由于webview的异步渲染问题，这种方法不太适合，用起来有些挑战。我不会就原生还是Web应用做过多讨论，但我得指出，大多数App Store里的流行应用都是原生的。</p>
+
+<h4>闭源</h4>
+
+<p>也许是显而易见的问题，但是无法访问UIKit框架或者iOS的其他重要模块的源代码这一事实，在你碰上一个很难理解的bug时，确实会成为问题。我也记不清有多少次我在Twitter上看到过诸如此类言论：“苹果的x构件没有按照y行为来运作，请弥补我在试图理解这些上面所浪费的时间”。我也很多次成为受害者。iOS系统bug不是很多，但没有访问源码权限的话会增加调试难度。</p>
+
+<p>顺带说一句，iOS开源项目的质量参差不齐，并且有很多地方没有覆盖到，就像没有一个好的Twitter连接库能够考虑到最新的Social框架的新功能，在iOS4-5上或者当用户没有设置他帐号的时候，还是回退到经典的应用内浏览器认证方式。我并没有对任何人的工作有抱怨，只是说些自己观察到的而已。</p>
+
+<h4>总结</h4>
+
+<p>总的来说，我觉得iOS既是最有价值，也是最具挑战的平台之一。有很多限制要考虑，但我可喜地发现工具极其好用。Instruments和Xcode都是一流的工具。它们肯定有它们的不足，但是和Eclipse或Visual Studio相比，它们很不错。</p>
+
+<p>在有价值的方面，苹果的客户会用一大堆的应用，他们到哪儿都用。此外，如今需要很多有能力的移动开发者，移动开发呈两位数增长。因此，如果你呈观望态度，我会鼓励你冒险尝试下iOS开发。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/13/iose5ba94e794a8e4b8bae4bb80e4b988e8a681e794a8e4b8a4e5a597e59bbe/">iOS应用为什么要用两套图</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-13T21:35:19+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>之前有个疑问，既然现在retina的屏幕已经很主流，3GS用户越来越少，而且只放@2x的图在低分辨率屏幕上仍然是可以展示的，那么是否可以在项目中只用一套@2x的图呢，也可以减轻美工部分工作量？</p>
+
+<p>看了stackOverFlow上一个帖子解了我的疑惑：<a href="http://stackoverflow.com/questions/10576520/ios-apps-why-include-both-2x-and-low-res-images">http://stackoverflow.com/questions/10576520/ios-apps-why-include-both-2x-and-low-res-images</a></p>
+
+<p>主要来讲原因有：</p>
+
+<ol>
+<li><p>在3GS等非retina屏幕的设备上，系统发现@2x的图片没有其对应的非retina版本，于是只能用比原来尺寸大很多的@2x的图，会占用很多内存</p></li>
+<li><p>这些设备每次遇到需要画图的地方都需要将retina的图读入内存，并且进行一次复杂的缩放操作，既耗内存又耗cpu，影响性能。在iPad1上尤其明显。</p></li>
+<li><p>经由系统缩放的图的效果肯定不如自己提供的非retina图好</p></li>
+</ol>
+
+
+<p>同事说不提供两套图是通不过苹果审核的，这点倒不是很同意，因为自己以前的项目有些图片只有一套图，app store上一些应用也是。</p>
+
+<p>随着非retina设备逐步进入历史，即使苹果有在这点上有审核，也应该调整策略了吧。一套@2x就够了。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/11/ios6-e58685e5ad98e8ada6e5918ae5a484e79086/">iOS6 内存警告处理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-11T15:09:03+08:00" pubdate data-updated="true">Mar 11<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在iOS6中将之前的viewDidUnload deprecated掉了，现在使用didReceiveMemoryWarning来处理内存警告。</p>
+
+<p>用个小demo来模拟下这个过程。在某个页面里，在viewDidLoad中开辟了一大块内存：</p>
+
+<pre><code>NSMutableArray *array = [[NSMutableArray alloc] init];
+    self.bigArray = array;
+    [array release];
+
+    for(NSInteger i = 0; i &lt; 1000000; i++)
+    {
+        [array addObject:@"hello"];
+    }
+</code></pre>
+
+<p>可以看到内存使用率陡然上升：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/03/1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/03/1.png" alt="" /></a></p>
+
+<p>然后点击某个按钮跳转到另一个页面中，此时模拟一个内存警告。在模拟器中很容易模拟，在真机上可以通过代码来模拟：</p>
+
+<pre><code>- (void)sendMemWarning
+{
+    [[UIApplication sharedApplication] performSelector:@selector(_performMemoryWarning)];
+}
+</code></pre>
+
+<p>因为是私有API，不能打包机发布版本中。实现之前页面中的didReceiveMemoryWarning函数释放可以重建的一些资源：</p>
+
+<pre><code>- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    if ([self isNeedClearMemory])
+    {
+        self.view = nil;
+        if ([self respondsToSelector:@selector(clearMemory)])
+        {
+            [self performSelector:@selector(clearMemory)];
+        }
+    }
+}
+
+- (BOOL)isNeedClearMemory
+{
+    if (self.view.window == nil)
+    {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)clearMemory
+{
+    self.button = nil;
+    self.bigArray = nil;
+}
+</code></pre>
+
+<p>由于每个vc都会接收到此消息，而当前展示页面不能释放内存，因此需要先加以判断是否为活跃页面。需要自己手动释放view，系统不像之前会自动释放不活跃的view。对于在接到警告时需要释放掉内存的变量，不要在init中初始化，这里面的东西属于不可再生资源。</p>
+
+<p>接到内存警告后，内存使用量减至之前水平（之后的再次上升是因为又回到了之前的页面，重新viewDidLoad加载了大块内存）：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/03/11.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/03/11.png" alt="" /></a></p>
+
+<p>that&rsquo;s all.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/06/iose680a7e883bde4bc98e58c96efbc88wwdce7ac94e8aeb0efbc89/">iOS性能优化（WWDC笔记）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T10:10:01+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>程序启动的几个阶段：链接和加载， UIKit初始化，应用回调，第一次的Core Animation transaction</p>
+
+<h3>1. 启动速度优化：</h3>
+
+<p>方法一：测量启动时间，在main里面第一行记录开始时间，在didfinishLaunching第一行记录结束时间。</p>
+
+<p>方法二：使用Time Profiling工具</p>
+
+<p>     1）链接和加载阶段。减少不必要的框架引用，可以减少程序启动时链接和加载的时间；不要将必要的框架设置为optional，因为optional会让链接器做额外工作；避免使用静态初始化，包括静态c++对象，加载时会运行的代码，如+(void) load{} ，会造成在Main函数之前运行额外的代码，</p>
+
+<p>     2）UIKit初始化阶段。减少main nib文件的大小； 在preferences中不要存入太多的数据，比如在某个Key中存入一个很大的NSData对象如图片，因为preferences是用plist来保存的，所有的plist都是一次性反序列化出来的；</p>
+
+<p>     3) 应用回调阶段。UIKit会首先调用willfinishLaunchingWithOptions，然后恢复应用状态，然后调用didfinishLaunchingWithOptions。</p>
+
+<p>     4) 最后阶段。在_reportAppLaunchFinished中会调用CA::Transaction::commit()。 </p>
+
+<p>一些戒律：</p>
+
+<p>用工具度量，不要去猜。</p>
+
+<p> 不要做比不必要的工作。不必要的shadows和masks，同一数据的多次查询，启动时无数的logging。</p>
+
+<p>重用，而不是重复。重用那些创建代价昂贵的类：tablecell，date/number formatters，正则表达式，sqlite语句。[NSCalendar currentCalendar]看起来像是个单例，其实不是，每次调用都会创建一个新对象。调用nslog的时候会创建一个calendar对象，不要过度nslog。 每次使用sqlite_prepare会将SQL查询编译成字节码，要使用bind，重用那些已经prepared的语句。</p>
+
+<p>提高代码效率。要选择合适的数据结构和算法。 1）选择正确的数据类型。少量数据用plist，大量数据用core data或者sqlite。由于要访问plist中某个数据需要反序列化整个表，所以只能存少量数据。一些API底层使用plist实现的：preferences,通过NSCoding序列化的数据。2）优化数据库查询。用sqlite3_trace和sqlite3_profile来查找性能差的语句。</p>
+
+<p>预计算结果存入内存或者磁盘。1）注意内存增长。如screenSizedImage就不适合用static来一直保存在内存里。  </p>
+
+<p>异步加载。1）GCD等API</p>
+
+<p>保持在大数据量下伸缩性良好。如iPhone上的通讯录程序在通讯录里的人变多时启动时间控制的不错。1）保持关键方法快速。比如在Table加载sections时，numberofsectionsintableview,titleforheaderinsecion,numberofrowsinsection等方法就要性能好。 </p>
+
+<h3>2. 用户事件处理优化：</h3>
+
+<p>     1）保持主线程用来响应用户事件。</p>
+
+<p>          a) 在主线程中加快CPU处理速度，比如UILabel的cache处理；</p>
+
+<p>          b) 将事情移到主线程外面来做。隐式并发和显式并发。隐式：view和layer的动画，layer的组合，PNG解码；显式：GCD，NSOperationQueue，NSThread。</p>
+
+<p>          c)不要block掉主线程。</p>
+
+<h3>3. 内存优化</h3>
+
+<p>     1）系统如何回收内存？不是把page放到disk，而是直接扔掉不保存。 </p>
+
+<p>     2）干净内存和脏内存？干净：磁盘上存在的一些东西的拷贝，如代码、框架、内存映射文件。 脏：其他所有，如堆分配、解压的图片、数据库缓存。 NSString * a = [NSString stringWithFormat:@&ldquo;hello&rdquo;];是dirdy；NSString * a = @&ldquo;hello&#8221;是clean。</p>
+
+<p>     3）在你重复一个操作的时候，内存不应该持续增长。比如：push然后pop一个view controller，滚动table，执行数据库查询。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/01/e8aeb0e4b880e6aca1tableviewe6bb9ae58aa8e680a7e883bde8b083e4bc98/">记一次tableview滚动性能调优</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-01T22:33:47+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>项目中的会话界面逻辑很复杂，滚动起来有些卡。从发现问题到一步步解决，过程如下：</p>
+
+<ol>
+<li><p>锁定问题就和tableview的几个代理函数有关。于是基于二分法的思想，注释掉部分代码，检查只运行其余代码会不会卡。</p></li>
+<li><p>这样找下来发现性能瓶颈在设置用户头像的函数。 是之前项目里已有的一个UIButton的网络图片下载分类，里面会对图片路径进行MD5的加密，并且没用内存缓存，每次都从磁盘将头像读入UIImage，而头像照片的尺寸有的很大，于是把头像下载控件换成开源的SDWebImage，原以为就能圆满解决，结果发现还是有问题。</p></li>
+<li><p>只能靠工具了。用了Profile工具查CPU发现是每个cell在计算是否需要加上消息显示日期的时候，日期部分的计算占了大量cpu。每个cell的绘制都频繁创建和销毁NSCalendar和NSDateTimeFormatterz对象，而这两个对象的创建是比较昂贵的，难怪会卡。于是将NSCalendar和NSDateTimeFormatter改为全局cache，不需要每次都创建，粗略测了下发现不卡了。</p></li>
+<li><p>过了阵子又去测测发现又开始卡了（肯定遇到了未覆盖到的测试用例）。 肯定还有其他地方性能不够好。。 再接再厉，再次运行profile工具，多滚动列表一会，然后观察时间最长的部分在哪里。发现NSDateFormatter的dateFromString函数和获取登录用户头像路径的函数都比较耗时，于是采取逐个击破的方式，先注释掉其中一个的代码，调试另一个。首先将耗时的计算结果尽可能的缓存，比如这里的获取登录用户头像路径。改好后还是卡，说明dateFromString函数的计算时间需要减少，但这是系统函数（我还一度以为是该函数的性能有问题，去SO上搜索半天没人反映它有什么问题）。于是就假设是该函数调用次数太多了。</p></li>
+</ol>
+
+
+<p>5. 经检查发现在计算cell高度和绘制cell时，为了确定是否要显示时间条，需要计算两个时间之差是否在五分钟内，计算的函数都要调用dateFromString。必须把计算移到外面去，把结果保存好。改完后好了一阵，多测测又不行了。。还是有丢帧的感觉。。后来怀疑是debug模式下log没关，因为据说每一句NSLog底层都会调用[NSCalendar currentCalendar]，但关了以后发现还是不行。有些束手无策。</p>
+
+<p>6.  然后发现整个会话中没有时间条的时候都很顺畅，有了几个时间条以后滚动就会有点卡，于是目光聚焦在绘制时间条的地方。由于之前对时间条UILabel的layer使用了圆角设置了borderColor，这个肯定很耗时，去掉，用默认的UILabel格式，然后在draw的时候根据是否需要展示时间条来设置其hidden属性。发现还是卡。然后发现把UILabel的颜色改成clearColor（跟tableView的backgroundColor一样）就不卡了。之前网上看到说clearColor会影响性能，但这里竟然好像改善了性能。原因可能是在tableView背景色透明时，在上面画不同色的view比较耗时。 然后在label后面加了个背景图，就解决了原先需要用layer的问题了。最终问题解决。当然肯定还有优化空间，但至少比较流畅了，就不做“过早优化”了。</p>
+
+<p>总结下：</p>
+
+<ol>
+<li><p>Time Profile很重要，光凭感觉去猜是不靠谱的。这一点WWDC里也提到了。</p></li>
+<li><p>性能问题有可能由单个大问题引起，也可能由很多小问题叠加引起。对于后者，用“控制变量法”逐个击破。</p></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/27/e7b1bbe5beaee4bfa1e59091e4b88ae6bb91e58aa8e58f96e6b688e58f91e98081e99fb3e9a291e79a84e5ae9ee78eb0/">类微信向上滑动取消发送音频的实现</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-27T14:38:54+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png" alt="" /></a></p>
+
+<p>界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时，向上滑动时画面中央出现“松开手指取消发送”的提示，向下滑动时出现其他提示，同时一直在录着音。手势的滑动可以发生在该界面的任何部分，在上面的tableview伤滑动也有效。</p>
+
+<p>在ChatVoiceView中首先给按钮加上一些事件关联：</p>
+
+<pre><code>    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpInside:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpOutside:withEvent:) forControlEvents:UIControlEventTouchUpOutside];
+    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonDragOutside:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+</code></pre>
+
+<p>在响应函数中，除了录音相关的操作外，将事件传递给按钮的nextResponder，也就是让ChatVoiceView根据按钮被按下去的状态做不同的处理：</p>
+
+<pre><code>- (void)voiceHoldButtonDragOutside:(id)sender withEvent:(UIEvent *)event
+{
+    self.longPressBtn.highlighted = YES;
+    shouldResponseToSwipe = YES;
+    [[sender nextResponder] touchesMoved:[event allTouches] withEvent:event];
+}
+
+- (void)voiceHoldButtonTouchUpInside:(id)sender withEvent:(UIEvent *)event
+{
+    shouldResponseToSwipe = YES;
+    //do sth here
+    [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+}
+
+- (void)voiceHoldButtonTouchUpOutside:(id)sender withEvent:(UIEvent *)event
+{
+    shouldResponseToSwipe = YES;
+    //do sth here
+    [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+}
+</code></pre>
+
+<p>在ChatVoiceView中加上触摸事件捕获函数：</p>
+
+<pre><code>- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if(shouldResponseToSwipe == NO)
+    {
+        return;
+    }
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInView:self.superview];
+    CGPoint prevLocation = [touch previousLocationInView:self.superview];
+    if (location.y - prevLocation.y &gt; 0 &amp;&amp; direction == 1)//向下
+    {
+        //do sth
+    }
+    else if(location.y - prevLocation.y &lt; 0 &amp;&amp; direction == 2)//向上
+    {
+        //do sth
+    }
+}
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if(shouldResponseToSwipe == NO)
+    {
+        return;
+    }
+    shouldResponseToSwipe = NO;
+}
+</code></pre>
+
+<p>done.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/12/iose5ad97e4bd93/">iOS字体</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-12T14:57:44+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>可以参考：<a href="http://iosfonts.com">http://iosfonts.com</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/03/e58ebbe999a4grouped-uitableviewe79a84e8beb9e6a186e4b88ee8838ce699af/">去除Grouped UITableView的边框与背景</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-03T17:19:46+08:00" pubdate data-updated="true">Dec 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>viewDidLoad中，</p>
+
+<p>self.tableView.backgroundView = nil; //去除table背景</p>
+
+<p>[self.tableView setSeparatorColor:[UIColor clearColor]]; //去除边框</p>
+
+<p>cell创建过程中，</p>
+
+<p>[cell setBackgroundColor:[UIColor clearColor]];  //去除背景</p>
+
+<p>然后就可以根据cell的位置是top、middle、bottom和single来贴不同的自定义背景图了。</p>
+
+<p>ps: 如果只要去掉某个cell的背景和边框，可以对某个cell调用：</p>
+
+<pre><code>&lt;code&gt;cell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];&lt;/code&gt;
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

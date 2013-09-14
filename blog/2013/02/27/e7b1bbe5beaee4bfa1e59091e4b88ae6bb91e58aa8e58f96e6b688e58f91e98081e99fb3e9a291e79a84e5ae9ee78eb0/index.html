@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>类微信向上滑动取消发送音频的实现 - 不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。 界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/2013/02/27/e7b1bbe5beaee4bfa1e59091e4b88ae6bb91e58aa8e58f96e6b688e58f91e98081e99fb3e9a291e79a84e5ae9ee78eb0">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">类微信向上滑动取消发送音频的实现</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-27T14:38:54+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png" alt="" /></a></p>
+
+<p>界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时，向上滑动时画面中央出现“松开手指取消发送”的提示，向下滑动时出现其他提示，同时一直在录着音。手势的滑动可以发生在该界面的任何部分，在上面的tableview伤滑动也有效。</p>
+
+<p>在ChatVoiceView中首先给按钮加上一些事件关联：</p>
+
+<pre><code>    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpInside:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpOutside:withEvent:) forControlEvents:UIControlEventTouchUpOutside];
+    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonDragOutside:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+</code></pre>
+
+<p>在响应函数中，除了录音相关的操作外，将事件传递给按钮的nextResponder，也就是让ChatVoiceView根据按钮被按下去的状态做不同的处理：</p>
+
+<pre><code>- (void)voiceHoldButtonDragOutside:(id)sender withEvent:(UIEvent *)event
+{
+    self.longPressBtn.highlighted = YES;
+    shouldResponseToSwipe = YES;
+    [[sender nextResponder] touchesMoved:[event allTouches] withEvent:event];
+}
+
+- (void)voiceHoldButtonTouchUpInside:(id)sender withEvent:(UIEvent *)event
+{
+    shouldResponseToSwipe = YES;
+    //do sth here
+    [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+}
+
+- (void)voiceHoldButtonTouchUpOutside:(id)sender withEvent:(UIEvent *)event
+{
+    shouldResponseToSwipe = YES;
+    //do sth here
+    [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+}
+</code></pre>
+
+<p>在ChatVoiceView中加上触摸事件捕获函数：</p>
+
+<pre><code>- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if(shouldResponseToSwipe == NO)
+    {
+        return;
+    }
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInView:self.superview];
+    CGPoint prevLocation = [touch previousLocationInView:self.superview];
+    if (location.y - prevLocation.y &gt; 0 &amp;&amp; direction == 1)//向下
+    {
+        //do sth
+    }
+    else if(location.y - prevLocation.y &lt; 0 &amp;&amp; direction == 2)//向上
+    {
+        //do sth
+    }
+}
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if(shouldResponseToSwipe == NO)
+    {
+        return;
+    }
+    shouldResponseToSwipe = NO;
+}
+</code></pre>
+
+<p>done.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">njuxjy</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-27T14:38:54+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/12/12/iose5ad97e4bd93/" title="Previous Post: iOS字体">&laquo; iOS字体</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/01/e8aeb0e4b880e6aca1tableviewe6bb9ae58aa8e680a7e883bde8b083e4bc98/" title="Next Post: 记一次tableview滚动性能调优">记一次tableview滚动性能调优 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

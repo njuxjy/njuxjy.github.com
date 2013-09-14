@@ -1,0 +1,567 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>objc.io之并发编程：API和挑战（译文） - 不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="原文地址：http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html ============================================== 并发是指在同一段时间同时运行多个任务。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">objc.io之并发编程：API和挑战（译文）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-20T23:29:53+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>原文地址：<a href="http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html">http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html</a></p>
+
+<p>==============================================</p>
+
+<p>并发是指在同一段时间同时运行多个任务。并发可以在单核CPU上以分时方式运行，或者在多CPU情况下实现真正的并行。</p>
+
+<p>OS X和iOS提供了不同的API来实现并发编程。每种API都有其优缺点，适用于不同类型的任务。它们的抽象程度也各不相同。我们可以用到非常靠近底层的API，但同时用对这些API也更加困难。</p>
+
+<p>并发编程是个很困难的主题，有很多复杂的问题和陷阱，在使用像GCD或NSOperationQueue这些API的时候很容易忽略这些问题。在这篇文章中，我们会首先看下在OS X和iOS上有哪些不同的并发API，然后深入了解下并发编程固有的一些难点，这些难点和你具体使用的那些API无关。</p>
+
+<h1>OS X和iOS上的并发API</h1>
+
+<p>苹果的移动和桌面操作系统在并发编程上提供了相同的API。在本文中，我们将会看到pthread和NSThread、GCD、NSOperationQueue以及NSRunloop。技术上来讲，run loop不应该属于这个单子里，因为它们没法用来写并发程序。但它们跟并发话题太有关系了，值得我们同样关注下。</p>
+
+<p>我们首先会看一些偏底层的API，然后慢慢接触高层次的API。之所以这样是因为高层的API建立在底层API的基础上。然而，当你为你的用例选择API的时候，你应该以相反的顺序来考虑：选择最高抽象层次的来完成任务，这样会使得你的并发模型非常简单。</p>
+
+<p>如果你想知道为什么我坚持推荐优先使用高层次的API以及要保持并发代码简单，你可以读下这篇文章的第二部分——并发编程的挑战，以及Peter Steinberger的线程安全文章。</p>
+
+<h2>线程</h2>
+
+<p>线程是进程的子单元，可以由操作系统调度器单独调度。实际上所有的并发API底层都是线程，包括GCD和operation queue。</p>
+
+<p>多个线程可以在单个CPU上同时执行（或者至少说可以认为是同时）。操作系统给每个线程分配了一小片计算时间，对用户来说好像多个任务是在同时执行。如果是多核CPU，那么多个线程就能真正的实现并发，因此某个任务所需的执行时间就能减少。</p>
+
+<p>你可以使用Instruments中的CPU strategy view(译者注：在Xcode 4.6上没有发现有此视图)来查看你的代码或者框架里的代码是如果在多核CPU上调度执行的。</p>
+
+<p>你需要记住的是，你无法控制你的代码在什么时候哪个CPU上执行，由于其他任务的介入也无法控制什么时候执行多久你的代码就会停止。这类的线程调度是很强大的一种技术。然而，它的复杂度也很高，我们一会儿会深入研究。</p>
+
+<p>暂时先不考虑这种复杂度，你可以使用POSIX thread API，也可以使用Objective-C对此API的一个封装——NSThread——来创建你自己的线程。这儿有个小例子，使用pthread来从一百万个数字中找到最小和最大的数。它创建了4个线程并发运行。从这个例子中很明显可以看出你不应该直接使用pthread。</p>
+
+<pre><code>struct threadInfo {
+    uint32_t * inputValues;
+    size_t count;
+};
+
+struct threadResult {
+    uint32_t min;
+    uint32_t max;
+};
+
+void * findMinAndMax(void *arg)
+{
+    struct threadInfo const * const info = (struct threadInfo *) arg;
+    uint32_t min = UINT32_MAX;
+    uint32_t max = 0;
+    for (size_t i = 0; i &lt; info-&gt;count; ++i) {
+        uint32_t v = info-&gt;inputValues[i];
+        min = MIN(min, v);
+        max = MAX(max, v);
+    }
+    free(arg);
+    struct threadResult * const result = (struct threadResult *) malloc(sizeof(*result));
+    result-&gt;min = min;
+    result-&gt;max = max;
+    return result;
+}
+
+int main(int argc, const char * argv[])
+{
+    size_t const count = 1000000;
+    uint32_t inputValues[count];
+
+    // Fill input values with random numbers:
+    for (size_t i = 0; i &lt; count; ++i) {
+        inputValues[i] = arc4random();
+    }
+
+    // Spawn 4 threads to find the minimum and maximum:
+    size_t const threadCount = 4;
+    pthread_t tid[threadCount];
+    for (size_t i = 0; i &lt; threadCount; ++i) {
+        struct threadInfo * const info = (struct threadInfo *) malloc(sizeof(*info));
+        size_t offset = (count / threadCount) * i;
+        info-&gt;inputValues = inputValues + offset;
+        info-&gt;count = MIN(count - offset, count / threadCount);
+        int err = pthread_create(tid + i, NULL, &amp;findMinAndMax, info);
+        NSCAssert(err == 0, @"pthread_create() failed: %d", err);
+    }
+    // Wait for the threads to exit:
+    struct threadResult * results[threadCount];
+    for (size_t i = 0; i &lt; threadCount; ++i) {
+        int err = pthread_join(tid[i], (void **) &amp;(results[i]));
+        NSCAssert(err == 0, @"pthread_join() failed: %d", err);
+    }
+    // Find the min and max:
+    uint32_t min = UINT32_MAX;
+    uint32_t max = 0;
+    for (size_t i = 0; i &lt; threadCount; ++i) {
+        min = MIN(min, results[i]-&gt;min);
+        max = MAX(max, results[i]-&gt;max);
+        free(results[i]);
+        results[i] = NULL;
+    }
+
+    NSLog(@"min = %u", min);
+    NSLog(@"max = %u", max);
+    return 0;
+}
+</code></pre>
+
+<p>NSThread是一个对pthread的简单Objective-C封装。在Cocoa环境里代码看起来会更熟悉些。举例来说，你可以定义一个线程作为NSThread的子类，这个类封装了你想在后台运行的一写代码。举之前的例子来说，你可以像这样定义一个NSThread的子类：</p>
+
+<pre><code>@interface FindMinMaxThread : NSThread
+@property (nonatomic) NSUInteger min;
+@property (nonatomic) NSUInteger max;
+- (instancetype)initWithNumbers:(NSArray *)numbers;
+@end
+
+@implementation FindMinMaxThread {
+    NSArray *_numbers;
+}
+
+- (instancetype)initWithNumbers:(NSArray *)numbers
+{
+    self = [super init];
+    if (self) {
+        _numbers = numbers;
+    }
+    return self;
+}
+
+- (void)main
+{
+    NSUInteger min;
+    NSUInteger max;
+    // process the data
+    self.min = min;
+    self.max = max;
+}
+@end
+</code></pre>
+
+<p>要开启新线程，我们得创建新线程对象，然后调用其start方法：</p>
+
+<pre><code>NSSet *threads = [NSMutableSet set];
+NSUInteger numberCount = self.numbers.count;
+NSUInteger threadCount = 4;
+for (NSUInteger i = 0; i &lt; threadCount; i++) {
+    NSUInteger offset = (count / threadCount) * i;
+    NSUInteger count = MIN(numberCount - offset, numberCount / threadCount);
+    NSRange range = NSMakeRange(offset, count);
+    NSArray *subset = [self.numbers subarrayWithRange:range];
+    FindMinMaxThread *thread = [[FindMinMaxThread alloc] initWithNumbers:subset];
+    [threads addObject:thread];
+    [thread start];
+}
+</code></pre>
+
+<p>现在我们可以观察所有线程的isFinished属性来检测是否所有新创键的线程在计算结果前都已经运行结束。我们把联系留给感兴趣的读者。我想说的重点是直接使用pthread或者NSThread API来操作线程是一个笨拙的方法，不符合我们编程的思维习惯。</p>
+
+<p>直接使用线程会造成的一个问题是，如果你的代码和底下框架的代码都创建了各自的线程的话，活跃线程的数量会呈指数增长。这在大项目中是个很普遍的问题。举例来说，你创建了8个线程，在8核CPU上跑，你所调用的框架代码也这么做（因为它并不知道你已经创建了其他线程），最终你会得到几十甚至上百个线程。每个线程的代码都各尽其职，然而最终结果是有问题的。线程并非没有代价，每个线程都会占用内存和内核资源。</p>
+
+<p>接下来，我们会讨论两种基于队列的并发API：GCD和operation queues。它们通过集中式管理一个任何线程都能协同使用的线程池来缓解这个问题。</p>
+
+<h2>GCD</h2>
+
+<p>为了使开发者能更容易地充分利用消费者设备越来越多的CPU数量，在OS X10.6和iOS4中引入了GCD。我们将在这篇“底层并发API”的文章中讨论更多GCD的内容。</p>
+
+<p>使用了GCD，你就不用再直接和线程打交道了。你只要将代码块加入队列，然后GCD会在背后管理一个线程池。GCD会决定你的代码块在哪个线程上执行，会根据可用系统资源来管理这些线程。这会缓解太多线程被创建的问题，因为现在所有的线程都由GCD集中管理，和应用开发者抽象隔离开来。</p>
+
+<p>GCD另一个重要改变在于，作为开发者的你思考的是在一个队列里的一些操作对象，而不是一些线程。这种新的关于并发的思维模型更容易使用。</p>
+
+<p>GCD有五个不同的队列：在主线程上运行的主队列，三个拥有不同优先级的后台队列，一个有着更低优先级的I/O受限的后台队列。另外，你也可以创建自定义队列，可以是串行或者并行队列。自定义队列的抽象层次很高，所有你调度在它上面运行的代码块最终都会分配到系统全局队列之一和它的线程池里。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/gcd-queues@2x.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/gcd-queues@2x.png" alt="" /></a></p>
+
+<p>使用不同优先级的几个队列一开始听起来还不错，然而我们强烈推荐你在几乎任何情况下都使用默认优先级的队列。如果几个任务访问了共享资源，那么在不同优先级的队列上调度任务会导致无法预期的行为。最坏可以导致你的程序慢慢停下来，因为低优先级的任务阻止了高优先级的任务执行。你可以了解一下这种现象，称为优先级反转。</p>
+
+<p>尽管GCD是低层次的C API，但是用起来很顺手。当你把代码块放到GCD队列上去执行的时候，你很容易忘掉并发编程所有要注意的地方及陷阱。为了了解潜在的问题，请记得阅读下面这篇文章“并发编程的挑战”。另外，这个话题里还有一章精彩的“GCD API攻略”，包含了许多深入的解释和有价值的提示。</p>
+
+<h2>Operation Queues</h2>
+
+<p>Operation queues是GCD队列模型的一个Cocoa抽象。GCD提供了很多低层次的控制，而operation queues在其基础上失信了一些方便的特习惯，使得它成为应用开发者们最优最安全的选择。</p>
+
+<p>NSOperationQueue类有两种不同类型的队列：主队列和自定义队列。主队列运行在主线程上，自定义队列在后台处理。在任何情况下，由这些队列处理的任务都是由NSOperation的子类来表示。</p>
+
+<p>你可以有两种方法来定义自己的operation：要么重写main，要么重写start。前者容易实现，但灵活性不如后者。像isExecuting和isFinished这些状态属性不用自己管理，当main返回的时候只需要假定operation已经运行结束了。</p>
+
+<pre><code>@implementation YourOperation
+    - (void)main
+    {
+        // do your work here ...
+    }
+@end
+</code></pre>
+
+<p>如果你需要获得更多的控制权，或者在operation里执行一个异步任务的话，你可以重写start：</p>
+
+<pre><code>@implementation YourOperation
+    - (void)start
+    {
+        self.isExecuting = YES;
+        self.isFinished = NO;
+        // start your work, which calls finished once it's done ...
+    }
+
+    - (void)finished
+    {
+        self.isExecuting = NO;
+        self.isFinished = YES;
+    }
+@end
+</code></pre>
+
+<p>在这种请情况下你需要手动管理operation的状态。为了使operation queue能够捕获到operation的状态变化，状态属性必须以兼容KVO的方式来定义。因此万一你没有通过默认访问器方法为状态属性设置值的话，记得要发送合适的KVO消息。</p>
+
+<p>为了使用operation queues的取消功能，对于长时间运行的operation你得周期性检查isCancelled属性的值：</p>
+
+<pre><code> (void)main
+{
+    while (notDone &amp;&amp; !self.isCancelled) {
+        // do your processing
+    }
+}
+</code></pre>
+
+<p>当你定义好了你的operation类，把它放到operation queue上很容易：</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+YourOperation *operation = [[YourOperation alloc] init];
+[queue  addOperation:operation];
+</code></pre>
+
+<p>或者你也可以把代码块加到operation queue中。做起来很方便。比如：你把一次性任务加到主队列中：</p>
+
+<pre><code>[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+    // do something...
+}];
+</code></pre>
+
+<p>这种方法把任务调度到队列中执行的确很方便，然而定义你自己的NSOperation子类在调试时候会很有帮助。如果你重写了operation的description方法，你可以很轻松地识别出某个队列中所有当前调度的operation。</p>
+
+<p>除了基本的调度operation或代码块，operation queues还提供了一些在GCD中不容易正确使用的特性。举例来说，通过maxConcurrentOperationCount属性，你可以很轻松地控制某个队列中有多少可以并发运行的operation。将其设置为1就使得队列变成了一个串行队列，出于线程隔离的目的很好用。</p>
+
+<p>另一个方便的特性是根据一个队列中operation的优先级来给它们排序。这不同于GCD的队列优先级。它只影响某一个队列中所有operation的执行顺序。如果除了标准的5个优先级外你还想对执行顺序有更多的控制权，你可以像这样指定operation间的依赖关系：</p>
+
+<pre><code>[intermediateOperation addDependency:operation1];
+[intermediateOperation addDependency:operation2];
+[finishedOperation addDependency:intermediateOperation];
+</code></pre>
+
+<p>这段简单的代码确保了operation1和operation2将在intermediateOperation之前执行，而intermediateOperation将在finishedOperation之前执行。Operation依赖是可以用来指定执行顺序的强大机制。它可以让你创建一个operation组，确保这个组在某个依赖它的operation之前执行，或者在并发队列中创建一些串行的operation。</p>
+
+<p>出于抽象的本质来说，operation queues在性能上略输于GCD API。然而，在绝大多数情况下，这种影响可以忽略，operation queues依然是你的首选。</p>
+
+<h2>Run Loops</h2>
+
+<p>技术上来说Run loop并不和GCD或者operation queue一样是一种并发机制，因为你不能用它来并发执行任务。然而，run loop和那些在主dispatch/operation队列上执行的任务密切相关，它提供了一种异步执行代码的机制。</p>
+
+<p>Run loop使用起来比operation queue或GCD都简单，因为你无需处理复杂的并发问题就可以异步地执行一些任务。</p>
+
+<p>Run loop总是和某个特定的线程绑定的。在每个Cocoa和CocoaTouch应用中，和主线程相关的主run loop扮演着核心角色，因为它负责处理UI事件、定时器以及其他内核事件。每当你开启定时器，使用NSURLConnection，或者调用performSelector:withObject:afterDelay:的时候，背后都使用了run loop来执行这些异步任务。</p>
+
+<p>当你使用了依靠run loop来运行的方法时，需要记住的是run loop可以以不同模式来运行。每个模式定义了一系列事件，在某个模式下运行的run loop可以响应这些事件。用这种办法可以在主run loop里临时将一些任务的优先级调得高于另一些。</p>
+
+<p>一个典型的例子就是iOS中的滚动。当你在滚动列表时，run loop并不在它的默认模式下运行，因此它不会响应诸如你之前开启的一个定时器。一旦滚动停止了，run loop便回到了默认模式，之前放入队列里的那些事件得到了执行。如果你想在滚动时触发定时器，你需要把它用NSRunLoopCommonModes模式加入到run loop中。</p>
+
+<p>主线程默认就有主run loop在跑。其他线程默认没有配置run loop。你也可以为其他线程设置一个run loop，但这种情况很罕见。大多数时候使用主run loop会简单得多。如果你需要在主线程外做一些复杂的任务时，在主run loop调用你的代码以后你仍然可以把任务分配到其他队列上执行。Chris在他的文章“后台任务实践”的文章中有一些很好的例子。</p>
+
+<p>如果你确实要在另一个线程中创建一个run loop的话，不要忘了至少要为它加上一个输入源。如果run loop没有配置输入源的话，每次一运行它就会立马退出。</p>
+
+<h1>并发编程的挑战</h1>
+
+<p>编写并发程序伴随着很多陷阱。只要你不是在做最最基础的事情，你很难全面考虑到多个并发执行的任务相互交互时各种不同的状态。问题会以不确定的方式发生，这样调试并发代码的话难度就更大了。</p>
+
+<p>有一个关于并发程序不可预期行为的突出例子：在1995年，NASA向火星发射了拓荒者号。在成功着陆这颗红色的临近星球后的不久，任务几乎突然终结。这位火星探路者不停地无故重启——它被一个叫优先级反转的现象所害，低优先级的线程阻止了高优先级任务执行。我们将在下面探索这个话题的更多细节。这个例子足以证明即使在充足的资源和许多技术人才可用的情况下，并发依然是个令人头疼的问题。</p>
+
+<h2>资源共享</h2>
+
+<p> 许多并发问题的根源都是多个线程访问共享资源。资源可以是一个属性或一个对象、内存、网络设备、文件等等。任何你在多线程间共享的东西都有可能造成冲突，你必须做好安全措施来防止这种冲突。</p>
+
+<p>为了说明这个问题，我们来看一个整型属性作为计数器资源的例子。假设有两个线程并发运行，A和B，同时在尝试增加计数器的值。问题是你写的一句C或者Objective-C代码大多数都不是一条CPU指令。为了增加我们的计数器，当前的值需要从内存里读取出来。然后这个值加上1再写回到内存中去。</p>
+
+<p>想象两个线程都试着同时去这么做的危险。举个例子，线程A和B都从内存中读取到了计数器的值，假设是17。然后线程A给计数器+1并将结果18写回内存。同时，线程B紧随其后也给计数器加1，将结果18写回到内存。在这一刻数据就错误了，因为计数器的值17在加了两次1以后变成了18。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/race-condition@2x.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/race-condition@2x.png" alt="" /></a></p>
+
+<p>这个问题叫做“竞态”，如果多个线程访问某个共享资源情况下，一个线程还没访问结束，另一个就开始访问它，就会发生这个问题。如果你不光是写入一个简单的整型到内存，而是一个更复杂的结构，另一个线程在你写到一半的时候去读取内存的话，甚至可能会读到一半新数据一半老数据，或者未初始化数据。 为了防止这种情况，多线程必须以互斥的方式去访问共享资源。</p>
+
+<p>在实际开发中，情况甚至比这个更复杂，因为现在的CPU会出于优化目的改变对内存的读写顺序（乱序执行）。</p>
+
+<h2>互斥</h2>
+
+<p>互斥访问的意思是一次只有一个线程可以访问某个资源。为了保证互斥，每个需要访问资源的线程需要事先获取该资源的一把互斥锁。当这个线程结束了它的操作，它会释放这把锁，这样其他线程就有机会来访问这个资源了。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/locking@2x1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/locking@2x1.png" alt="" /></a></p>
+
+<p>为了确保互斥访问，锁还必须处理乱序执行带来的问题。如果CPU访问内存的顺序不是严格按照你的程序指令顺序，光确保互斥访问是不够的。为了解决CPU优化策略所带来的这个副作用，得使用内存屏障技术。设置了内存屏障以后可以确保乱序执行问题只发生在屏障的一边。</p>
+
+<p>当然，互斥锁自己的实现必须是不存在竞态的。这个实现起来并不容易，需要用到特殊的现代CPU指令。你可以从Daniel的这篇“底层并发技术”文章中了解更多关于原子操作的东西。</p>
+
+<p>Objective-C属性在语言层面上支持互斥锁，可以通过声明属性为atomic来实现。实际上，属性默认就是atomic的。将属性声明为atomic的话，每次访问该属性都会隐式地在外面加上locking和unlocking。那以防万一的话将所有属性设置为atomic看起来貌似不错哦。不过，加锁是有开销的。</p>
+
+<p>为资源请求锁会有性能开销。请求和释放锁都是非竞态的，在多核系统上都不是那么容易实现的。当请求锁的时候，由于其他线程已经拥有了这把锁，当前线程必须等待。在这种情况下，该线程会进入睡眠状态，然后在其他线程释放锁的时候会收到通知。所有这些操作都是昂贵而复杂的。</p>
+
+<p>有不同类型的锁。有些锁在没有锁竞争的情况下代价很小，但是在竞争下的表现糟糕。有些锁在基本情况下会昂贵一些，但在竞争下的代价没那么高（锁竞争是指一个或多个线程想要获取已经被占用的锁的情况）。</p>
+
+<p>这里有个需要权衡的地方：请求和释放锁都需要代价（锁开销）。因此你需要确保你不会经常进出关键代码区（比如：获取和释放锁）。同时，如果你在太大的一块代码区域上加了锁的话，你就会面临锁竞争的危险，其他线程会由于等待获取锁而经常无法正常工作。这个问题不太好解决。</p>
+
+<p>有些代码本来是应该并发运行的，但由于对共享资源上锁的方式，导致了最终一次只有一个活跃线程在运行，这种情况很常见。要在多核CPU上预测你的代码如何得到调度是很难的。你可以用Instrument的CPU策略视图来了解你是否充分利用了可用的CPU资源。</p>
+
+<h2>死锁</h2>
+
+<p>互斥锁解决了竞态的问题，但不幸的是它们同时也带来了一个新问题：死锁。死锁在多个线程都在互相等待对方运行结束的时候发生。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/dead-lock@2x1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/dead-lock@2x1.png" alt="" /></a></p>
+
+<p>考虑下面的示例代码，交换两个变量的值：</p>
+
+<pre><code>void swap(A, B)
+{
+    lock(lockA);
+    lock(lockB);
+    int a = A;
+    int b = B;
+    A = b;
+    B = a;
+    unlock(lockB);
+    unlock(lockA);
+}
+</code></pre>
+
+<p>大多数时候能正常工作，但当两个线程同时用两个相反的参数去调用它的时候：</p>
+
+<pre><code>swap(X, Y); // thread 1
+swap(Y, X); // thread 2
+</code></pre>
+
+<p>最后就进入死锁。线程1需要X上的一个锁，线程2需要Y上的一个锁。它们都在等待其他的锁，但都不可能拿到它。</p>
+
+<p>你在线程中共享的资源远多，你拥有的锁越多，那么你遭遇死锁的可能性也越大。这也是要确保越简单越好、在线程中共享越少资源越好的一条原因。记得要读一下“底层并发API”文章中的异步完成任务这一段。</p>
+
+<h2>饥饿</h2>
+
+<p>就在你还在想原来有那么多问题要考虑的时候，一个新问题马上就来了。给共享资源加锁会造成读写者问题。在多数情况下，限制一次只能有一个线程来读资源是一种浪费。因此，只要资源上没有写锁的情况下就能加上读锁。在这种情况下，一个等待写锁的线程可能会由于资源上同时加的多把读锁而进入饥饿状态。</p>
+
+<p>为了解决这个问题，需要除了简单的读/写锁以外的一些更聪明的办法。比如，使用写者有限策略或者读-拷贝修改算法。Daniel在他的“底层并发技术”文章中展示了怎样使用GCD来实现不会造成饥饿问题的多读者/单写者模式。</p>
+
+<h2>优先级反转</h2>
+
+<p>我们以NASA的火星拓荒者遭遇并发问题为例开始了本段内容。现在我们来仔细看下为什么拓荒者号会失败，以及为何你的应用会受到优先级反转这个问题的困扰。</p>
+
+<p>优先级反转描述了一种低优先级任务阻止了高优先级任务执行从而反转了任务优先级的情况。因为GCD中有不同优先级的后台队列，其中还包括一个I/O受限的队列，因而有必要了解优先级反转的可能性。</p>
+
+<p>这个问题在高低优先级任务共享资源的情况下可能会发生。当低优先级任务拥有了公共资源上的一把锁，它理应迅速完成任务以便释放锁让高优先级任务执行不至于等待太久。由于低优先级任务有锁，高优先级任务得不到运行，期间有可能被中优先级的任务钻了空子，抢占了低优先级特任务的运行时间，是因为中优先级任务拥有当前所有可运行任务中最高的优先级。这样，中优先级任务阻止了低优先级任务释放锁，因此成功地从还在等待运行的高优先级任务那抢到了优先运行的机会。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/priority-inversion@2x.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/priority-inversion@2x.png" alt="" /></a></p>
+
+<p>在你的代码中，可能不会像火星探测器那样发生那么戏剧性的事情，因为优先级反转带来的后果往往不会那么严重。</p>
+
+<p>总的来说，不要使用不同的优先级。如果用了，通常会造成高优先级代码等待低优先级代码完成。当你使用了GCD，总是要使用默认优先级队列（直接使用或者作为目标队列）。如果你使用了不同优先级，有可能会事情变得很糟。</p>
+
+<p>从这可以学到的是，使用不同优先级的多个队列在理论上看起来不错，但是会给并发程序带来更多的复杂度和不可确定性。如果你将来遇到了高优先级任务貌似无故停止运行了这种奇怪的问题，也许你可以记起这篇文章，以及连NASA的工程师都碰到过的优先级反转问题。</p>
+
+<h2>总结</h2>
+
+<p>我们希望已经讲明白了并发程序的复杂性和它的一些问题，不管它的API看起来有多么直观明了。并发程序的结果很难全面考虑到，调试这类问题也通常很困难。</p>
+
+<p>另一方面，并发是充分利用现代多核CPU的强有力的手段。关键在于确保你的并发模型越简单越好，这样可以减少所需锁的数量。</p>
+
+<p>我们推荐的安全的使用模式是：在主线程中使用数据，在后台线程用operation queue来对数据操作，最终将后台任务的结果带回到主线程中使用。这样的话，你不需要自己做任何锁操作，大大降低了犯错的可能性。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">njuxjy</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-20T23:29:53+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/fan-yi/'>翻译</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/" title="Previous Post: 《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据">&laquo; 《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/" title="Next Post: iOS 开发者必知的 75 个工具（译文）">iOS 开发者必知的 75 个工具（译文） &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

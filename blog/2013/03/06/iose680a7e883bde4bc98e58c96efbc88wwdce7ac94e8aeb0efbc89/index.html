@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS性能优化（WWDC笔记） - 不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="程序启动的几个阶段：链接和加载， UIKit初始化，应用回调，第一次的Core Animation transaction 1. 启动速度优化： 方法一：测量启动时间，在main里面第一行记录开始时间，在didfinishLaunching第一行记录结束时间。 方法二：使用Time &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/2013/03/06/iose680a7e883bde4bc98e58c96efbc88wwdce7ac94e8aeb0efbc89">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iOS性能优化（WWDC笔记）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T10:10:01+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>程序启动的几个阶段：链接和加载， UIKit初始化，应用回调，第一次的Core Animation transaction</p>
+
+<h3>1. 启动速度优化：</h3>
+
+<p>方法一：测量启动时间，在main里面第一行记录开始时间，在didfinishLaunching第一行记录结束时间。</p>
+
+<p>方法二：使用Time Profiling工具</p>
+
+<p>     1）链接和加载阶段。减少不必要的框架引用，可以减少程序启动时链接和加载的时间；不要将必要的框架设置为optional，因为optional会让链接器做额外工作；避免使用静态初始化，包括静态c++对象，加载时会运行的代码，如+(void) load{} ，会造成在Main函数之前运行额外的代码，</p>
+
+<p>     2）UIKit初始化阶段。减少main nib文件的大小； 在preferences中不要存入太多的数据，比如在某个Key中存入一个很大的NSData对象如图片，因为preferences是用plist来保存的，所有的plist都是一次性反序列化出来的；</p>
+
+<p>     3) 应用回调阶段。UIKit会首先调用willfinishLaunchingWithOptions，然后恢复应用状态，然后调用didfinishLaunchingWithOptions。</p>
+
+<p>     4) 最后阶段。在_reportAppLaunchFinished中会调用CA::Transaction::commit()。 </p>
+
+<p>一些戒律：</p>
+
+<p>用工具度量，不要去猜。</p>
+
+<p> 不要做比不必要的工作。不必要的shadows和masks，同一数据的多次查询，启动时无数的logging。</p>
+
+<p>重用，而不是重复。重用那些创建代价昂贵的类：tablecell，date/number formatters，正则表达式，sqlite语句。[NSCalendar currentCalendar]看起来像是个单例，其实不是，每次调用都会创建一个新对象。调用nslog的时候会创建一个calendar对象，不要过度nslog。 每次使用sqlite_prepare会将SQL查询编译成字节码，要使用bind，重用那些已经prepared的语句。</p>
+
+<p>提高代码效率。要选择合适的数据结构和算法。 1）选择正确的数据类型。少量数据用plist，大量数据用core data或者sqlite。由于要访问plist中某个数据需要反序列化整个表，所以只能存少量数据。一些API底层使用plist实现的：preferences,通过NSCoding序列化的数据。2）优化数据库查询。用sqlite3_trace和sqlite3_profile来查找性能差的语句。</p>
+
+<p>预计算结果存入内存或者磁盘。1）注意内存增长。如screenSizedImage就不适合用static来一直保存在内存里。  </p>
+
+<p>异步加载。1）GCD等API</p>
+
+<p>保持在大数据量下伸缩性良好。如iPhone上的通讯录程序在通讯录里的人变多时启动时间控制的不错。1）保持关键方法快速。比如在Table加载sections时，numberofsectionsintableview,titleforheaderinsecion,numberofrowsinsection等方法就要性能好。 </p>
+
+<h3>2. 用户事件处理优化：</h3>
+
+<p>     1）保持主线程用来响应用户事件。</p>
+
+<p>          a) 在主线程中加快CPU处理速度，比如UILabel的cache处理；</p>
+
+<p>          b) 将事情移到主线程外面来做。隐式并发和显式并发。隐式：view和layer的动画，layer的组合，PNG解码；显式：GCD，NSOperationQueue，NSThread。</p>
+
+<p>          c)不要block掉主线程。</p>
+
+<h3>3. 内存优化</h3>
+
+<p>     1）系统如何回收内存？不是把page放到disk，而是直接扔掉不保存。 </p>
+
+<p>     2）干净内存和脏内存？干净：磁盘上存在的一些东西的拷贝，如代码、框架、内存映射文件。 脏：其他所有，如堆分配、解压的图片、数据库缓存。 NSString * a = [NSString stringWithFormat:@&ldquo;hello&rdquo;];是dirdy；NSString * a = @&ldquo;hello&#8221;是clean。</p>
+
+<p>     3）在你重复一个操作的时候，内存不应该持续增长。比如：push然后pop一个view controller，滚动table，执行数据库查询。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">njuxjy</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-06T10:10:01+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/01/e8aeb0e4b880e6aca1tableviewe6bb9ae58aa8e680a7e883bde8b083e4bc98/" title="Previous Post: 记一次tableview滚动性能调优">&laquo; 记一次tableview滚动性能调优</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/11/ios6-e58685e5ad98e8ada6e5918ae5a484e79086/" title="Next Post: iOS6 内存警告处理">iOS6 内存警告处理 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

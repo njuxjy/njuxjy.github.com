@@ -1,0 +1,518 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>symbian学习笔记三（内存管理） - 不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="本文内容非原创，属于网上资源的整理。 ======================================== 二阶段构造 问题1：为什么需要二阶段构造？ 首先考虑如下的语句： CClassName* ptr = new (ELeave) CClassName();   &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Symbian学习笔记三（内存管理）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-01T20:12:48+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>本文内容非原创，属于网上资源的整理。</p>
+
+<p>========================================</p>
+
+<p><strong>二阶段构造</strong></p>
+
+<p>问题1：为什么需要二阶段构造？</p>
+
+<p>首先考虑如下的语句：</p>
+
+<ol>
+<li> CClassName* ptr = new (ELeave) CClassName();  </li>
+</ol>
+
+
+<p>在内存有足够空间的情况下，代码首先在堆上分配一个CClassName类型的对象，并将地址赋给ptr指针，然后调用类的构造函数初始化这个对象。</p>
+
+<p>这样，如果类的构造函数出现了异常，则会发生问题，这种异常发生时没有任何指针指向成功分配给CClassName对象的内存区域，因此这些内存成为孤立内存，发生内存泄漏。这就引出了symbian内存处理的一个重要规则：构造函数绝对不能异常退出。</p>
+
+<p>问题2：为什么二阶段函数能够避免内存泄漏？</p>
+
+<p>二阶段构造函数，顾名思义就是将一个对象的构造分为两个阶段：</p>
+
+<p>第一个阶段是常规的的构造函数，在该构造函数中，没有可能导致异常退出的代码；</p>
+
+<p>第二个阶段是可能会产生异常的构造阶段，实现为函数ConstructL()；</p>
+
+<p>这样，对象的构造过程就应当包括了如下的代码：</p>
+
+<ol>
+<li><p> CClassName* self = new (ELeave) CClassName();   </p></li>
+<li><p> CleanupStack::PushL(self);   </p></li>
+<li><p> self->ConstructL();   </p></li>
+<li><p> CleanupStack::Pop(self);  </p></li>
+</ol>
+
+
+<p>这样的构造方式为什么就能够避免内存泄漏呢？下面我们来逐行分析代码：</p>
+
+<ol>
+<li> CClassName* self = new (ELeave) CClassName();  </li>
+</ol>
+
+
+<p>重载的运算符new首先将内存分配给新的self实例，如果分配失败，那么程序异常退出，如果成功给新的对象分配了内存，那么接着执行不会异常退出的第一阶段构造函数；</p>
+
+<ol>
+<li> CleanupStack::PushL(self);  </li>
+</ol>
+
+
+<p>接着我们将本地指针self推入清除栈，因为下面要调用可能发生异常的退出函数。</p>
+
+<ol>
+<li> self->ConstructL();  </li>
+</ol>
+
+
+<p>如果该二阶段构造函数在执行时异常退出，那么新的CClassName的指针由清楚栈负责清楚，避免了内存泄漏；另外，如果该函数没有异常退出，则拥有了一个完全构造的CClassName实例。</p>
+
+<ol>
+<li> CleanupStack::Pop(self);  </li>
+</ol>
+
+
+<p>安全的将本地指针从清除栈中弹出；</p>
+
+<p>每实例化一个对象就要写上述代码确实有些啰嗦了，Symbian OS为了简化实例化的步骤，又引入了NewL(),NewLC()两个函数(其实也可以写成一个NewL(),然而大家都比较推崇同时创建NewL()和NewLC())，其具体的实现方式见问题3；</p>
+
+<p>问题3：如何在新的类中创建二阶段构造函数？</p>
+
+<p>.h头文件：</p>
+
+<ol>
+<li><p> Class CClassName : public CBase   </p></li>
+<li><p> {   </p></li>
+<li><p> public:   </p></li>
+<li><p>        static CClassName* NewL();   </p></li>
+<li><p>        static CClassName* NewlC();   </p></li>
+<li><p>        ~CClassName();   </p></li>
+<li><p> private:   </p></li>
+<li><p>        CClassName(); //第一阶段构造   </p></li>
+<li><p>        void ConstructL(); //第二阶段构造   </p></li>
+<li><p>. ……   </p></li>
+<li><p>. }  </p></li>
+</ol>
+
+
+<p>cpp源文件:</p>
+
+<ol>
+<li><p> CClassName* CClassName::NewL()   </p></li>
+<li><p> {   </p></li>
+<li><p>        CClassName* self = CClassName::NewLC();   </p></li>
+<li><p>        CleanupStack::Pop(self);   </p></li>
+<li><p>        return self;   </p></li>
+<li><p> }   </p></li>
+<li><p> CClassName* CClassName::NewLC()   </p></li>
+<li><p> {   </p></li>
+<li><p>        CClassName* self = new (ELeave) CClassName();   </p></li>
+<li><p>.        CleanupStack::PushL(self);   </p></li>
+<li><p>.        self->ConstructL(); //二阶段构造   </p></li>
+<li><p>.        return self;   </p></li>
+<li><p>. }   </p></li>
+<li><p>. void CClassName::ConstructL()   </p></li>
+<li><p>. {   </p></li>
+<li><p>. /<strong><strong><strong><strong><strong><strong>**可能产生异常的代码</strong></strong></strong></strong></strong></strong>/  </p></li>
+<li><p>. }  </p></li>
+</ol>
+
+
+<p><strong>Why Memory Management</strong></p>
+
+<p>    <a href="http://www.sf.org.cn/symbian-os.html">Symbian OS</a>本身就是为<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=2473&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.zfjd.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=802405&amp;k=%E5%86%85%E5%AD%98">内存</a>和<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5143&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=210306&amp;k=%E8%B5%84%E6%BA%90">资源</a>受限的设备开发的，应用<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4744&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cnzz.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=436188&amp;k=%E7%A8%8B%E5%BA%8F">程序</a>运行过程中很可能碰到内存用光，或者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=6038&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.weibo800.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=638529&amp;k=%E7%A1%AC%E4%BB%B6">硬件</a>资源不可用的情况。而这种exceptions是通过修改程序无法解决的，所以遵守以下几条：</p>
+
+<ul>
+<li><p>尽量不要<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5383&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//biyela.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=167752&amp;k=%E4%BD%BF%E7%94%A8">使用</a>不必要的RAM</p></li>
+<li><p>尽早释放资源，如文件server等</p></li>
+<li><p>当你每次申请内存时，都须准备处理out-of-memory错误</p></li>
+<li><p>当 out-of-memory错误发生时，返回到<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5373&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.hongniang.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=378695&amp;k=%E4%B8%80%E4%B8%AA">一个</a>stable的状态，并释放所有期间申请到的资源</p></li>
+</ul>
+
+
+<p><strong> Stack and Heap</strong></p>
+
+<p>    Stack：默认大小8kb，自动删除，如 TInt i = 0;</p>
+
+<p>    Heap ：至少０.5Mb，由程序员手动删除，如 CMyObj* obj = new (ELeave) CMyObj;</p>
+
+<p><strong>Leaves</strong></p>
+
+<p>    首先介绍Conventional C++ Memory Management，在Symbian看来，这是非常低效率的。</p>
+
+<ul>
+<li><p>NULL Pointer Checking  if ((myObj = new CMyObj( ) ) == NULL) { //Error Handling }</p></li>
+<li><p>ANSI C++ Exeption Handling   try { //throw an Exception } catch (int e) { //Error Handling }</p></li>
+</ul>
+
+
+<p>    在Symbian中<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5301&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//bbs.21our.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=465235&amp;k=%E6%8E%A8%E8%8D%90">推荐</a><a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=755&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cntvs.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=260104&amp;k=%E9%87%87%E7%94%A8">采用</a>Leave，如果内存或者资源不能分配到，这个<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4864&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.llf535.com/&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=198436&amp;k=%E4%BB%A3%E7%A0%81">代码</a>就会Leave，沿着Call Stack，直到操作系统或者在某个函数中被Handle掉。</p>
+
+<p>    所有可能Leave的函数最好以L结尾，保证该函数的用户知道这个函数可能Leave。</p>
+
+<p>    Leave的例子：</p>
+
+<ul>
+<li><p>动态内存分配： return new (ELeave) TUint8[1000];</p></li>
+<li><p>产生一个Leave：User::Leave(KErrNotFound);</p></li>
+<li><p>内存不足时Leave：User::LeaveNoMemory();</p></li>
+<li><p>NULL的时候Leave：User::LeaveIfNull(aNotify);</p></li>
+<li><p>当发生错误时Leave：RFs fs; TInt err = fs.Connect(); User::LeaveIfError(err);</p></li>
+</ul>
+
+
+<p>    处理Leave：</p>
+
+<p>    操作系统有默认的处理Leave的方式：</p>
+
+<ul>
+<li><p>在程序启动过程中：直接关闭应用程序。</p></li>
+<li><p>应用程序启动后：显示一个错误消息。</p></li>
+</ul>
+
+
+<p>    开发者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5145&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=858573&amp;k=%E5%8F%AF%E4%BB%A5">可以</a>通过trap装置来处理Leave。TRAP(<em>r, </em>s)和TRAPD(<em>r, </em>s)，其中：</p>
+
+<ul>
+<li><p>_r：是一个TInt类型的leave code，默认值为TErrNone。</p></li>
+<li><p>_s：一系列可能Leave的C++ Statements。</p></li>
+<li><p> TRAPD(err, DoFunctionL());   </p></li>
+<li><p> if (err != KErrNone)   </p></li>
+<li><p>     { //Error Handling }   </p></li>
+<li><p> else  </p></li>
+<li><p>     { //Everything is well }  </p></li>
+</ul>
+
+
+<p><strong>  The Cleanup Stack</strong></p>
+
+<p>    Cleanup stack用于存储在leave发生后需要deallocating的局部变量(指针)。即：当一个函数leave了，所有在cleanup stack上的对象会被全部删除掉。</p>
+
+<p>    Cleanup Stack的使用方法：</p>
+
+<p>CleanupStack::PushL(ptr) ：当发生leave时所有内存都会被释放
+CleanupClosePushL(handle)：当发生leave时这个句柄（handler）会被关闭</p>
+
+<p>CleanupStack::Pop(pointer)：第一个元素出栈
+CleanupStack::PopAndDestroy(pointer)：第一个元素出栈并释放内存</p>
+
+<p>    如果一个函数可能leave，检查一下两种情况：</p>
+
+<ul>
+<li><p>如果leave了，是否所有在堆（heap）上的元素都在cleanup stack中了</p></li>
+<li><p>如果没有leave，你是否自己恰当地将他cleanup了</p></li>
+<li><p> CMyClass* CMyClass::NewL(TInt aBufSize)   </p></li>
+<li><p>    {   </p></li>
+<li><p>    CMyClass* self = new (ELeave) CMyClass;   </p></li>
+<li><p>    CleanupStack::PushL(self);   </p></li>
+<li><p>    self->ConstructL(aBufSize);   </p></li>
+<li><p>    CleanupStack::Pop(self);   </p></li>
+<li><p>    return self;   </p></li>
+<li><p>    }  </p></li>
+</ul>
+
+
+<p>    如果某个函数会在cleanup stack上留下一个对象，那么他必须以C结尾。</p>
+
+<p><strong>Two Phase Construction</strong></p>
+
+<p>    C++构造函数一定不能leave。所有内存和资源的分配应该在第二阶段构造函数ConstructL( )中完成。</p>
+
+<p>编码指南，所有用户定义的C类必须：</p>
+
+<ul>
+<li><p>定义NewL和NewLC函数为public static</p></li>
+<li><p>定义ConstructL和C++ Constructor为private</p></li>
+</ul>
+
+
+<p><strong>Best Practise</strong></p>
+
+<p>     Construction的规则：</p>
+
+<ul>
+<li><p>默认的C++构造函数中不能含有可能leave的代码</p></li>
+<li><p>可能发生leave的函数必须在ConstructL中被调用</p></li>
+<li><p>如果基类也有ConstructL，必须首先调用，不要忘了explicit scoping</p></li>
+</ul>
+
+
+<p>    Destruction的规则：</p>
+
+<ul>
+<li><p>C类必须在析构函数中删除它自己所包含的对象</p></li>
+<li><p>在删除一个对象后，把它的指针设为NULL</p></li>
+<li><p>不要删除不是本类所拥有的对象</p></li>
+<li><p>在reallocation前首先删除对象，并且将其指针设为NULL</p></li>
+</ul>
+
+
+<p>    Further Discussion：</p>
+
+<ul>
+<li><p>Preserve Stack Memory：每个进程只有8K，以引用的方式传递参数，大的对象放在堆上</p></li>
+<li><p>Preallocation vs last moment allocation：一般的原则是只在使用前分配资源并且在使用后马上释放。但是preallocation的好处是节约处理时间，并且在没有内存的情况下照常运行（资源已经分配到了）</p></li>
+<li><p>where to put trap harness：最基本的情况是依靠GUI应用程序的框架。根据应用的不同，可以自定义粒度。</p></li>
+<li><p>Error Code Returns vs. leaving functions：在执行某个处理前检测是否会出现问题，如下代码：</p></li>
+</ul>
+
+
+<p>                                    User::LeaveIfError(fs.Connect());</p>
+
+<p><strong>Memory Leaks</strong></p>
+
+<p>    如果你的程序有内存泄露，在模拟器上关闭时会crash。尽早发现并解决你的内存泄露，因为你可以追查到你可能导致内存泄露的代码改动。如果实在找不到，可用下面方法：</p>
+
+<p>    Heap Balance Checking：</p>
+
+<ul>
+<li><p>_UHEAP_MARK</p></li>
+<li><p>_UHEAP_MARKEND</p></li>
+</ul>
+
+
+<p>    用上述这两个宏放在你要检查的代码的开头和结尾，如果发生panic，则说明这段代码中发生了内存泄露。可以嵌套使用。</p>
+
+<p><strong>Panics </strong></p>
+
+<p>    Panic是一个未经处理的exception，暗示着一个无法解决的错误。</p>
+
+<p>一般程序有以下三类错误：</p>
+
+<ul>
+<li><p>程序错误：如引用一个超过数组范围的元素</p></li>
+<li><p>环境错误：内存、磁盘空间不够，或缺少其他资源等</p></li>
+<li><p>用户错误：输入错误数据</p></li>
+</ul>
+
+
+<p>    可以使用trap和cleanup stack技术来解决环境和用户错误，但是对于第一类的程序错误，我们无法恢复，最好是使用User::Panic()函数，它带有两个参数，第一个是string，第二个是Tint。</p>
+
+<p>内存管理的二十二条军规</p>
+
+<p>1、C类必须有析构函数，这是CBase的一个虚函数。
+2、C类的构造函数和ConstructL()必须为protect或private类型的成员函数
+3、在C class中必须有一个NewLC()函数，除非它是嵌套类。NewL()是可选的，并且总是根据NewLC()来实现。
+4、NewL()和NewLC()在c class中必须是static函数。
+5、C类通过指针和引用来传递。
+6、拷贝构造函数在symbian中没有用。
+7、不要一定在析构函数中删除类的成员对象。（生命期结束即可删除）
+8、析构函数中必须对对象进行if检查。即</p>
+
+<ol>
+<li> if(iObject) delete iObject;iObject = NULL;  </li>
+</ol>
+
+
+<p>9、R类没有明确的构造、析构或拷贝构造函数以及赋值操作。
+10、delete a;a=NULL;a=b;标准重新分配过程。
+11、任何可能导致异常退出的函数皆加L后缀。
+12、不要删除非拥有对象（也就是，那些仅仅只使用的对象）
+13、分配动态数组前定义一个合适粒度。
+14、把new换成new(ELeave).
+15、if(函数不能异常退出&amp;&amp;要自己处理错误时)使用TRAP&amp;&amp;不要过多嵌套。
+16、if(aObject被一个自动变量指针引用&amp;&amp;将进行一个可能在aObject生存期内Leave的操作）
+CleanupStack::PushL(aObject);
+17、决不能把一个i前缀的成员变量PushL入清理栈。
+18、构造函数决不能Leave，把可能异常退出的语句放到ConstructL()中去。
+19、Symbian的默认栈容量为8k，小心使用递归。
+20、TBuf的长度最好不超16，必要的情况下用HBufC代替TBuf.
+21、使用__UHEAP_MAEK 宏来检测你的内存状况。
+22、尽可能早的删除一切失去使用价值的东西，不要等到函数尾部（自动变量）或在析构函数中才删除（成员变量）。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">njuxjy</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-01T20:12:48+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/symbian/'>symbian</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2/" title="Previous Post: symbian学习笔记二（字符串）">&laquo; symbian学习笔记二（字符串）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/08/07/e5b7a5e4bd9ce4b880e69c88e5b08fe8aeb0/" title="Next Post: 工作一月小记">工作一月小记 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <title><![CDATA[不可卷也]]></title>
   <link href="http://njuxjy.github.io/atom.xml" rel="self"/>
   <link href="http://njuxjy.github.io/"/>
-  <updated>2013-09-14T11:07:17+08:00</updated>
+  <updated>2013-09-14T11:10:19+08:00</updated>
   <id>http://njuxjy.github.io/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -12,5 +12,1416 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iOS 开发者必知的 75 个工具（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/"/>
+    <updated>2013-08-25T17:48:45+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文地址：<a href="http://benscheirman.com/2013/08/the-ios-developers-toolbelt">http://benscheirman.com/2013/08/the-ios-developers-toolbelt</a> （需翻墙）</p>
+
+<p>=================================================</p>
+
+<p>如果你去到一位熟练的木匠的工作室，你总是能发现他/她有一堆工具来完成不同的任务。</p>
+
+<p>软件开发同样如此。你可以从软件开发者如何使用工具中看出他水准如何。有经验的开发者精于使用工具。对你目前所使用的工具不断研究，同时了解一些替代品的使用，当你目前所用的工具无法满足你的需要时可以填补空缺。</p>
+
+<p>记住了这些，我将向你展示一份关于各种工具的长长的列表。其中一些我每天都用，其他的我看情况使用。如果你还有更多的工具想展示在这个列表里，可以跟我留言哦亲。</p>
+
+<p>我尽我所能给列表分分类。有一些是网站，有些是后台服务，但大多数是你可以装的应用。不是所有应用都是免费，因此我会用$符号来表示此应用是否要花钱。</p>
+
+<p>废话不多说，我们马上开始。</p>
+
+<h2>灵感</h2>
+
+<ul>
+<li><p><a href="http://pttrns.com/">pttrns</a> - 一个很棒的按任务分类的iOS屏幕设计图库。举例来说，如果你想看其他应用如何处理活动feed，在这儿你可以找到一堆的例子。</p></li>
+<li><p><a href="http://tappgala.com/">TappGala</a> - 另一个很棒的优美应用设计的集合站。它不是按任务来分类的，只是一个优秀应用的列表，你可以在此获取灵感。</p></li>
+<li><p><a href="http://cocoacontrols.com/">Cocoa Controls</a> - 一些很棒的你可以用在你的iOS应用中的组件（代码）的列表。有时你可以找到一段优秀代码来节省时间，有时你也可以学习其他开发者是如何完成某个功能的。订阅他们的每周一报吧，都是精华，极少糟粕。</p></li>
+<li><p><a href="http://www.iicns.com/">IICNS</a> - 真正优秀图标的集合。获取灵感吧，但不要抄袭。</p></li>
+<li><p><a href="http://www.dribbble.com/search?q=ios">Dribbble</a> - 最优秀的设计师们在上面展示他们的作品。真正的精品。</p></li>
+<li><p><a href="http://capptivate.co/">Capptivate</a> - 给人灵感的设计作品图库。有些带有动画。感谢你，@joaopmaia！</p></li>
+</ul>
+
+
+<h2>设计</h2>
+
+<ul>
+<li><p><a href="http://celestialteapot.com/mocks">Mocks</a> ($) &ndash; 一个简单应用的快速创建iOS应用原型的工具。自带一些默认控件，你可以快速搭建原型。</p></li>
+<li><p><a href="http://giveabrief.com/">Briefs</a> ($) &ndash; 一个很有用的应用，可以让你创建应用原型，将原型连起来形成交互。你可以部署到真实设备上，看看在你手上是什么样的感觉。</p></li>
+<li><p><a href="http://www.flyingmeat.com/acorn/">Acorn</a> ($) &ndash; Photoshop的有力竞争者，比ps便宜多了。我发现自己最近用Photoshop越来越少了。该项目在积极的开发维护中。</p></li>
+<li><p><a href="http://www.bohemiancoding.com/sketch/">Sketch</a> ($) - 一个基于矢量的画图工具，随着屏幕尺寸和像素密度的改变，这个工具越来越有用。只需要设计一次，然后可以根据需要进行缩放。同时还带有一个很强大的导出系统。对于Sketch示例项目，请看<a href="http://sketchmine.co/">Sketchmine</a>。我的 <a href="http://nsscreencast.com/episodes/079-sketch">screencast on Sketch</a>上有视频演示。</p></li>
+<li><p><a href="http://www.teehanlax.com/tools/ios7/">iOS 7 PSD by Teehan+Lax</a> - 如果你（或者你的设计师）用Photoshop的话，这是个超有用的资源。也有 <a href="http://www.teehanlax.com/blog/ios-6-gui-psd-iphone-5/">iOS 6 </a>版本的。</p></li>
+<li><p><a href="http://bjango.com/articles/actions/">Bjango’s Photoshop Actions</a> - 如果你用Photoshop来设计iOS应用的话绝对能帮你省时间。一次点击即可重设画布大小，缩放200%（或50%），设置全局亮度为90等等。他们的 <a href="http://bjango.com/articles/">博客</a>中也有许多Photoshop的工作技巧。</p></li>
+<li><p><a href="http://xscopeapp.com/">xScope</a> ($) &ndash; 一把不可或缺的瑞士军刀，指导，像素放大镜，屏幕度量等等。想知道某个像素点的颜色值？想知道某个Mac应用的一个按钮和窗口之间有多少像素？xScope都能帮你。可以看下他们为<a href="http://xscopeapp.com/guide#mirror">镜像设计</a>所开发的<a href="https://itunes.apple.com/app/xscope-mirror/id488819289?mt=8&amp;ign-mpt=uo%3D4">iPhone应用</a>，看镜像设计在你的苹果设备上是多么的像素完美。</p></li>
+<li><p><a href="http://glyphish.com/">Glyphish</a> ($) &ndash;  一个很赞的有很多你的iOS应用可以使用的高质量图标的集合。苹果提供的内置图标并不多，所有拥有这么一个囊括各种概念的图标集合很有用。我还在寻找关于婴儿的一些图标。Glyphish是以包的形式发布的，最新的包里有iOS7的“细线条”图标，当设计iOS7应用的时候很有用。</p></li>
+<li><p><a href="https://github.com/AlexDenisov/FontasticIcons">Fontastic Icons for iOS</a> - 一个使用图标字体的开源类集合，例如iOS应用中的<a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a>。可以在任何像素维度上快速简便的得到一个图标。由于字体在本质上可以轻松缩放，用这种办法可以很方便的在不同平台使用的图标，而无需根据不同尺寸导出不同的版本。</p></li>
+<li><p><a href="http://paintcodeapp.com/">PaintCode</a> ($) -一个基于向量的画图工具，可以将你的作品导出为Core Graphics源代码。用来学习Core Graphics绘图是非常棒的，同时如果你想要动态绘图也是非常方便。我的<a href="http://nsscreencast.com/episodes/80-paintcode">screencast on PaintCode</a>上有视屏演示。</p></li>
+<li><p><a href="https://itunes.apple.com/us/app/edge-insets/id622650418?mt=12">Edge Insets</a> ($) &ndash; 一个帮助你定义可重用图片边距的简单工具。在Mac App Store上有售。</p></li>
+<li><p><a href="http://www.zambetti.com/projects/liveview/">LiveView</a> - 一个iOS上的远程屏幕查看器，在你的设备上可以立马轻松地看到你的设计图。谢谢你，@_funkyboy！</p></li>
+<li><p><a href="http://bjango.com/mac/skalapreview/">Skala Preview</a> ($) &ndash; 另一个很棒的可以在真实设备上快速看到你的设计图的工具。Bjango的朋友们很给力，这个应用物有所值。谢谢你，jn40！</p></li>
+</ul>
+
+
+<h2>源代码控制</h2>
+
+<ul>
+<li><p><a href="http://gitscm.org/">Git</a> - 如果你没有使用源代码控制的话，停下手中的活立马做出改变吧。我使用git做任何事情，我超爱它的。</p></li>
+<li><p><a href="http://www.kaleidoscopeapp.com/">Kaleidoscope</a> ($) &ndash; 最棒的diff/merge工具。三路合并，看着很漂亮。我每天都用。</p></li>
+<li><p><a href="http://www.perforce.com/product/components/perforce-visual-merge-and-diff-tools">p4merge</a> - 一个免费的、简陋的Kaleidoscope的替代品。强大的三路合并功能，但找下载链接不容易啊。我每次要找的时候都觉得在他们网站上藏的很深啊。</p></li>
+<li><p><a href="http://gitx.frim.nl/">Git X</a> - 一个简单强大的GUI工具，可以看到git的时间线，轻松简便地实现暂存区提交。我通常在终端上使用git，但当我需要将暂存区的改变做一次提交的时候就会想到这个应用。这是原来（已经废弃）的GitX的一个衍生品，我在这个<a href="http://gitx.org/">衍生品列表</a>上找到的。</p></li>
+<li><p><a href="http://www.sourcetreeapp.com/">Source Tree</a> - 一个免费功能很全的Git应用。我没用过是因为我喜欢命令行的方式，但如果你喜欢用GUI工具的话，可以看看这个。</p></li>
+</ul>
+
+
+<h2>剖析应用</h2>
+
+<ul>
+<li><p><a href="http://pmt.sourceforge.net/pngcrush/">pngcrush</a> - 这个实用工具可以压缩解压缩PNG文件，当你想那些App Store上应用里的图片时很有用。只要打开iTunes，查看本地应用列表，对图标右键在Finder中打开。然后打开应用，你可以看到一堆PNG文件，但你没法查看它们。使用了pngcrush你可以将它们全部提取出来，然后用预览来查看。</p></li>
+<li><p><a href="https://github.com/boctor/idev-recipes/tree/master/Utilities/appcrush">appcrush.rb</a> - 这个很方便的ruby脚本可以针对所有图片将以上过程自动化。只需将它指向你磁盘上的一个.app文件，它就会将所有图片提取到你桌面上的一个文件夹里。很方便地可以知道你手机上的应用如何完成某些设计的。我的<a href="http://nsscreencast.com/episodes/20-dissecting-apps">my screencast on dissecting apps</a>上有视频演示。</p></li>
+<li><p><a href="http://charlesproxy.com/">Charles</a> ($, 免费功能受限的试用版) &ndash; 我不知道它的界面或者图标为何如此丑陋，但是Charles是对于任何开发者来说都非常重要的一个工具。Charles作为一个代理，允许你监视进出你iPhone模拟器的网络流量。你同样可以通过将手机的代理设置为你Mac上正在运行的Charles来监控你设备上的流量。字签名的SSL证书，请求&amp;响应断点，请求/响应查看器，Charles真心是大赞。一个必须拥有的工具。再次，我的<a href="http://nsscreencast.com/episodes/20-dissecting-apps">dissecting apps</a>上视频演示。</p></li>
+</ul>
+
+
+<h2>编辑器</h2>
+
+<p>我知道你在想什么，难道不是所有iOS开发者都用Xcode吗？答案是大多数都使用。但从我和Xcode的恩恩怨怨来看，我相信很有必要来考虑下有哪些替代品。</p>
+
+<ul>
+<li><p><a href="http://jetbrains.com/objc">AppCode</a> - Jetbrains（ReSharper for .NET的制作公司）的一款功能全面的IDE。强大的重构工具和功能可以帮助你更快地写代码。快速识别死代码，当你使用了相关代码时自动插入#import语句，轻松选取变量、方法以及类。我唯一希望的是它能成为Xcode的一个插件。</p></li>
+<li><p><a href="http://www.vim.org/">Vim</a> - 等一下， vim？真的么？确实是真的，有人在vim里做所有的Objective-C开发。我并不是其中之一，但我喜欢用vim开发ruby。就因为如此，我很喜欢&hellip;</p></li>
+<li><p><a href="https://github.com/JugglerShu/XVim">Xvim</a> -  一个Xcode插件，能使用vim中的keybindings。感觉不错，‘nuff说。</p></li>
+<li><p><a href="https://github.com/omz/ColorSense-for-Xcode">OMColorSense</a> -<strong> </strong>另一个Xcode插件，当你的光标停留在某个代码行如：[UIColor redColor]上的时候，它会在一小块区域里展示出代码中的颜色。点击颜色选项卡会打开颜色选择器，你在上面做的任何改变都会在代码里得到反映，相应代码改为[UIColor colorWithRed:&hellip; green&hellip; blue&hellip; alpha:&hellip; ]。当我开着这个功能写代码，别人看到的时候总是问我：“哇哦！这是啥玩意！”</p></li>
+<li><p><a href="https://github.com/ksuther/KSImageNamed-Xcode">KSImageNamed</a> - 另一个Xcode插件，可以在你打下[UIImage imageNamed:&hellip;]的时候，自动补全bundle中图片的文件名。有了它，就可以避免那些不小心打错图片名导致方法返回nil，然后你花10分钟去检查为什么图片没有展示出来的问题了。</p></li>
+<li><p><a href="https://github.com/kattrali/cocoapods-xcode-plugin">CocoaPods Xcode Plugin</a> - 这个插件增加了一个菜单项可以和CocoaPods交互。如果你不想用命令行的话很有用。</p></li>
+<li><p><a href="http://mneorr.github.io/Alcatraz/">Alcatraz Package Manager</a> - 一个很棒的元插件，可以让你通过轻点鼠标轻松安装其他的Xcode配色方案和插件。</p></li>
+<li><p><a href="https://itunes.apple.com/us/app/coderunner/id433335799?mt=12">Code Runner</a> ($) &ndash; 一个轻量级的代码感知文本编辑器，知道怎么编译和运行多种语言的代码。想快速测试一段Objective-C代码，又不想创建一整个Xcode项目？试试Code Runner吧。</p></li>
+</ul>
+
+
+<h2>文档</h2>
+
+<p>啊哈，文档，每个人最爱的话题。文档很重要，因此请注意一下，我们可以让你生活变得简单一些。</p>
+
+<ul>
+<li><p><a href="http://gentlebytes.com/appledoc/">appledoc</a> - 想自动生成苹果官方那样的文档吗？不用再找了。自动在你的项目中定义超链接符号，使用特殊格式的代码注释来提取内容。生成正式文档和HTML网页。</p></li>
+<li><p><a href="http://kapeli.com/dash/">Dash</a> ($) &ndash; 一个必须拥有的API文档查看器和代码片段管理器。它很好用，允许你下载并搜索各种语言和框架的API文档，而且速度很快。最快访问文档的方式。为了使搜索更快，我<a href="http://joeworkman.net/blog/post-30037947509">把Dash和Alfred集成起来使用</a>。</p></li>
+</ul>
+
+
+<h2>依赖管理</h2>
+
+<p>是的，这里只列举了一个工具。我不想引入真正的第三方库列表，因为它们属于完全不同的另一个列表。当我们谈到依赖管理的时候，最最重要的就是：</p>
+
+<ul>
+<li><a href="http://cocoapods.org/">CocoaPods</a> -  管理Objective-C项目的重要工具。允许你轻松快速地将第三方库集成到你的应用中。它是通过创建另一个静态库工程，然后自动链接到你的工程来实现的。有成千上万个可用的pod，可以轻松地为你的项目增加那些不属于你（或者私有）的第三方库支持。我在我的每个项目里都用了CocoaPods。</li>
+</ul>
+
+
+<h2>诊断&amp;调试</h2>
+
+<p>有时候我们正在开发应用，我们想更好的了解到底发生了什么，修bug或者改善性能。</p>
+
+<ul>
+<li><p><a href="https://github.com/robbiehanson/CocoaLumberjack">Cocoa Lumberjack</a> - 一个更强大的NSLog，Cocoa Lumberjack提供了高级日志行为，比如记录日志到文件、网络，根据日志级别来筛选（info,debug,warn,error）。在<a href="http://nsscreencast.com/episodes/61-cocoa-lumberjack">NSScreencast Episode 61</a>中有提到。</p></li>
+<li><p><a href="https://github.com/domesticcatsoftware/DCIntrospect">DCIntrospect</a> - 当你在模拟器上调试的时候链接到你应用中的超强大的工具。一旦你这么做了，你可以按下空格键来取得一些很有用的视图调试支持。查看屏幕上视图元素的精确维度，打印视图层次，甚至水平或垂直移动视图。</p></li>
+<li><p><a href="https://github.com/square/PonyDebugger">Pony Debugger</a> - 另一个你可以嵌入一个库到你调试版本中的工具，Pony Debugger实际上使用了Chrome的开发工具来查看设备上发出的网络请求，还有一个基本的Core Data浏览器。很难描述，请看我的<a href="http://nsscreencast.com/episodes/54-pony-debugger">screencast on Pony Debugger</a>吧。</p></li>
+<li><p><a href="http://runscope.com/">Runscope</a> ($) &ndash; Runscope是一个网络服务，可以捕捉请求，记录日志，给你关于你的API的有用数据。因为它是个HTTP通道API， 搭建简单，你只需要更换你的主机名就行了。</p></li>
+<li><p><a href="http://simpholders.com/">SimPholders</a> - 快速简单的访问你的模拟器文件夹。根据iOS版本来浏览，然后是应用名，可以直接在Finder中打开文件夹。</p></li>
+<li><p><a href="http://sparkinspector.com/">Spark Inspector</a> -  在调试模式运行你的应用时，可以用3D来展示调试你的视图层次。这个应用你真的要看到了才会真正明白它的价值。它能帮助你了解你的应用是由哪些视图组成的。它还带有一个通知中心监视器，你可以轻松看到发出了哪些NSNotification，谁在观察它们。另一个监控NSNotification的应用是<a href="http://revealapp.com/">Reveal</a>。</p></li>
+</ul>
+
+
+<h2>图像</h2>
+
+<ul>
+<li><p><a href="http://pngmini.com/">ImageAlpha</a> - 一个Mac应用，可以让你将24位带透明度的PNG图转成8位的带alpha通道的PNG图。通常8位PNG图不带有alpha通道，因此如果你的图片可以用8位来表示（比如一个单色的按钮）的话，你可以通过把25位PNG转成8位的来节省很多空间。</p></li>
+<li><p><a href="http://imageoptim.com/">ImageOptim</a> - 另一个Mac应用，可以压缩PNG图片来节省空间。大多数PNG文件可以省掉几个百分点的大小，有时甚至30%或更多。图片更小意味着应用尺寸更小，运行时加载它们所使用的内存也更小。</p></li>
+<li><p><a href="http://wearemothership.com/work/prepo">Prepo</a> - 一个Mac上的小应用，可以将图片快速变换为你需要的多个尺寸。只需要拖动一个大图标文件（比如，1024<em>1024）到Prepo，它就会生成512</em>512的iTunesArtwork，114*114的 Icon@2x.png，以及其他的尺寸和文件名。</p></li>
+<li><p><a href="http://dragonforged.com/slender/">Slender</a> ($) -一个很棒的应用，可以分析你的应用，找出各种问题，比如缺少视网膜屏的图片，没用到的图片，能压缩的图片。使用Slender去除掉那些没用的图片，可以为你的iPhone应用节省好多空间。</p></li>
+</ul>
+
+
+<h2>Core Data</h2>
+
+<ul>
+<li><p><a href="http://rentzsch.github.com/mogenerator/">Mogenerator</a> -  一个超有用的工具，在你的Core Data模型中生成NSManagedObjects智能子类。有些人使用Xcode完成这功能，通过手动子类化或者创建分类来为模型增加逻辑。Mogenerator作为预编译脚本运行来生成你可以使用的子类。它通过创建带有下划线的版本(_User)以及正常你可以修改的版本(User)来实现。</p></li>
+<li><p><a href="http://menial.co.uk/software/base/">Base</a> ($) &ndash; 你肯定会需要查看你的Core Data sqlite数据库来检查发生了什么。你可以使用sqlite3命令行工具，但Base给了你一个方便查看的GUI浏览器。当你看到Core Data为你创建的数据库schema时你可不要吐哦。</p></li>
+<li><p><a href="http://christian-kienle.de/CoreDataEditor">Core Data Editor</a> ($) -对于一些更高级的数据分析、发掘以及修改，你可以使用Core Data Editor。这个应用了解Core Data，因此你是在直接和实体打交道，而不是数据库行。</p></li>
+</ul>
+
+
+<h2> 后台服务</h2>
+
+<p>最终你的iOS应用很可能会和服务器通信分享数据、获取新内容、发送推送通知等等。虽然你都可以手动去做，但你或许想要更方便的解决方案。</p>
+
+<ul>
+<li><p><a href="http://helios.io/">Helios</a> - Helios是一个开源的框架，为iOS应用提供了基础的后台服务，从数据同步、推送通知到应用内购买以及passbook集成。它建立在许多开源ruby gem的基础上，因此如果你想要的话可以挑选构建你自己的栈。看一下<a href="http://nomad-cli.com/">Nomad CLI</a>，有很多好用的相关工具。</p></li>
+<li><p><a href="http://www.windowsazure.com/en-us/develop/mobile/">Windows Azure Mobile Services</a> - 你可以把它想象成在云端的一个可编程数据库。建表，用JavasScript来读取、插入、删除，增加额外的功能。实现推送通知相当简单。</p></li>
+<li><p><a href="http://urbanairship.com/">Urban Airship</a> - 我现在在用Urban Airship来实现推送通知。很容易集成，用户量不大的话是免费的。</p></li>
+<li><p><a href="http://parse.com/">Parse</a> - 这是另一个云端数据服务，但是它提供了很多API以及有一个在线数据浏览器。我们一个很小的应用用了Parse，感觉不错。</p></li>
+</ul>
+
+
+<h2> 分析</h2>
+
+<p>这里还有些别的选择，但没有一个让我觉得有冲动把flurry换掉的。我乐于听取意见，欢迎在评论里告诉我吧。</p>
+
+<ul>
+<li><a href="http://flurry.com/">Flurry</a> - 我用flurry很长时间了，它可以提供用户使用我的应用的有用的分析数据。想知道什么时候可以停止支持iOS5么？Flurry会给你数据供你们讨论。</li>
+</ul>
+
+
+<h2> 部署</h2>
+
+<ul>
+<li><p><a href="http://www.deploymateapp.com/">Deploymate</a> ($) &ndash; 还需要支持iOS4，但是你在用iOS6 SDK编译？当你使用了一些在你的部署目标上不存在的符号时，Deploymate会警告你的。</p></li>
+<li><p><a href="https://github.com/nomad/cupertino">Cupertino</a> - Nomad CLI工具之一，Cupertino为你提供了命令行接口来管理苹果Provisioning Portal上的设备及profile。举例来说，只要键入ios devices:list就可以看到你帐号里的当前设备列表。可以用来自动化许多过程。</p></li>
+<li><p><a href="http://hockeyapp.net/">Hockey App</a> ($) &ndash; 管理你ad-hoc版本发布的不错服务。测试人员可以得到一个链接，无线安装新的测试版本。它还提供了健壮的崩溃报告功能，你可以轻松应对你应用中的崩溃。</p></li>
+<li><p><a href="http://testflightapp.com/">TestFlight</a> - 一个类似于Hockey App的免费应用。我们使用TestFlight已经取得了很大成功，轻松发布应用，从用户那收集反馈。我唯一希望他们能对这个服务进行收费。它还包括了分析和崩溃报告功能，但我们没有用到那些功能。</p></li>
+<li><p><a href="http://www.curioustimes.de/iphonesimulatorcropper/index.html">iOS Simulator Cropper</a> - 一个拍模拟器屏幕快照的简单方法，可以选择带或者不带状态栏，带或者不带机器外壳等等。对于App Store或者普通市场上的一些截屏很有用。</p></li>
+<li><p><a href="http://shinydevelopment.com/status-magic/">Status Magic</a> ($) &ndash; 拍出更好的app store截屏图。没有什么比App Store上带有低电量或者低信号标识的截屏图更让你的应用看起来糟糕的了。Status Magic让你充分定制你的状态栏，包括去除一些元素，把时间改成苹果喜欢的“9:41 AM”那样，等等。</p></li>
+<li><p><a href="http://crashlytics.com/">Crashlytics</a> -对于你正在开发中的应用来说是个很棒的崩溃报告工具。在发布版里自动上传dSYM文件，因此你的崩溃日志会为你自动符号化并组织好，你可以专注于最关键的部分。</p></li>
+</ul>
+
+
+<h2> 测试</h2>
+
+<p>我认为我们作为一个社区对测试关注得还不够。有很多不错的工具可用，大多数都很好用，我们没有借口不为我们的应用写一些测试。</p>
+
+<ul>
+<li><p><a href="https://github.com/allending/Kiwi">Kiwi</a> - 一个不错的Rspec风格的iOS测试框架。基于SenTestingKit建立，因此你只需按下⌘U来运行你的用例。它同样带有健壮的mocking以及stubbing库和断言。</p></li>
+<li><p><a href="https://github.com/specta/specta">Specta</a> -一个类似于Kiwi的轻量级BDD框架，但是它的expectation语法有一个比Kiwi好的地方：每个变量都隐式装箱：expect(items.count).to.equal(5)。不需要像Kiwi那样将5包装成NSNumber。和<a href="https://github.com/specta/expecta/">Expecta</a>搭配使用效果更好。</p></li>
+</ul>
+
+
+<p>以下的几个都可以用来执行端到端的验收测试。这些测试会和你的界面交互，点击按钮，滚动，等等。虽然上它们运行会比较慢，但是在大范围内测试会更容易看到所有的模块整合的是否良好。</p>
+
+<ul>
+<li><p><a href="https://github.com/square/KIF">KIF</a></p></li>
+<li><p><a href="https://github.com/calabash/calabash-ios">Calabash</a></p></li>
+<li><p><a href="http://www.zucchiniframework.org/">Zucchini</a></p></li>
+<li><p><a href="http://testingwithfrank.com/">Frank</a></p></li>
+<li><p><a href="https://github.com/bendyworks/bwoken">Bwoken</a></p></li>
+</ul>
+
+
+<h2> 演示/市场</h2>
+
+<ul>
+<li><p><a href="http://www.airsquirrels.com/reflector/">Reflector</a> ($) &ndash; 将你的iOS设备通过Air Play镜像到你的Mac上。很适合在你的电脑上做应用演示。</p></li>
+<li><p><a href="http://placeit.breezi.com/">Placeit</a> - 一些关于人们使用设备的高分辨率的图的集合，但是设备可以由你上传的截屏图来定制。很酷，很适合在你网站上优雅地展示你的应用。</p></li>
+</ul>
+
+
+<h2>应用销售报告</h2>
+
+<p>你当然想要知道你的应用能赚多少钱，不是么？有一些解决方案，这儿有些还不错的：</p>
+
+<ul>
+<li><p><a href="http://www.ideaswarm.com/AppViz2.html">App Viz 2</a> ($) &ndash; 一个很有用的Mac应用，可以跟踪你应用的销量。你在本地运行它，它会登录并下载你的销售报告。</p></li>
+<li><p><a href="http://www.appannie.com/">App Annie</a> - 一个在线的销售报告工具。我不太乐意把我的认证信息交给除了iTunes以外的第三方，但它确实能确保你的报告是最新的，你无需在本地运行一个程序。<em>在评论中，Josh Brown建议可以创建另一个用户用于iTunes Connect中的分析，这个主意不错。</em></p></li>
+</ul>
+
+
+<h2>摸彩袋</h2>
+
+<p>这些工具没有一个定义好的分类，但值得一提。</p>
+
+<ul>
+<li><a href="http://www.quickradar.com/">Quick Radar</a> - 提交bug报告给苹果，是我们唯一可以帮助他们改善工具的办法。如果你由于缺少某个功能感到万分沮丧，你可以提交一个bug报告。如果你遇到了一个bug，你同样可以。如果他们没有雷达的话，用户还没有抱怨的权利：）因此，通过<a href="http://bugreporter.apple.com/">bugreporter</a>来提交bug报告的话好像又回到了1995年。Quick Radar是一个很赞的应用，它可以使提交bug报告变得超级简单。自动发布到开放的雷达，这样其他人就能看到，也可以发twitter，发布到App.net。我每周都要用好几次这个应用。</li>
+</ul>
+
+
+<p>好了就这么多。满满一墙的工具。希望你以后碰到新工具也能加入到你的兵器库里。如果你喜欢这篇文章，可以在<a href="http://nsscreencast.com/">NSScreencast</a>里看下我的iOS屏幕录像。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[objc.io之并发编程：API和挑战（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/"/>
+    <updated>2013-08-20T23:29:53+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898</id>
+    <content type="html"><![CDATA[<p>原文地址：<a href="http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html">http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html</a></p>
+
+<p>==============================================</p>
+
+<p>并发是指在同一段时间同时运行多个任务。并发可以在单核CPU上以分时方式运行，或者在多CPU情况下实现真正的并行。</p>
+
+<p>OS X和iOS提供了不同的API来实现并发编程。每种API都有其优缺点，适用于不同类型的任务。它们的抽象程度也各不相同。我们可以用到非常靠近底层的API，但同时用对这些API也更加困难。</p>
+
+<p>并发编程是个很困难的主题，有很多复杂的问题和陷阱，在使用像GCD或NSOperationQueue这些API的时候很容易忽略这些问题。在这篇文章中，我们会首先看下在OS X和iOS上有哪些不同的并发API，然后深入了解下并发编程固有的一些难点，这些难点和你具体使用的那些API无关。</p>
+
+<h1>OS X和iOS上的并发API</h1>
+
+<p>苹果的移动和桌面操作系统在并发编程上提供了相同的API。在本文中，我们将会看到pthread和NSThread、GCD、NSOperationQueue以及NSRunloop。技术上来讲，run loop不应该属于这个单子里，因为它们没法用来写并发程序。但它们跟并发话题太有关系了，值得我们同样关注下。</p>
+
+<p>我们首先会看一些偏底层的API，然后慢慢接触高层次的API。之所以这样是因为高层的API建立在底层API的基础上。然而，当你为你的用例选择API的时候，你应该以相反的顺序来考虑：选择最高抽象层次的来完成任务，这样会使得你的并发模型非常简单。</p>
+
+<p>如果你想知道为什么我坚持推荐优先使用高层次的API以及要保持并发代码简单，你可以读下这篇文章的第二部分——并发编程的挑战，以及Peter Steinberger的线程安全文章。</p>
+
+<h2>线程</h2>
+
+<p>线程是进程的子单元，可以由操作系统调度器单独调度。实际上所有的并发API底层都是线程，包括GCD和operation queue。</p>
+
+<p>多个线程可以在单个CPU上同时执行（或者至少说可以认为是同时）。操作系统给每个线程分配了一小片计算时间，对用户来说好像多个任务是在同时执行。如果是多核CPU，那么多个线程就能真正的实现并发，因此某个任务所需的执行时间就能减少。</p>
+
+<p>你可以使用Instruments中的CPU strategy view(译者注：在Xcode 4.6上没有发现有此视图)来查看你的代码或者框架里的代码是如果在多核CPU上调度执行的。</p>
+
+<p>你需要记住的是，你无法控制你的代码在什么时候哪个CPU上执行，由于其他任务的介入也无法控制什么时候执行多久你的代码就会停止。这类的线程调度是很强大的一种技术。然而，它的复杂度也很高，我们一会儿会深入研究。</p>
+
+<p>暂时先不考虑这种复杂度，你可以使用POSIX thread API，也可以使用Objective-C对此API的一个封装——NSThread——来创建你自己的线程。这儿有个小例子，使用pthread来从一百万个数字中找到最小和最大的数。它创建了4个线程并发运行。从这个例子中很明显可以看出你不应该直接使用pthread。</p>
+
+<pre><code>struct threadInfo {
+    uint32_t * inputValues;
+    size_t count;
+};
+
+struct threadResult {
+    uint32_t min;
+    uint32_t max;
+};
+
+void * findMinAndMax(void *arg)
+{
+    struct threadInfo const * const info = (struct threadInfo *) arg;
+    uint32_t min = UINT32_MAX;
+    uint32_t max = 0;
+    for (size_t i = 0; i &lt; info-&gt;count; ++i) {
+        uint32_t v = info-&gt;inputValues[i];
+        min = MIN(min, v);
+        max = MAX(max, v);
+    }
+    free(arg);
+    struct threadResult * const result = (struct threadResult *) malloc(sizeof(*result));
+    result-&gt;min = min;
+    result-&gt;max = max;
+    return result;
+}
+
+int main(int argc, const char * argv[])
+{
+    size_t const count = 1000000;
+    uint32_t inputValues[count];
+
+    // Fill input values with random numbers:
+    for (size_t i = 0; i &lt; count; ++i) {
+        inputValues[i] = arc4random();
+    }
+
+    // Spawn 4 threads to find the minimum and maximum:
+    size_t const threadCount = 4;
+    pthread_t tid[threadCount];
+    for (size_t i = 0; i &lt; threadCount; ++i) {
+        struct threadInfo * const info = (struct threadInfo *) malloc(sizeof(*info));
+        size_t offset = (count / threadCount) * i;
+        info-&gt;inputValues = inputValues + offset;
+        info-&gt;count = MIN(count - offset, count / threadCount);
+        int err = pthread_create(tid + i, NULL, &amp;findMinAndMax, info);
+        NSCAssert(err == 0, @"pthread_create() failed: %d", err);
+    }
+    // Wait for the threads to exit:
+    struct threadResult * results[threadCount];
+    for (size_t i = 0; i &lt; threadCount; ++i) {
+        int err = pthread_join(tid[i], (void **) &amp;(results[i]));
+        NSCAssert(err == 0, @"pthread_join() failed: %d", err);
+    }
+    // Find the min and max:
+    uint32_t min = UINT32_MAX;
+    uint32_t max = 0;
+    for (size_t i = 0; i &lt; threadCount; ++i) {
+        min = MIN(min, results[i]-&gt;min);
+        max = MAX(max, results[i]-&gt;max);
+        free(results[i]);
+        results[i] = NULL;
+    }
+
+    NSLog(@"min = %u", min);
+    NSLog(@"max = %u", max);
+    return 0;
+}
+</code></pre>
+
+<p>NSThread是一个对pthread的简单Objective-C封装。在Cocoa环境里代码看起来会更熟悉些。举例来说，你可以定义一个线程作为NSThread的子类，这个类封装了你想在后台运行的一写代码。举之前的例子来说，你可以像这样定义一个NSThread的子类：</p>
+
+<pre><code>@interface FindMinMaxThread : NSThread
+@property (nonatomic) NSUInteger min;
+@property (nonatomic) NSUInteger max;
+- (instancetype)initWithNumbers:(NSArray *)numbers;
+@end
+
+@implementation FindMinMaxThread {
+    NSArray *_numbers;
+}
+
+- (instancetype)initWithNumbers:(NSArray *)numbers
+{
+    self = [super init];
+    if (self) {
+        _numbers = numbers;
+    }
+    return self;
+}
+
+- (void)main
+{
+    NSUInteger min;
+    NSUInteger max;
+    // process the data
+    self.min = min;
+    self.max = max;
+}
+@end
+</code></pre>
+
+<p>要开启新线程，我们得创建新线程对象，然后调用其start方法：</p>
+
+<pre><code>NSSet *threads = [NSMutableSet set];
+NSUInteger numberCount = self.numbers.count;
+NSUInteger threadCount = 4;
+for (NSUInteger i = 0; i &lt; threadCount; i++) {
+    NSUInteger offset = (count / threadCount) * i;
+    NSUInteger count = MIN(numberCount - offset, numberCount / threadCount);
+    NSRange range = NSMakeRange(offset, count);
+    NSArray *subset = [self.numbers subarrayWithRange:range];
+    FindMinMaxThread *thread = [[FindMinMaxThread alloc] initWithNumbers:subset];
+    [threads addObject:thread];
+    [thread start];
+}
+</code></pre>
+
+<p>现在我们可以观察所有线程的isFinished属性来检测是否所有新创键的线程在计算结果前都已经运行结束。我们把联系留给感兴趣的读者。我想说的重点是直接使用pthread或者NSThread API来操作线程是一个笨拙的方法，不符合我们编程的思维习惯。</p>
+
+<p>直接使用线程会造成的一个问题是，如果你的代码和底下框架的代码都创建了各自的线程的话，活跃线程的数量会呈指数增长。这在大项目中是个很普遍的问题。举例来说，你创建了8个线程，在8核CPU上跑，你所调用的框架代码也这么做（因为它并不知道你已经创建了其他线程），最终你会得到几十甚至上百个线程。每个线程的代码都各尽其职，然而最终结果是有问题的。线程并非没有代价，每个线程都会占用内存和内核资源。</p>
+
+<p>接下来，我们会讨论两种基于队列的并发API：GCD和operation queues。它们通过集中式管理一个任何线程都能协同使用的线程池来缓解这个问题。</p>
+
+<h2>GCD</h2>
+
+<p>为了使开发者能更容易地充分利用消费者设备越来越多的CPU数量，在OS X10.6和iOS4中引入了GCD。我们将在这篇“底层并发API”的文章中讨论更多GCD的内容。</p>
+
+<p>使用了GCD，你就不用再直接和线程打交道了。你只要将代码块加入队列，然后GCD会在背后管理一个线程池。GCD会决定你的代码块在哪个线程上执行，会根据可用系统资源来管理这些线程。这会缓解太多线程被创建的问题，因为现在所有的线程都由GCD集中管理，和应用开发者抽象隔离开来。</p>
+
+<p>GCD另一个重要改变在于，作为开发者的你思考的是在一个队列里的一些操作对象，而不是一些线程。这种新的关于并发的思维模型更容易使用。</p>
+
+<p>GCD有五个不同的队列：在主线程上运行的主队列，三个拥有不同优先级的后台队列，一个有着更低优先级的I/O受限的后台队列。另外，你也可以创建自定义队列，可以是串行或者并行队列。自定义队列的抽象层次很高，所有你调度在它上面运行的代码块最终都会分配到系统全局队列之一和它的线程池里。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/gcd-queues@2x.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/gcd-queues@2x.png" alt="" /></a></p>
+
+<p>使用不同优先级的几个队列一开始听起来还不错，然而我们强烈推荐你在几乎任何情况下都使用默认优先级的队列。如果几个任务访问了共享资源，那么在不同优先级的队列上调度任务会导致无法预期的行为。最坏可以导致你的程序慢慢停下来，因为低优先级的任务阻止了高优先级的任务执行。你可以了解一下这种现象，称为优先级反转。</p>
+
+<p>尽管GCD是低层次的C API，但是用起来很顺手。当你把代码块放到GCD队列上去执行的时候，你很容易忘掉并发编程所有要注意的地方及陷阱。为了了解潜在的问题，请记得阅读下面这篇文章“并发编程的挑战”。另外，这个话题里还有一章精彩的“GCD API攻略”，包含了许多深入的解释和有价值的提示。</p>
+
+<h2>Operation Queues</h2>
+
+<p>Operation queues是GCD队列模型的一个Cocoa抽象。GCD提供了很多低层次的控制，而operation queues在其基础上失信了一些方便的特习惯，使得它成为应用开发者们最优最安全的选择。</p>
+
+<p>NSOperationQueue类有两种不同类型的队列：主队列和自定义队列。主队列运行在主线程上，自定义队列在后台处理。在任何情况下，由这些队列处理的任务都是由NSOperation的子类来表示。</p>
+
+<p>你可以有两种方法来定义自己的operation：要么重写main，要么重写start。前者容易实现，但灵活性不如后者。像isExecuting和isFinished这些状态属性不用自己管理，当main返回的时候只需要假定operation已经运行结束了。</p>
+
+<pre><code>@implementation YourOperation
+    - (void)main
+    {
+        // do your work here ...
+    }
+@end
+</code></pre>
+
+<p>如果你需要获得更多的控制权，或者在operation里执行一个异步任务的话，你可以重写start：</p>
+
+<pre><code>@implementation YourOperation
+    - (void)start
+    {
+        self.isExecuting = YES;
+        self.isFinished = NO;
+        // start your work, which calls finished once it's done ...
+    }
+
+    - (void)finished
+    {
+        self.isExecuting = NO;
+        self.isFinished = YES;
+    }
+@end
+</code></pre>
+
+<p>在这种请情况下你需要手动管理operation的状态。为了使operation queue能够捕获到operation的状态变化，状态属性必须以兼容KVO的方式来定义。因此万一你没有通过默认访问器方法为状态属性设置值的话，记得要发送合适的KVO消息。</p>
+
+<p>为了使用operation queues的取消功能，对于长时间运行的operation你得周期性检查isCancelled属性的值：</p>
+
+<pre><code> (void)main
+{
+    while (notDone &amp;&amp; !self.isCancelled) {
+        // do your processing
+    }
+}
+</code></pre>
+
+<p>当你定义好了你的operation类，把它放到operation queue上很容易：</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+YourOperation *operation = [[YourOperation alloc] init];
+[queue  addOperation:operation];
+</code></pre>
+
+<p>或者你也可以把代码块加到operation queue中。做起来很方便。比如：你把一次性任务加到主队列中：</p>
+
+<pre><code>[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+    // do something...
+}];
+</code></pre>
+
+<p>这种方法把任务调度到队列中执行的确很方便，然而定义你自己的NSOperation子类在调试时候会很有帮助。如果你重写了operation的description方法，你可以很轻松地识别出某个队列中所有当前调度的operation。</p>
+
+<p>除了基本的调度operation或代码块，operation queues还提供了一些在GCD中不容易正确使用的特性。举例来说，通过maxConcurrentOperationCount属性，你可以很轻松地控制某个队列中有多少可以并发运行的operation。将其设置为1就使得队列变成了一个串行队列，出于线程隔离的目的很好用。</p>
+
+<p>另一个方便的特性是根据一个队列中operation的优先级来给它们排序。这不同于GCD的队列优先级。它只影响某一个队列中所有operation的执行顺序。如果除了标准的5个优先级外你还想对执行顺序有更多的控制权，你可以像这样指定operation间的依赖关系：</p>
+
+<pre><code>[intermediateOperation addDependency:operation1];
+[intermediateOperation addDependency:operation2];
+[finishedOperation addDependency:intermediateOperation];
+</code></pre>
+
+<p>这段简单的代码确保了operation1和operation2将在intermediateOperation之前执行，而intermediateOperation将在finishedOperation之前执行。Operation依赖是可以用来指定执行顺序的强大机制。它可以让你创建一个operation组，确保这个组在某个依赖它的operation之前执行，或者在并发队列中创建一些串行的operation。</p>
+
+<p>出于抽象的本质来说，operation queues在性能上略输于GCD API。然而，在绝大多数情况下，这种影响可以忽略，operation queues依然是你的首选。</p>
+
+<h2>Run Loops</h2>
+
+<p>技术上来说Run loop并不和GCD或者operation queue一样是一种并发机制，因为你不能用它来并发执行任务。然而，run loop和那些在主dispatch/operation队列上执行的任务密切相关，它提供了一种异步执行代码的机制。</p>
+
+<p>Run loop使用起来比operation queue或GCD都简单，因为你无需处理复杂的并发问题就可以异步地执行一些任务。</p>
+
+<p>Run loop总是和某个特定的线程绑定的。在每个Cocoa和CocoaTouch应用中，和主线程相关的主run loop扮演着核心角色，因为它负责处理UI事件、定时器以及其他内核事件。每当你开启定时器，使用NSURLConnection，或者调用performSelector:withObject:afterDelay:的时候，背后都使用了run loop来执行这些异步任务。</p>
+
+<p>当你使用了依靠run loop来运行的方法时，需要记住的是run loop可以以不同模式来运行。每个模式定义了一系列事件，在某个模式下运行的run loop可以响应这些事件。用这种办法可以在主run loop里临时将一些任务的优先级调得高于另一些。</p>
+
+<p>一个典型的例子就是iOS中的滚动。当你在滚动列表时，run loop并不在它的默认模式下运行，因此它不会响应诸如你之前开启的一个定时器。一旦滚动停止了，run loop便回到了默认模式，之前放入队列里的那些事件得到了执行。如果你想在滚动时触发定时器，你需要把它用NSRunLoopCommonModes模式加入到run loop中。</p>
+
+<p>主线程默认就有主run loop在跑。其他线程默认没有配置run loop。你也可以为其他线程设置一个run loop，但这种情况很罕见。大多数时候使用主run loop会简单得多。如果你需要在主线程外做一些复杂的任务时，在主run loop调用你的代码以后你仍然可以把任务分配到其他队列上执行。Chris在他的文章“后台任务实践”的文章中有一些很好的例子。</p>
+
+<p>如果你确实要在另一个线程中创建一个run loop的话，不要忘了至少要为它加上一个输入源。如果run loop没有配置输入源的话，每次一运行它就会立马退出。</p>
+
+<h1>并发编程的挑战</h1>
+
+<p>编写并发程序伴随着很多陷阱。只要你不是在做最最基础的事情，你很难全面考虑到多个并发执行的任务相互交互时各种不同的状态。问题会以不确定的方式发生，这样调试并发代码的话难度就更大了。</p>
+
+<p>有一个关于并发程序不可预期行为的突出例子：在1995年，NASA向火星发射了拓荒者号。在成功着陆这颗红色的临近星球后的不久，任务几乎突然终结。这位火星探路者不停地无故重启——它被一个叫优先级反转的现象所害，低优先级的线程阻止了高优先级任务执行。我们将在下面探索这个话题的更多细节。这个例子足以证明即使在充足的资源和许多技术人才可用的情况下，并发依然是个令人头疼的问题。</p>
+
+<h2>资源共享</h2>
+
+<p> 许多并发问题的根源都是多个线程访问共享资源。资源可以是一个属性或一个对象、内存、网络设备、文件等等。任何你在多线程间共享的东西都有可能造成冲突，你必须做好安全措施来防止这种冲突。</p>
+
+<p>为了说明这个问题，我们来看一个整型属性作为计数器资源的例子。假设有两个线程并发运行，A和B，同时在尝试增加计数器的值。问题是你写的一句C或者Objective-C代码大多数都不是一条CPU指令。为了增加我们的计数器，当前的值需要从内存里读取出来。然后这个值加上1再写回到内存中去。</p>
+
+<p>想象两个线程都试着同时去这么做的危险。举个例子，线程A和B都从内存中读取到了计数器的值，假设是17。然后线程A给计数器+1并将结果18写回内存。同时，线程B紧随其后也给计数器加1，将结果18写回到内存。在这一刻数据就错误了，因为计数器的值17在加了两次1以后变成了18。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/race-condition@2x.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/race-condition@2x.png" alt="" /></a></p>
+
+<p>这个问题叫做“竞态”，如果多个线程访问某个共享资源情况下，一个线程还没访问结束，另一个就开始访问它，就会发生这个问题。如果你不光是写入一个简单的整型到内存，而是一个更复杂的结构，另一个线程在你写到一半的时候去读取内存的话，甚至可能会读到一半新数据一半老数据，或者未初始化数据。 为了防止这种情况，多线程必须以互斥的方式去访问共享资源。</p>
+
+<p>在实际开发中，情况甚至比这个更复杂，因为现在的CPU会出于优化目的改变对内存的读写顺序（乱序执行）。</p>
+
+<h2>互斥</h2>
+
+<p>互斥访问的意思是一次只有一个线程可以访问某个资源。为了保证互斥，每个需要访问资源的线程需要事先获取该资源的一把互斥锁。当这个线程结束了它的操作，它会释放这把锁，这样其他线程就有机会来访问这个资源了。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/locking@2x1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/locking@2x1.png" alt="" /></a></p>
+
+<p>为了确保互斥访问，锁还必须处理乱序执行带来的问题。如果CPU访问内存的顺序不是严格按照你的程序指令顺序，光确保互斥访问是不够的。为了解决CPU优化策略所带来的这个副作用，得使用内存屏障技术。设置了内存屏障以后可以确保乱序执行问题只发生在屏障的一边。</p>
+
+<p>当然，互斥锁自己的实现必须是不存在竞态的。这个实现起来并不容易，需要用到特殊的现代CPU指令。你可以从Daniel的这篇“底层并发技术”文章中了解更多关于原子操作的东西。</p>
+
+<p>Objective-C属性在语言层面上支持互斥锁，可以通过声明属性为atomic来实现。实际上，属性默认就是atomic的。将属性声明为atomic的话，每次访问该属性都会隐式地在外面加上locking和unlocking。那以防万一的话将所有属性设置为atomic看起来貌似不错哦。不过，加锁是有开销的。</p>
+
+<p>为资源请求锁会有性能开销。请求和释放锁都是非竞态的，在多核系统上都不是那么容易实现的。当请求锁的时候，由于其他线程已经拥有了这把锁，当前线程必须等待。在这种情况下，该线程会进入睡眠状态，然后在其他线程释放锁的时候会收到通知。所有这些操作都是昂贵而复杂的。</p>
+
+<p>有不同类型的锁。有些锁在没有锁竞争的情况下代价很小，但是在竞争下的表现糟糕。有些锁在基本情况下会昂贵一些，但在竞争下的代价没那么高（锁竞争是指一个或多个线程想要获取已经被占用的锁的情况）。</p>
+
+<p>这里有个需要权衡的地方：请求和释放锁都需要代价（锁开销）。因此你需要确保你不会经常进出关键代码区（比如：获取和释放锁）。同时，如果你在太大的一块代码区域上加了锁的话，你就会面临锁竞争的危险，其他线程会由于等待获取锁而经常无法正常工作。这个问题不太好解决。</p>
+
+<p>有些代码本来是应该并发运行的，但由于对共享资源上锁的方式，导致了最终一次只有一个活跃线程在运行，这种情况很常见。要在多核CPU上预测你的代码如何得到调度是很难的。你可以用Instrument的CPU策略视图来了解你是否充分利用了可用的CPU资源。</p>
+
+<h2>死锁</h2>
+
+<p>互斥锁解决了竞态的问题，但不幸的是它们同时也带来了一个新问题：死锁。死锁在多个线程都在互相等待对方运行结束的时候发生。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/dead-lock@2x1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/dead-lock@2x1.png" alt="" /></a></p>
+
+<p>考虑下面的示例代码，交换两个变量的值：</p>
+
+<pre><code>void swap(A, B)
+{
+    lock(lockA);
+    lock(lockB);
+    int a = A;
+    int b = B;
+    A = b;
+    B = a;
+    unlock(lockB);
+    unlock(lockA);
+}
+</code></pre>
+
+<p>大多数时候能正常工作，但当两个线程同时用两个相反的参数去调用它的时候：</p>
+
+<pre><code>swap(X, Y); // thread 1
+swap(Y, X); // thread 2
+</code></pre>
+
+<p>最后就进入死锁。线程1需要X上的一个锁，线程2需要Y上的一个锁。它们都在等待其他的锁，但都不可能拿到它。</p>
+
+<p>你在线程中共享的资源远多，你拥有的锁越多，那么你遭遇死锁的可能性也越大。这也是要确保越简单越好、在线程中共享越少资源越好的一条原因。记得要读一下“底层并发API”文章中的异步完成任务这一段。</p>
+
+<h2>饥饿</h2>
+
+<p>就在你还在想原来有那么多问题要考虑的时候，一个新问题马上就来了。给共享资源加锁会造成读写者问题。在多数情况下，限制一次只能有一个线程来读资源是一种浪费。因此，只要资源上没有写锁的情况下就能加上读锁。在这种情况下，一个等待写锁的线程可能会由于资源上同时加的多把读锁而进入饥饿状态。</p>
+
+<p>为了解决这个问题，需要除了简单的读/写锁以外的一些更聪明的办法。比如，使用写者有限策略或者读-拷贝修改算法。Daniel在他的“底层并发技术”文章中展示了怎样使用GCD来实现不会造成饥饿问题的多读者/单写者模式。</p>
+
+<h2>优先级反转</h2>
+
+<p>我们以NASA的火星拓荒者遭遇并发问题为例开始了本段内容。现在我们来仔细看下为什么拓荒者号会失败，以及为何你的应用会受到优先级反转这个问题的困扰。</p>
+
+<p>优先级反转描述了一种低优先级任务阻止了高优先级任务执行从而反转了任务优先级的情况。因为GCD中有不同优先级的后台队列，其中还包括一个I/O受限的队列，因而有必要了解优先级反转的可能性。</p>
+
+<p>这个问题在高低优先级任务共享资源的情况下可能会发生。当低优先级任务拥有了公共资源上的一把锁，它理应迅速完成任务以便释放锁让高优先级任务执行不至于等待太久。由于低优先级任务有锁，高优先级任务得不到运行，期间有可能被中优先级的任务钻了空子，抢占了低优先级特任务的运行时间，是因为中优先级任务拥有当前所有可运行任务中最高的优先级。这样，中优先级任务阻止了低优先级任务释放锁，因此成功地从还在等待运行的高优先级任务那抢到了优先运行的机会。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/08/priority-inversion@2x.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/08/priority-inversion@2x.png" alt="" /></a></p>
+
+<p>在你的代码中，可能不会像火星探测器那样发生那么戏剧性的事情，因为优先级反转带来的后果往往不会那么严重。</p>
+
+<p>总的来说，不要使用不同的优先级。如果用了，通常会造成高优先级代码等待低优先级代码完成。当你使用了GCD，总是要使用默认优先级队列（直接使用或者作为目标队列）。如果你使用了不同优先级，有可能会事情变得很糟。</p>
+
+<p>从这可以学到的是，使用不同优先级的多个队列在理论上看起来不错，但是会给并发程序带来更多的复杂度和不可确定性。如果你将来遇到了高优先级任务貌似无故停止运行了这种奇怪的问题，也许你可以记起这篇文章，以及连NASA的工程师都碰到过的优先级反转问题。</p>
+
+<h2>总结</h2>
+
+<p>我们希望已经讲明白了并发程序的复杂性和它的一些问题，不管它的API看起来有多么直观明了。并发程序的结果很难全面考虑到，调试这类问题也通常很困难。</p>
+
+<p>另一方面，并发是充分利用现代多核CPU的强有力的手段。关键在于确保你的并发模型越简单越好，这样可以减少所需锁的数量。</p>
+
+<p>我们推荐的安全的使用模式是：在主线程中使用数据，在后台线程用operation queue来对数据操作，最终将后台任务的结果带回到主线程中使用。这样的话，你不需要自己做任何锁操作，大大降低了犯错的可能性。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/"/>
+    <updated>2013-05-28T13:57:08+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0</id>
+    <content type="html"><![CDATA[<p>无法在分类中增加成员变量，但是可以用关联引用来实现这一点。</p>
+
+<p>假设有一个Person类：</p>
+
+<pre><code>@interface Person : NSObject
+   @property (readwrite, copy) NSString *name;
+   @end
+   @implementation Person
+   @synthesize name=name_;
+   @end
+</code></pre>
+
+<p>可以创建Person类的一个分类来为Person新增一个emailAddress变量：</p>
+
+<pre><code>#import &lt;objc/runtime.h&gt;
+   @interface Person (EmailAddress)
+   @property (readwrite, copy) NSString *emailAddress;
+   @end
+   @implementation Person (EmailAddress)
+   static char emailAddressKey;
+   - (NSString *)emailAddress {
+     return objc_getAssociatedObject(self, &amp;emailAddressKey);
+}
+   - (void)setEmailAddress:(NSString *)emailAddress {
+     objc_setAssociatedObject(self, &amp;emailAddressKey,emailAddress,OBJC_ASSOCIATION_COPY);
+} @end
+emailAddress,
+OBJC_ASSOCIATION_COPY);
+</code></pre>
+
+<p>之后Person类就动态“增加”了属性emailAddress。</p>
+
+<p>关联引用有个比较实用的地方在于可以动态为一些控件增加数据对象：</p>
+
+<pre><code>ViewController.m (AssocRef)
+     id interestingObject = ...;
+     UIAlertView *alert = [[UIAlertView alloc]
+                           initWithTitle:@”Alert” message:nil
+                           delegate:self
+                           cancelButtonTitle:@”OK”
+                           otherButtonTitles:nil];
+     objc_setAssociatedObject(alert, &amp;kRepresentedObject,
+                              interestingObject,
+                           OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+     [alert show];
+</code></pre>
+
+<p>以上代码将interestingObject对象附在了UIAlertView控件对象上，当警告框消失时候，可以取出该对象，并做一些操作：</p>
+
+<pre><code>- (void)alertView:(UIAlertView *)alertView
+   clickedButtonAtIndex:(NSInteger)buttonIndex {
+UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
+     self.buttonLabel.text = [[sender titleLabel] text];
+   }
+</code></pre>
+
+<p>不用关联引用的话就得在类里新建一个成员变量来保存interestingObject对象的引用了。</p>
+
+<p>类似的代码在开源库SDWebImage中的UIImageView分类等文件也能看到：</p>
+
+<pre><code>- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock;
+{
+    [self cancelCurrentImageLoad];
+
+    self.image = placeholder;
+
+    if (url)
+    {
+        __weak UIImageView *wself = self;
+        id&lt;SDWebImageOperation&gt; operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
+        {
+            __strong UIImageView *sself = wself;
+            if (!sself) return;
+            if (image)
+            {
+                sself.image = image;
+                [sself setNeedsLayout];
+            }
+            if (completedBlock &amp;&amp; finished)
+            {
+                completedBlock(image, error, cacheType);
+            }
+        }];
+        objc_setAssociatedObject(self, &amp;operationKey, operation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+
+- (void)cancelCurrentImageLoad
+{
+    // Cancel in progress downloader from queue
+    id&lt;SDWebImageOperation&gt; operation = objc_getAssociatedObject(self, &amp;operationKey);
+    if (operation)
+    {
+        [operation cancel];
+        objc_setAssociatedObject(self, &amp;operationKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iPad UIModalpresentationPageSheet视图的resize和dismiss]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/"/>
+    <updated>2013-05-27T16:38:00+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss</id>
+    <content type="html"><![CDATA[<p>自定义弹出视图的frame:</p>
+
+<pre><code>- (void)viewDidLoad
+{
+    CGRect newFrame = CGRectMake(0,
+                              0,
+                              POP_WINDOW_WIDTH,
+                              POP_WINDOW_HEIGHT);
+
+    [self.view setFrame:newFrame];
+
+    //Now the bounds have changed so we save them to be used later on
+    self.realBounds = self.view.bounds;
+
+    [super viewDidLoad];
+
+    //视图周围一圈加阴影
+    UIImage *image = [[UIImage imageNamed:@"popup_view_shadow_bg"] stretchableImageWithLeftCapWidth:15 topCapHeight:15];
+    self.shadowView = [[UIImageView alloc] initWithFrame:CGRectMake(-7, -7, self.view.bounds.size.width + 14, self.view.bounds.size.height + 14)] ;
+    self.shadowView.image = image;
+    [self.navigationController.view.superview addSubview:self.shadowView];
+
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+//可以对view的边界做些定制，去除圆角等
+    self.navigationController.view.superview.layer.cornerRadius = 0;
+    self.navigationController.view.layer.cornerRadius = 0;
+    self.navigationController.view.superview.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    self.navigationController.view.superview.layer.borderWidth = 1;
+//设置bounds
+    self.navigationController.view.superview.bounds = self.realBounds;
+}
+</code></pre>
+
+<p>点击灰色区域dismiss掉view:</p>
+
+<pre><code>-(void)showPopupView
+{
+    PopupViewController *vc = [[PopupViewController alloc] init];
+    vc.delegate = self;
+    self.navController = [[UINavigationController alloc] initWithRootViewController:vc];
+    self.navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    self.navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:self.navController animated:YES completion:nil];
+
+    if(self.recongnizer)
+    {
+        [self.view.window removeGestureRecognizer:self.recongnizer];
+        self.recognizer = nil;
+    }
+    self.recongnizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
+    [self.recongnizer setNumberOfTapsRequired:1];
+    self.recongnizer.cancelsTouchesInView = NO;
+    [self.view.window addGestureRecognizer:self.recongnizer];
+}
+
+- (void)handleTapBehind:(UITapGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        CGPoint location = [sender locationInView:nil];
+        BOOL inSelfView;
+        BOOL inSelfNavigationView;
+        BOOL inPopupView;
+        inSelfView = [self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil];
+        inSelfNavigationView = [self.navigationController.view pointInside:[self.navigationController.view convertPoint:location fromView:self.view.window] withEvent:nil];
+        inPopupView = [self.navController.view pointInside:[self.navController.view convertPoint:location fromView:self.view.window] withEvent:nil];
+        if ((inSelfView || inSelfNavigationView) &amp;&amp; !inPopupView)
+        {
+            [self.view.window removeGestureRecognizer:sender];
+            [self dismissModalViewControllerAnimated:YES];
+        }
+    }
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用Xcode的断点打日志（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-22T14:29:14+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文地址：<a href="http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/">http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/</a></p>
+
+<p>=========================================</p>
+
+<p>If you don’t already know about it, setting actions for breakpoints in Xcode is a great way to monitor repetitive code without adding a bunch of NSLog() to your code.</p>
+
+<p>After setting a breakpoint, right-click and select “Edit Breakpoint…”. Then select “Debugger Command” for the Action. You can enter any valid debugger command at this point. When you check “Automatically continue after evaluating”, the debugger will run your command and your code doesn’t stop. Sweet.</p>
+
+<p>This approach works great when you want to log the contents of a variable by entering a command like <code>po myVar</code>. But there’s a problem: I often want to know where this variable is getting logged, so I ended up creating another breakpoint with a <code>script print "myMethod in myClass"</code> (in lldb) or <code>echo myMethod in MyClass\n</code> (in gdb) command.</p>
+
+<p>Great. Now you have to manage two breakpoints instead of one. Worse, when you have code like this:</p>
+
+<p>你知道不，为Xcode里的断点设置一些动作就可以很好地反复监控你的代码，而不需要在代码中加上一堆的NSLog()。</p>
+
+<p>在设置了断点后，右键点击选择&#8221;编辑断点&#8221;，然后在Action处选择“Debugger Command”。你可以在这里输入任何正确的调试命令。当你勾上&#8221;Automatically continue after evaluating&#8221;后，调试器会执行你的命令，而你的代码不会停下来。赞啊。</p>
+
+<p>当你想用命令 po myVar 来显示某个变量的值的时候，就可以用这个很棒的方法。但是有个问题：我通常想要知道某个变量是在哪里被打了日志，所以最后我又创建了一个断点，里面写上脚本命令：print &ldquo;myMethod in myClass&rdquo;(lldb里)，或者 echo myMethod in MyClass\n(gdb里)。</p>
+
+<p>完了，现在你需要管理两个断点而不是一个了。更糟的是，当你有如下代码的时候：</p>
+
+<pre><code>for (MyClass *class in aCraploadOfClasses) {
+    if (class.propertyThatIsRarelySet) {
+        [self doSomethingWith:class];
+    }
+}
+</code></pre>
+
+<p>当你想要在class收到-doSomeThingWith:消息之前跟踪class的话，你就没法用双断点技巧了。</p>
+
+<p>我费了好多劲才想到现在的解决方案：<strong>让调试器命令来调用NSLog!</strong></p>
+
+<p>举例来说：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/NSLog.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/NSLog.png" alt="" /></a></p>
+
+<p>我们来分析下这个命令：</p>
+
+<pre><code>p (void)NSLog(@"%s: %@", _cmd, syncItemId)
+</code></pre>
+
+<p><em>cmd是一个存有当前方法名的C字符串（它通过objc_msgSend被传给每个Objective-C方法）。在运行时，</em>cmd很好的取代了<strong>PRETTY_FUNCTION</strong>_的作用。syncItemId是我在我的类里几个不同的方法中需要跟踪的变量。p命令还需要带有void返回值。</p>
+
+<p>这个小发现将会绳叼我很多时间：不再需要陷到Xcode里面去加上一些跟踪完问题就会立马删掉的代码。希望对你也有帮助！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[接触iOSOpenDev]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/07/e68ea5e8a7a6iosopendev/"/>
+    <updated>2013-05-07T23:01:24+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/07/e68ea5e8a7a6iosopendev</id>
+    <content type="html"><![CDATA[<ol>
+<li><p>安装时遇到问题：</p>
+
+<p> installd: ./postinstall: You have not agreed to the Xcode license agreements, please run xcodebuild standalone from within a Terminal window to review and agree to the Xcode license agreements.</p></li>
+</ol>
+
+
+<p>解决办法在这：<a href="https://github.com/kokoabim/iOSOpenDev/wiki/Troubleshoot">https://github.com/kokoabim/iOSOpenDev/wiki/Troubleshoot</a></p>
+
+<ol>
+<li><p>参考<a href="http://www.cnblogs.com/xiongwj0910/archive/2012/09/03/2668362.html">http://www.cnblogs.com/xiongwj0910/archive/2012/09/03/2668362.html</a> 写个Logo Tweak。出现错误：</p>
+
+<p> Failed to locate Logos Processor. Is Theos installed? If not, see <a href="http://iphonedevwiki.net/index.php/Theos/Getting_Started.">http://iphonedevwiki.net/index.php/Theos/Getting_Started.</a></p></li>
+</ol>
+
+
+<p>解决办法：<a href="https://github.com/kokoabim/iOSOpenDev/wiki/Logos-">https://github.com/kokoabim/iOSOpenDev/wiki/Logos-</a>(Theos)-Support</p>
+
+<ol>
+<li><p>在bash_profile中加上export iOSOpenDevDevice=ip address or host name。host name可以通过iphone上的terminal查看前缀，在后面加上.local即可。如jerrys-iphone.local。</p></li>
+<li><p>Build for profile时出现ssh错误，参考<a href="https://github.com/kokoabim/iOSOpenDev/wiki/SSH-Public-Key-Authentication">https://github.com/kokoabim/iOSOpenDev/wiki/SSH-Public-Key-Authentication</a> 做完还出现错误（原因可能跟设置了root密码有关，不设置可能就不会有下面的错误）：</p>
+
+<p> ssh_askpass: exec(/usr/libexec/ssh-askpass): No such file or directory</p></li>
+</ol>
+
+
+<p>解决办法：<a href="http://rritw.com/a/caozuoxitong/OS/20121115/253801.html">http://rritw.com/a/caozuoxitong/OS/20121115/253801.html</a> 中，在mac的/usr/libexec/目录下自己建立ssh-askpass脚本，内容为：</p>
+
+<pre><code>#! /bin/sh
+TITLE=${MACOS_ASKPASS_TITLE:-"SSH"}
+DIALOG="display dialog \"$@\" default answer \"\" with title \"$TITLE\""
+DIALOG="$DIALOG with icon caution with hidden answer"
+result=`osascript -e 'tell application "Finder"' -e "activate"  -e "$DIALOG" -e 'end tell'`
+if [ "$result" = "" ]; then
+        exit 1
+else
+        echo "$result" | sed -e 's/^text returned://' -e 's/, button returned:.*$//'
+        exit 0
+fi
+</code></pre>
+
+<p>并执行命令：</p>
+
+<pre><code>sudo chmod +x /usr/libexec/ssh-askpass
+</code></pre>
+
+<p>再次Build for profile，搞定。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NSTimer的retain cycle问题解决]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3/"/>
+    <updated>2013-05-04T09:46:02+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3</id>
+    <content type="html"><![CDATA[<p>环境为iOS 5.1，6.1，开启了ARC。</p>
+
+<p>在某个Custom的UIView里开启了一个定时器，原想在其dealloc函数中将timer invalidate并置为nil，但发现退出view controller时view没有被释放，timer也在在不停的fire。原来的写法是这样的：</p>
+
+<pre><code>@property (nonatomic, strong) NSTimer *timer;
+
+-(void)startTimer
+{
+    if(self.timer == nil)
+    {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_DURATION target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
+    }
+}
+
+-(void)stopTimer
+{
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+-(void)dealloc
+{
+    [self stopTimer];
+}
+</code></pre>
+
+<p>由于NSTimer scheduledTimerWithTimeInterval会对self强引用，而self对timer也是强引用，这里存在了retain cycle。</p>
+
+<p>尝试将strong的timer改为weak，但并不奏效：</p>
+
+<pre><code>@property (nonatomic, weak) NSTimer *timer;
+
+-(void)startTimer
+{
+    if(self.timer == nil)
+    {
+        __weak MainCycleScrollView *weakSelf = self;
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_DURATION target:weakSelf selector:@selector(timerFired) userInfo:nil repeats:YES];
+    }
+}
+</code></pre>
+
+<p>尝试覆盖父类的removeFromSuperView函数，但也不奏效：</p>
+
+<pre><code>-(void)removeFromSuperview
+{
+    [self stopTimer];
+    [super removeFromSuperview];
+}
+</code></pre>
+
+<p>解决办法有两个，一个是将timer的启动和关闭移到controller，让controller来决定何时开启解决，但这样破坏了封装性。</p>
+
+<p>最后用了另一个方法，通过覆盖willMoveToWindow，并将self.timer改为_timer解决了问题：</p>
+
+<pre><code>- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [super willMoveToWindow:newWindow];
+    if (newWindow == (id)[NSNull null] || newWindow == nil)
+    {
+        [self stopTimer];
+    }
+}
+
+-(void)startTimer
+{
+    if(_timer == nil)
+    {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_DURATION target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
+    }
+}
+
+-(void)stopTimer
+{
+    [_timer invalidate];
+    _timer = nil;
+}
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 晒几张猥琐照]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e69992e587a0e5bca0e78ca5e79090e785a7/"/>
+    <updated>2013-05-02T19:13:31+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e69992e587a0e5bca0e78ca5e79090e785a7</id>
+    <content type="html"><![CDATA[<p>流出自iBay</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05100.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05100_thumb.jpg" alt="DSC05100" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05075.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05075_thumb.jpg" alt="DSC05075" /></a> <a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC0147.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC0147_thumb.jpg" alt="_DSC0147" /></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 小房子]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e5b08fe688bfe5ad90/"/>
+    <updated>2013-05-02T19:11:50+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e5b08fe688bfe5ad90</id>
+    <content type="html"><![CDATA[<p>转载自：<a href="http://www.toodaylab.com/11819">http://www.toodaylab.com/11819</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/1.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/1_thumb.jpg" alt="1" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/2.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/2_thumb.jpg" alt="2" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/3.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/3_thumb.jpg" alt="3" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/4.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/4_thumb.jpg" alt="4" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/5.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/5_thumb.jpg" alt="5" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/6.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/6_thumb.jpg" alt="6" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/7.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/7_thumb.jpg" alt="7" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/8.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/8_thumb.jpg" alt="8" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/9.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/9_thumb.jpg" alt="9" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/10.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/10_thumb.jpg" alt="10" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/11.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/11_thumb.jpg" alt="11" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/121.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/12_thumb1.jpg" alt="12" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/13.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/13_thumb.jpg" alt="13" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/14.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/14_thumb.jpg" alt="14" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/15.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/15_thumb.jpg" alt="15" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/16.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/16_thumb.jpg" alt="16" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/17.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/17_thumb.jpg" alt="17" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/18.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/18_thumb.jpg" alt="18" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/19.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/19_thumb.jpg" alt="19" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/20.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/20_thumb.jpg" alt="20" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/21.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/21_thumb.jpg" alt="21" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/22.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/22_thumb.jpg" alt="22" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/23.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/23_thumb.jpg" alt="23" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/24.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/24_thumb.jpg" alt="24" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/25.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/25_thumb.jpg" alt="25" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/26.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/26_thumb.jpg" alt="26" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/27.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/27_thumb.jpg" alt="27" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/28.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/28_thumb.jpg" alt="28" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/29.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/29_thumb.jpg" alt="29" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/30.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/30_thumb.jpg" alt="30" /></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:09:13+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<h1>原文地址：<a href="http://www.developer.com/open/article.php/3883891/Top-10-Android-22-Features-Developers-Cant-Wait-to-Use.htm">http://www.developer.com/open/article.php/3883891/Top-10-Android-22-Features-Developers-Cant-Wait-to-Use.htm</a>     </h1>
+
+<p>Android2.2（开发代号：Froyo）是个次要SDK版本，但它仍然很有影响力，给开发者及用户提供了一些期待已久的特性。在参加了Google I/O会议，见证了Froyo的宣告之后，我们认为有10个特性（排名不分先后）是开发者最迫不及待跃跃欲试的。</p>
+
+<p><strong>1.Flash10.1</strong><strong>及</strong><strong>AIR</strong><strong>支持</strong>    <br/>
+对于手机上Flash的可行性可能有一些争议，但它即将登陆Android手机。未来是否属于Flash真的不重要，眼下看来，Flash在web上相当流行，因此排斥Flash实际上就相当于排斥了许多用户已经乐在其中的动态web应用。    <br/>
+从Froyo版本开始，Android用户将能够从Android市场下载Flash10.1及AIR支持（以Android应用程序的形式）的公开测试版。这个决定实质上扩大了Android用户可访问的web应用和站点的数量，扩大了Android开发社区的队伍。    <br/>
+然而这也可能成为Android开发者的一把双刃剑。这将如何改变Android市场的内容呢？外面有那么多的Flash应用（如德州扑克，每个人都有吧？），谁还会去创建一个本地Android应用版本呢？好吧，理由当然是能想出来的，但是我们认为这样一来，很多公司要有足够的理由才会去创建本地应用了，因为本地应用需要他们针对不同平台满足客户要求。也许Flash应用可以帮助清除掉那些写得糟糕的本地Android应用程序的竞争，但它能够增强Android开发社区的整体实力吗？让我们拭目以待吧。</p>
+
+<p><strong>2.</strong><strong>推送消息</strong>    <br/>
+开发者现在可以利用谷歌的另一项服务了，即Android Cloud to Device Messaging(C2DM) 框架。这个框架提供了一项服务可以通过谷歌的服务（负责发送至设备的轻量级消息的排队以及安全交付）使Android设备支持有限的推送功能。在解决框架问题的同时，开发者可以在Google Labs网站上注册。谷歌的一些应用程序，例如Web版的Android Market将很快使用这个特性把用户通过Web购买的Android应用程序通过无线电推送至手机上。这项技术能帮助解决目前由Android应用程序产生的严重的轮询拥堵问题（导致电池寿命减少、性能降低等问题）。</p>
+
+<p><strong>3.</strong><strong>全新的企业级特性</strong>    <br/>
+Android终于将自身定位于重要的企业级应用了。Android2.2 SDK包括了全新的设备管理API，用于远程设备管理和设备的安全管理。你可以看到用来管理设备安全的API，包括密码策略实施、远程锁定及抹除设备的能力。举个例子，如果有员工丢失了他或她的带有敏感数据及凭证的手机，手机会迅速锁定并清除掉那些数据。    <br/>
+Froyo还引进了健壮性更强的Microsoft Exchange支持（见第9个特性）。我们也听到了一些关于类似Android市场的企业及部署方案的声音，但这些特性可能以后会有的（Froyo中没有）。</p>
+
+<p><strong>4.</strong><strong>性能提升</strong>    <br/>
+开发者和用户能够从Froyo巨大而深远的性能提升中受益。谷歌的那些极度追求质量和性能的极客们似乎曾经把这个平台贬作“垃圾”（这个词是从谷歌哥们那里听来的，意味着很差的性能和响应性），并在后台内置了很多性能的测量仪和基准。这种急需的性能大检查最终诞生了一个更为流畅简洁的活跃平台，以及一份保持平台今后也同样简洁快速的计划。    <br/>
+性能的提升部分原因是Dalvik虚拟机中包括了一个JIT编译器。据谷歌Android团队所说，Froyo运行时的性能比之前的Android平台快了2到5倍。你可以在应用程序的Android清单文件中关闭JIT优化。Android浏览器由于使用了V8 Javascript引擎，速度也显著提升，比起Android2.1浏览器在性能提升了2到3倍（见第10个特性）。</p>
+
+<p><strong>5.</strong><strong>声音和媒体</strong><strong>API</strong><strong>改进</strong>    <br/>
+随着Froyo版本的发布，人们也提出了很多关于Android媒体API的问题。举个例子，其中加入了声音聚焦API来管理竞争应用间的声音播放规范。声音池API也进行了更新，其中加入了一个回调函数当某项加载完毕时调用，也融入了暂停和继续所有流的能力，这样应用程序不再需要跟踪每个流的状态，也不需要在单独的流上进行操作。这些改进简化了实现，提高了效率。</p>
+
+<p><strong>6.</strong><strong>全面的</strong><strong>SDK</strong><strong>改进</strong>    <br/>
+许多Android API加进了2.2发布版中。图像和游戏开发者们将为OpenGL ES2.0及ETC1向量纹理压缩的支持而欢呼雀跃。像语音识别（android.speech）这样的服务取得了实质性的进展，其他一些如支持拍照和摄像的API也改进很多。全新的UI模式管理器（android.app.UIModeManager）服务能将设备的配置调整为支持夜间模式、汽车模式以及桌面模式（停靠状态）。（译者注：最后一句不会翻）    <br/>
+从Android2.2开始，应用程序不光可以安装在主设备上，还可以安装在SD卡等外部存储上。Android应用还可以使用全新的通用数据备份服务让用户无缝地在Android设备间迁移。    <br/>
+就合理但令人沮丧的API变更来说，布局属性fill_parent已重命名为match_parent（是的，目前还不会影响你原有的那些应用程序）。通过使用按照DropBoxManager的形式且基于blob的“logcat”风格的数据队列，调试功能甚至也得到了改进。这份列表还会继续。（译者注：猜想意思是还有很多SDK的改进之处，就先不列举了）</p>
+
+<p><strong>7.Android</strong><strong>市场更新</strong>    <br/>
+随着Froyo版本的发布，Android市场也有不少更新。对发布者而言最有用的新特性之一便是内建的错误报告了。如果你的应用程序在用户的手机里崩溃了，用户可以选择是否将错误报告通过Android市场发回给相应的发布者。这样开发者和用户之间便形成了一个反馈的良性循环，使得发布者可以设法解决问题（可以收到有价值的崩溃诊断信息，比如设备配置和堆栈跟踪），避免被打低分。</p>
+
+<p><em>让我们始终把<strong>Android</strong>开发者和用户放在心上。除了大家所期待的性能改进以及加入到<strong>Froyo</strong>平台中的<strong>“Chrome”</strong>浏览器外，<strong>Froyo</strong>中还有很多让人欲罢不能的用户特性，比如：</em></p>
+
+<p><strong>8.</strong><strong>数据系链及便携式热点</strong>    <br/>
+Froyo发布了USB数据系链和将Android设备变为便携式Wi-Fi热点的功能。这是个很酷的特性，但我们不清楚有多少使用者/携带者会隐藏且/或关闭此功能，因为有些人已经在竞争者的平台上实现了类似的特性。如果不得不让我们来猜的话，我们觉得这是个迷人的特性，也许能够增加Android的使用者数量（尽管每天增加100000个新用户，对Android来说还不算太差），但如果这群用户无法在他们的航程中使用这个特性的话，也很有可能让他们感到失望。我们走着瞧吧。</p>
+
+<p><strong>9.Microsoft Exchange</strong><strong>支持</strong>    <br/>
+没有人会喜欢根据工作用途还是私人用途等不同的使用目的来在不同的手机间捣腾。有相当一类人由于他们公司的IT需求–显而易见是对Microsoft Exchange的支持，在选择他们的手机时觉得捉襟见肘。（坦白说，如果手机不支持Microsoft Exchange的话，我们都不好意思称之为“智能手机”，但这仅仅是我们的观点。）    <br/>
+Android2.2包括许多新的Microsoft Exchange特性，比如：</p>
+
+<ul>
+<li><p>增强的安全特性，允许管理员强制密码策略</p></li>
+<li><p>对Exchange管理员来说，在设备丢失或被盗时可以远程抹除其数据</p></li>
+<li><p>Exchange日历支持目前已和Android日历应用相兼容</p></li>
+<li><p>使用自动发现简化账户建立及同步</p></li>
+<li><p>使用Microsoft Exchange Global Address Lists使Android Email支持自动补全收信人姓名及地址</p></li>
+</ul>
+
+
+<p><strong>10.“</strong><strong>世界上最快的移动浏览器</strong><strong>”</strong>    <br/>
+在Google I/O主题会上，谷歌全球副总裁Vic Gundotra宣布Android2.2使用了全球最快的移动浏览器。他用行动来证明一点，他让iPad浏览器和Android浏览器在一个基于SunSpider JavaScript标准的比赛中“赛跑”（之后甚至让iPad浏览器先跑，<a href="http://bit.ly/dq5Lb7">在这里</a>可以尝试下）。不管这是不是一个公平的比较，大家都接受了这么一个观点：对Froyo的性能改进使它变得速度奇快。Android浏览器的性能让大家都很开心（好吧，竞争对手除外…），随着HTML5的成熟会得到大家的认可。</p>
+
+<p><em>好啦！这些就是让我们迫不及待想得到的<strong>Android2.2</strong>特性了。你们的看法呢？新的<strong>SDK</strong>可以通过更新机制来下载，更多的信息可以在<strong>Android2.2</strong>平台主页上找到。</em></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 关于fork()]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork/"/>
+    <updated>2013-05-02T19:08:37+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork</id>
+    <content type="html"><![CDATA[<p>APUE上关于fork的使用有段比较经典的代码：   <br/>
+if ((pid = fork()) &lt; 0) {    <br/>
+err_sys(&ldquo;fork error&rdquo;);    <br/>
+} else if (pid == 0) { /<em> child </em>/    <br/>
+execlp(buf, buf, (char <em>)0);    <br/>
+err_ret(&ldquo;couldn&rsquo;t execute: %s&rdquo;, buf);    <br/>
+exit(127);    <br/>
+}    <br/>
+/</em> parent */    <br/>
+if ((pid = waitpid(pid, &amp;status, 0)) &lt; 0)    <br/>
+err_sys(&ldquo;waitpid error&rdquo;);    <br/>
+一开始看这段代码会有疑惑，比如说else if(pid==0)执行子进程代码那块，字面上理解这段代码就是说进程号为0则判断其为子进程，则执行里面的代码，可是，子进程号为0，这怎么可能？ 因此我觉得这里将fork的返回值取名为pid有误导读者的影响，改为fRetValue或者干脆叫i会不会好点？    <br/>
+下面是网上摘的一段fork的解释：    <br/>
+<strong>调用方法</strong></p>
+
+<h1>include</h1>
+
+<h1>include</h1>
+
+<p>pid_t fork(void);    <br/>
+正确返回：在父进程中返回子进程的进程号，在子进程中返回0    <br/>
+错误返回：-1    <br/>
+子进程是父进程的一个拷贝。即，子进程从父进程得到了数据段和堆栈段的拷贝，这些需要分配新的内存；而对于只读的代码段，通常使用共享内存的方式访问。fork返回后，子进程和父进程都从调用fork函数的下一条语句开始执行。    <br/>
+父进程与子进程的不同之处在于：fork的返回值不同——父进程中的返回值为子进程的进程号，而子进程为0    <br/>
+关于fork，还有个问题，就是print缓冲区被子进程复制的问题，如果执行下面这段代码：    <br/>
+pid_t fRetValue;    <br/>
+printf(“fork!”);    <br/>
+fRetValue=fork();    <br/>
+if (fRetValue &lt; 0)    <br/>
+printf(“error in fork!”);    <br/>
+else if (fRetValue == 0)    <br/>
+printf(“i am the child process, my process id is %d”,getpid());    <br/>
+else    <br/>
+printf(“i am the parent process, my process id is %d”,getpid());    <br/>
+父子进程都会打印出fork!，而如果将printf(“fork!”)改为printf(“fork!\n”)就只会打印出一个fork!，同样摘了段解释如下：    <br/>
+主要的区别是因为有了一个\n回车符号这就跟Printf的缓冲机制有关了,printf某些内容时,操作系统仅仅是把该内容放到了stdout的缓冲队列里了,并没有实际的写到屏幕上但是,只要看到有 n 则会立即刷新stdout,因此就马上能够打印了.运行了printf(“AAAAAA”) 后, AAAAAA 仅仅被放到了缓冲里,再运行到fork时,缓冲里面的 AAAAAA 被子进程继承了因此在子进程度stdout缓冲里面就也有了 AAAAAA.所以,你最终看到的会是 AAAAAA 被printf了2次!!!!而运行 printf(“AAAAAAn”)后, AAAAAA 被立即打印到了屏幕上,之后fork到的子进程里的stdout缓冲里不会有 AAAAAA 内容因此你看到的结果会是 AAAAAA 被printf了1次!!!!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 为什么Windows7那么贵？（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:06:59+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文地址：<a href="http://www.cringely.com/2009/10/why-windows-7-costs-so-much/">http://www.cringely.com/2009/10/why-windows-7-costs-so-much/</a></p>
+
+<p>我用Windows7已经好几天了，跟Vista和Xp比起来它当然进步许多，相比之下，它需要更少的资源（比Vista少得多），启动的更快，可用性非常好。恩，但它为什么那么贵呢？我知道原因。</p>
+
+<p>为了形成鲜明对比，让我们比较Windows7和可能的竞争对手Mac OS X10.6雪豹。我在这里并非要争论他们谁将谁视为竞争对手，还是两者皆是。然而在市场上，雪豹的升级版是49.95美元 29.95美元（对于五台机器的家庭装来说是99.95美元 49.95美元），而可供用户选择的20种不同的Windows7的版本里最流行的一种（Windows7家庭高级版）要119.95美元。</p>
+
+<p>Windows7是真的要比雪豹贵70美元90美元吗？</p>
+
+<p>（这价格定的明显是在扯淡嘛——Bob说）</p>
+
+<p>问得更好一点应该是为什么微软要把价格设定在以往那么高的标准上？这个问题的答案非常简单：微软压根就没想要你升级到Windows7。</p>
+
+<p>微软是想要你去买一台全新的装有Windows7的电脑。</p>
+
+<p>把价格设定在119.95美元是微软一次成功的运作。他们不希望用户来升级系统，所以通过将价格定得很高这一手段，微软实质上将Windows7的升级税强加在了用户头上。在斯台普斯买一台新的Windows7电脑，软件价格便降到了49.95美元，跟雪豹一样。</p>
+
+<p>从Windows7的税来看，微软热衷于赚钱，但他们将价格定那么高的主要原因是能让我们都去买新电脑。那会使得微软在每个小单元上收入减少一些，但是在整体业务上会带来跟多的收入，例如用户将会决定升级为新电脑上的整套Office软件，而不是单单为了一个新软件在每台机上花费119.95美元。对微软来说，卖一台新的电脑比零售一个软件升级在支持服务上花费少得多。这种定价策略使得微软受到广泛欢迎，同样受益的还有其原始设备制造商，像惠普、戴尔以及其他上百家厂商。</p>
+
+<p>这里还有一个证据可以说明微软的意图：你确实做过Windows7的升级吗？我升级用了七个钟头！这原本不应该要花那么长时间，除非这其中有一部分意图是要阻碍用户升级。雪豹的升级花了我20分钟，但是苹果公司没有取悦任何一家员原始设备制造商（这是关键），并且甚至定价在49.95美元的情况下还是在升级上赚了很多钱。</p>
+
+<p>当Windows95刚刚引进的时候（那时我正在拍摄《书呆子的胜利》），比尔盖茨和杰雷诺那天的部分表演是将一台486/66机器从Windows3.1升级到Windows95。升级过程用了半个钟头。而如今有了更为现代的处理器、内存、磁盘驱动器和声称精简而平凡的新型操作系统，为什么升级Windows7要比其他的多花那么多时间？</p>
+
+<p>不应该是这样的，除非一开始并没有把升级的速度放在特性列表上加以考虑。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 只要这些人中有百分之一…（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:06:34+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文地址：<a href="http://sivers.org/1pct">http://sivers.org/1pct</a></p>
+
+<p>一个音乐家邀请我的朋友来帮他做一间发送CD邮件的大房间。   <br/>
+这个音乐家已经堆放了一万份他CD的拷贝，预计着通过那个礼拜可以收到一万份的订单。    <br/>
+他在一份拥有一百万忠实读者的杂志的封底买下了四分之一版的广告。    <br/>
+他不停的说：“<strong>只要这份杂志的读者中有百分之一买了我的</strong><strong>CD…</strong><strong>那么就有一万份了！而且这仅仅只是百分之一！</strong>”    <br/>
+他买了一万个带衬垫的邮包和邮件标签，把他的车库变成了一个大的邮寄中心。    <br/>
+他不停的说：“可能会有百分之十呢！那就是十万份！但最坏的情况，如果只有百分之一的话…那还是棒极了！”    <br/>
+杂志出版了，并且… 什么也没发生。他买了一本。上面有他的广告。但却没有收到任何订单！难道出什么错了么？没有。他检查了一遍，一切都很正常。    <br/>
+在接下来的几个星期里，他一共收到了<strong>四份</strong>订单。CD一共卖出了：四份。    <br/>
+跟我说这个故事的朋友最后加了一句最好的注解：    <br/>
+“<strong>他忘了还有比百分之一更小的数字</strong>。”    <br/>
+每当我听到商业计划里这样说道”只要卖出了超过三千万台iPhone，我们的应用程序铁定能…”的时候，我总会想起这个故事。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 尖端项目和时间管理（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:06:06+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文地址：<a href="http://www.joelonsoftware.com/items/2009/10/26.html">http://www.joelonsoftware.com/items/2009/10/26.html</a></p>
+
+<p>令人吃惊的是，现在的学生要顺利从一所顶尖大学拿到计算机学位是多么的容易，他们没有学习过如何使用软件开发人员的基本工具，没有在团队里工作过，没有上过一门需要团队合作的课。许多计算机系还是用80年代的老套路，老是教那么几个一样的课程，这些课在现在看来已经完全和现代软件开发脱离开来了。   <br/>
+学生们该在哪里学习版本控制、缺陷跟踪、团队协作、时间安排、估算、调试、可用性测试和写文档呢？他们要在哪才能学写超过20行的程序呢？    <br/>
+许多大学已成功地说服自己，课程越是和现实世界脱钩，它们就越牛。这是在走文科学习的路子。就把确确实实在产出程序员的任务留给那些技术职业学院、红砖大学和各地的小学校（“北西南佛罗里达大学”）吧。全世界的长春藤联盟大学要教的是线性代数、计算理论和哈斯科尔编程，所有努力地提升他们层次的计算机系都这么做，从课程体系里去除掉那些需要实践的部分，取而代之的是更多的理论。    <br/>
+不要误会我的意思，这并不一定是件坏事。至少他们正把教Java换成教Scheme语言，仅仅是因为“MIT就是这么做的”。（太晚了！）他们也在教学生们用某种方式思考。但即使一个计算机系教授对现实世界软件开发懂得再多，我也情愿让我的孩子们通过在Fog Creek公司里实习来学习那些知识。    <br/>
+多伦多大学的助理教授Greg Wilson在多伦多举行的StackOverflow开发者日会议上发表了演说，他的报告有趣，信息量丰富，很有影响力。我们聊了一会，他跟我说了他最新的创意UCOSP，代表的含义是“所有的好名字都被人取了”。    <br/>
+有一个由15个大学组成的财团，这些大学大多数来自加拿大，这个财团正在为所有的高年级学生筹备一个尖端项目。他们从各类学校中挑选出本科生，让他们六个人一组来合作完成一个开源项目，作为荣誉也作为成绩。我一听说有这么一个项目便自愿赞助了其中一个团队来为Mercurial项目做出贡献。赞助某个团队包括支付组织这些本科生到多伦多的旅途的费用，以及提供一名程序员来指导该团队。    <br/>
+在UCOSP博客上浏览的时候，我想起了一篇文章：《为什么学生的项目受到赞扬却还是常常没有什么用途》。“这门课中一个关键点是让你有机会去发现要设置什么样的目标，然后实现你自己的目标。”Greg写道，“明白了这一点，最终的结果是很明显的：在很多情况下，学生们每周花在这门课上的时间比以前花在同样内容的一门更有条理的课程上的时间更少了。”    <br/>
+大学里的毕业生大约有16年的做短期作业并且喜欢拖到截止日期最后才做的经验。直到你成了大学里的高年级生，你还没有碰到过有哪个作业是你熬夜做不完的。    <br/>
+比较典型的计算机科学作业都只要求学生完成作业里写代码这一比较“有趣”的活（用这个词的学术意义来说）。作业其余的百分之九十对于本科生从不作要求，因为改错和处理真实世界的情况并无乐趣，大多数的计算机系教职人员也从来没有真刀真枪地做过软件，他们几乎不知道怎样才能做出能满足用户需求的软件，然而正是这百分之九十无趣的工作可以将代码带到一个“有实际用途，成为现实世界中的代码”的层次。    <br/>
+时间管理也是遭受非议的一个方面。在一个四名学生组成的小组中，即使有一到两个有进取心的学生想要早点开始项目，其他学生很有可能拖他们后腿，因为他们有着更为紧急的其他课的任务等着明天要交。有进取心的学生（们）必须作出选择，是他（们）自己先做起来并且做比他（们）应分担的任务更多的工作，还是和其他人一起等到要交项目的前夜，猜猜他会怎么选择。    <br/>
+学生对于长期的以团队为基础的时间安排表完全没有经验。因此，一旦接到了一个长期的项目并且被告知他们自己管理自己的时间时，他们几乎总是做不出什么像样的东西。    <br/>
+如果真要这些项目有什么有益的东西产出，你就必须按照星期制定最后期限，并且你必须意识到在每周期限到来的前夜，该项目的所有工作都要完成。如果不把完成项目的这段时间分成一个个短期里程碑的话，极少能在最后期限前完成这个项目，这似乎是人的固有性质决定的。    <br/>
+这可能是一个使用Scrum的好机会。每周一次整个团队会聚在一起，无论是亲自到场还是虚拟会议，他们会审查上一周的工作。然后他们会决定下周要完成哪些部分和任务。FogBugz在跟踪方面做的不错：如果你正在做一个尖端项目需要访问FogBugz，请让我们知道，我们很乐意免费为你安装。我们还能为你安装kiln的测试版本，这是Mercurial的托管版本，包括代码审查的功能。    <br/>
+我在这里抱怨学生们缺少在某个时间段里做长期项目的训练，而并非他们故意拖拉耽搁，但这个问题在非学生群体中当然也存在。我花了一定时间，但最终还是明白了长期的期限（或根本没有期限）对职业程序员来说没有效果，在这么长一个时间段里，你要有一个定期经常发布有益产品的时间表。现实世界正确地做到了这点，而所有的大学生团队失败了，其原因是在现实世界里有经理，他们可以设置最后期限，而在学生团队中，大家都是平等的，不能这样做。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 实时搜索究竟能走多远？（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:05:25+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文网址：<a href="http://www.nytimes.com/2009/10/25/business/25ping.html?_r=1&amp;hpw">http://www.nytimes.com/2009/10/25/business/25ping.html?_r=1&amp;hpw</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image0011.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb1.jpg" alt="clip_image001" /></a></p>
+
+<p>当一架美国航空公司的飞机一月份降落在哈德逊河畔的时候，Twitter上第一张图片诞生了。在六月份，Twiiter的用户赶在各大新闻媒体报导迈克尔杰克逊的死讯之前就已经开始为他哀悼了。就在这个月，随着全国大多数人的目光聚焦在一个载着6岁男童的热气球上，这起事件每一次的转折瞬间都会在Twitter上掀起一番“推”和”转推”的浪潮，几乎将网站上其他所有的信息都淹没了。</p>
+
+<p>随着大事件的发生，Twitter,Facebook和其他相似的服务正越来越成为这个国家的虚拟水冷却器(译者注：许多公司都有水冷却器，员工喜欢在工作之余在旁边讨论一些问题)。它们能快速传播信息，有时能赶在大众媒体之前，并且他们爆发增长文字和链接瞬间记录下了美国人集体的当务之急。</p>
+
+<p>难怪学者和投资者对有一种有效的手段来<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>这类信息的前景会如此垂涎三尺了。当然Twitter有它自己的搜索引擎，但还有其他一些如OneRiot、Collecta和Topsy也在竞争成为实时搜索领域的Google。</p>
+
+<p>为了不被淘汰，谷歌和微软分别在上周与Twitter达成协议，将Twitter发布的信息融合到他们的<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>引擎中去。</p>
+
+<p>在纷繁的讨论声中，然而有一个问题始终没有得到解答：到底实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>转变成现金有多难呢？</p>
+
+<p>没有人会怀疑帮助用户在网上发现新鲜、最新的内容是有价值的。但许多其他有价值的Web服务——包括内容网站、免费的Web电子邮件以及社交网络——也在挣扎着寻找有效的商业模式。</p>
+
+<p>分析家说Twitter也许可以寻找除了<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>以外的其他方法来从流经它的系统的海量数据中盈利。</p>
+
+<p>但是Twitter的总裁Evan Williams说收入并非它与谷歌和微软签订协议的重点。</p>
+
+<p>还有，这两家公司都没有马上计划在Twitter<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>上投放广告，尽管他们以后可能会这么做。并且Facebook上周也称自己并有从与微软签订的把一些用户的更新放到实时搜索中的协议里赚到钱。</p>
+
+<p>“我们不知道到底能从实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>里赚到多少钱。”资深搜索行业分析师、搜索引擎大陆的编辑、行业博客写手Danny Sullivan说。</p>
+
+<p>传统的Web<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>是个实践中能赚钱的生意，有两个原因。其一，如果没有谷歌、雅虎、必应或Ask，Web就是一坨不可思议的比特的混杂。这些服务极为重要，以至于根据comScore的统计结果，单单在美国一天就要被使用超过四亿五千万次。</p>
+
+<p>其二，同样重要的一点是，<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>引擎广告也许是曾发明过的最有效的市场营销形式了。因为搜索查询精准地泄露了用户的意图，这使得在对的时间用对的广告吸引用户成为了可能。其结果是，登广告的人愿意出大笔钱在那些在谷歌里输入“iPhone交易”或者“毛伊酒店”的人面前兜售他们的商品。</p>
+
+<p>为了使得商人们能准确找出用户的兴趣，在网络上跟踪用户需求的技术已经花费了数十亿美元，所有形式的在线广告——或者相对的离线广告——在有效性方面跟<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>引擎广告比起来都差了一大截。</p>
+
+<p>如果实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>要取得同样神奇的成果，首先就需要有大量的查询结果，还需要可以跟搜索引擎广告相匹敌的用广告来满足用户需求的能力。Sullivan先生说他希望实时搜索查询结果更一般的搜索结果比起来数量更少，内容更专一。</p>
+
+<p>内容更为专一，有可能就意味着不那么好赚钱。实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>还是个新技术，与之相关的信息很难获得。但是最近的检查报告显示，仅有一小部分实时的交谈是明显关于商业的。举个例子，在最近的某个早晨，Twitter上10个话题里仅有两个——万圣节前夕和苹果笔记本电脑——是关于商业的。</p>
+
+<p>实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>企业家们对此意见并不一致。</p>
+
+<p>Collecta的总裁Gerry Campbell说，最多只有所有流经系统的百分之二十的查询可以轻易转为收入来源。举例来说，这个月Collecta查询中有一个激增的关键词，那就是Viper——一款新的iPhone应用，它能够远程启动一辆汽车。</p>
+
+<p>还有人说查询跟广告匹配的例子比比皆是：在<a href="http://www.yeeyan.com/articles/tag/twitter"><em>twitter</em></a>里搜下雪情况，可能意味着对滑雪胜地来说是个广告的机会；搜关于手机信号差的内容，可能会吸引到网络竞争对手的广告；搜关于饭店的内容，可能会和某个显示地方熟食店最新座位情况的广告相匹配。</p>
+
+<p>“很明显用户在显露他们的意图，那样你就有机会来匹配他们。”Campbell先生说。</p>
+
+<p>微软<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>技术的总经理Sean Suchter说，他期待实时搜索最终能赚大钱。但他现在加了这么一句，“我们的目标就是要驱动用户的价值。”</p>
+
+<p>与之类似的，谷歌说实时<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>很有价值，尽管并非不可或缺，因为普通的搜索也能赚同样多的钱。</p>
+
+<p>“我们并不清楚人们针对实时数据会做出什么样的查询，所以并不了能赚多少钱。”谷歌<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>产品部和用户体验部的副总裁Marissa Mayer说。</p>
+
+<p>谷歌需要Twitter的数据主要是由于谷歌的任务是要获得全面的数据：谷歌想要整合全世界所有的信息，包括网络上短暂的实时交谈。</p>
+
+<p>“我们很清楚全面性对于我们业务会带来商业上的好处。”她说。换句话讲，全面性使得人们始终在谷歌上进行<a href="http://www.yeeyan.com/articles/tag/%E6%90%9C%E7%B4%A2"><em>搜索</em></a>。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) Nook——一款新型的电子阅读器进入了市场（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba/"/>
+    <updated>2013-05-02T19:04:43+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba</id>
+    <content type="html"><![CDATA[<p>原文网址：<a href="http://www.nytimes.com/2009/10/21/technology/21nook.html?em">http://www.nytimes.com/2009/10/21/technology/21nook.html?em</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup_thumb.jpg" alt="popup" /></a></p>
+
+<p>由美国书商Barnes &amp; Noble推出的Nook这款电子阅读设备在昨天揭开了它神秘的面纱，与Kindle正式展开了竞争。</p>
+
+<p>正如众人所期盼Barnes &amp; Noble在周二的一次引人注意的新闻发布会上展示了它的Nook电子阅读设备赢得了出版界普遍良好的反映并就人们私下议论的借阅功能提供了一些细节信息。</p>
+
+<p>最重要的是出版商对于Barnes &amp; Noble这个操控着全国最大的连锁书店的书商生产出了亚马逊Kindle的可靠替代品这件事似乎松了一口气。Nook售价为259美元，于周二下午在 nook.com上开始发售，价格跟最新版的Kindle不相上下。Nook将于11月下旬全面上市。</p>
+
+<p>亚马逊公司目前在电子阅读器市场上占有绝对优势。尽管各种销量估计值不尽相同，但根一家据对出版业的咨询公司Codex Group的数据，亚马逊公司已经卖出了945000台，而与之相比索尼公司仅卖出了525000台索尼阅读器。</p>
+
+<p>Barnes &amp; Noble公司在七月份开了一家电子书店，它的出版物可以再ePub上获取到，是Adobe PDF格式的，可以在多种不同设备上阅读，包括苹果的 iPhone、黑莓、Mac和PC。Barnes &amp; Noble公司将继续支持这些设备，同时也会支持即将到来的iRex公司和Plastic Logic公司的电子阅读器。</p>
+
+<p>但是该公司很明显要在Nook上巩固电子书的销量。Nook的特征是有一个六英尺长的灰白的阅读屏和一个彩色的触摸屏控制面板。在连锁的1300家商店的任一家里，顾客都可以通过Wi-Fi网络下载电子书。在商店外面，顾客可以通过访问AT&amp;T公司的3G网络来下载。</p>
+
+<p>Nook与众不同的因素之一便是顾客可以把书“借”给朋友。但是顾客一次只可以把任一本书借出去14天，并且在书外借期间他们不能在自己的Nook上阅读它。</p>
+
+<p>在一次采访中，Barnes&amp;Noble.com的总裁William Lynch说，公司将在有营业场所的商店里不遗余力地推销Nook。Nook也自带软件可以检测到一个顾客走进了一家商店，这样它便可以跳出优惠券信息和其他促销信息，像即将到来的书的摘要或者新书阅读建议。当在商店的时候，Nook的主人可以通过流媒体软件阅读任何电子书。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 为什么人人都爱Twitter（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:04:16+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文网址：<a href="http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html">http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb.jpg" alt="clip_image001" /></a>    <br/>
+Twitter的实时搜索功能给人一种在线谈话的感受</p>
+
+<p>硅谷的许多顶尖和优秀的企业都参加了在旧金山举行的Web2.0会议，但这场盛会上最亮眼的明星无疑是Twitter。</p>
+
+<p>如果还需要证据来证明微博客服务确实已经飞速成名了，你只需要看看昨天下午从诸如微软和谷歌这样的技术中坚传来的潮水般的新闻就可以了。他们两家都争相宣称自己和Twitter签订了协议来在他们的网站上增强新的实时搜索功能，以在竞争中胜过对方。</p>
+
+<p>甚至于Facebook这样的Web2.0运动的典范都发现，自己和微软签订的将Facebook状态更新整合到Bing的搜索结果中的新闻跟Twitter提供的盛宴比起来仅仅是一道开胃菜而已。</p>
+
+<p>微软和谷歌在最近几个月里都承认他们需要在将实时搜索整合到他们的结果页面里这方面做得更好。Twitter最强大的能力便是能展现出世界上任何地 方的人们当下正在讨论些什么的快照。和这些流动的超地域数据相比，Bing和谷歌的搜索结果如此固定以至于他们看起来不会变化。</p>
+
+<p>就在我写这篇文章的时候，举个例子，英国国民党领袖Nick Griffin在今晚出现在“质询时间”之前已经摆平了在BBC电视中心外面的抗议者。在Google里迅速搜索下“Nick Griffin”抛出了一些有趣的结果，其中包括了一份在BBC网站上的简介和一篇来自卫报的社论。但在Twitter里搜同样的内容能看到关于成百上千 个人的愤怒的更加丰富、详细和引人注意的内容。</p>
+
+<p>某些类型的搜索，诸如关于一些事件、新闻或者股票和证券的，越是最近的和最新的消息越是有价值。Twitter本身有野心成为“地球的脉搏”。</p>
+
+<p>Web用户所梦想的场景是有这么一种搜索引擎，它能提供那种我们期望从我们喜欢的Bing和谷歌那里能得到的事实和背景信息，并且带有一种在Web社区里进行全球化交谈的氛围。</p>
+
+<p>微软和谷歌非常渴望“买进”这些实时搜索功能，而不是他们内部开发一套自己的解决方案。但是这明显是个最明智的选择；与Twitter合作使得这两个网站从Twitter数百万的活跃用户那里增强自己的数据，只要鼠标轻轻一点便展现出一个实时的看法和意见的现成的图景。</p>
+
+<p>当然，所有这些最大的赢家是Twitter自己。尽管微软和谷歌都尚未透露这项交易的财务条款，基本上可以确定这已经成为了Twitter的第一个 真正的收入来源。迄今收到过约一亿美元风险投资资金的微博客网站，为这项服务打拼出了一个商业模式；这些协议和合作伙伴能潜在地给网站带来可观的收入，通 过给它金融安全网，而同时它可以尝试其他业务建议，包括要求公司和企业为Twitter上的企业账户而付费。</p>
+
+<p>TechCrunch的行业分析师Michael Arrington表示现在还不清楚这些实时的更新是怎样“融合”到搜索结果中区的，但他设想那些不出名的在Web社区里广为议论的博客文章或网站可能会 在相关搜索的结果列表里排名上升一些。同样地，当这些来源淡出了网络的讨论，它们将会在结果排名上跌回来，其他热门的观点和意见便泡沫一样浮出表面。</p>
+
+<p>本周的会议上清楚的一点是，Twitter喜欢在技术社区里不断增长实力和影响力。它的这种在网上发布和分享信息的新鲜的方法已经迫使其他的像谷歌这样的技术中坚放弃游戏转而继续围绕搜索平台进行创新。那样，最终受益的是我们所有人。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) Emily Howell: 一个会创作古典音乐的计算机程序（译文）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89/"/>
+    <updated>2013-05-02T19:03:44+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89</id>
+    <content type="html"><![CDATA[<p>原文网址：<a href="http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html">http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html</a></p>
+
+<p>Emily Howell，这个会创作原版古典音乐的计算机程序已经签订了唱片协议，并将于明年发行她的第一张原创唱片。    <br/>
+这个程序由来自加州大学圣克鲁斯分校的音乐教授David Cope在工作将近四十载后设计和完成。    <br/>
+她的第一张唱片《黑暗中的光明》将于春季发行。是由人们在两架钢琴上通过六个动作演奏出来的。    <br/>
+Cope教授告诉《时代》杂志他原打算写一个程序，它能够复制类似于莫扎特和贝多芬这样的成百上千个古典作家的风格。    <br/>
+但是他说他决定还是要创造出一个不仅能模仿其他人，同时也能以自己的风格原创音乐的东西。    <br/>
+“我致力于创造出一个独一无二的作曲者，它能创作出有趣而引人注目的当代的古典音乐，但是风格却是独树一帜的。”他说。    <br/>
+但他的工作一直是有争议的，一些作曲家和管弦乐队拒绝演奏他的作品。Cope教授说许多大牌的古典演奏家的经纪人援引业界对他作品的争议而拒绝让他们的客户演奏该程序创作的音乐。    <br/>
+许多专家对这个项目持怀疑态度。“对我而言，音乐主要是关于人的情况，”古典音乐评论家Hilary Finch说，“而机器与人不同，我不确定这能否使人满意。”    <br/>
+Cope教授主张Emily Howell的音乐仍然主要是由人来创作的。“计算机并不是单独的一样东西，”他说，“计算机是人造的。程序本身也是人造的。数据库里的音乐也是人为的。那么多相关的东西都是人造的。现在相比往常有更多的人已经参与到这个项目中来了。”</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 商业大厦停车场上坡处的栏杆机被第一天开车的我一个溜坡撞烂了]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/"/>
+    <updated>2013-05-02T19:03:12+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
+    <content type="html"><![CDATA[<p>RT</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 搭完，标记下]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/"/>
+    <updated>2013-05-02T19:02:19+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2</id>
+    <content type="html"><![CDATA[<p>这是用live writer写的第一篇日志。   <br/>
+在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：</p>
+
+<ul>
+<li><p>用live writer连空间的时候会有XML RPC错误，是因为wp里没开启，解决方法是在控制面板Setting-Writing中某选项勾下。</p></li>
+<li><p>解决wp日志编辑器以及live writer中按回车会多一个空行的问题：按shift+enter。</p></li>
+<li><p>解决在live writer中全角空格不缩进问题：在live writer中 日志-编辑日志设置-高级，将XHTML改为HTML。</p></li>
+<li><p>live writer中本地日志的保存地址在\My Documents\My Weblog Posts\Recent Posts</p></li>
+</ul>
+
+
+<p>在这之前，通过了本科的答辩。   <br/>
+在这之前，用５０块买了个godaddy域名，用40块买了个美国主机，256M/5G。对其数据没什么概念，能用就行。    <br/>
+在这之前，算了一下一年费用１００，用到９０岁也不过７０００块左右。用一个月工资做一件一辈子不会后悔的事情，有什么可犹豫的。    <br/>
+在这之前，在琢磨着咱也整个独博玩玩？</p>
+]]></content>
+  </entry>
   
 </feed>

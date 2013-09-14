@@ -1,0 +1,896 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>学习iOS 5中的ARC 第一部分 （译文） - 不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="原文网址：http://www.raywenderlich.com/5677/beginning-arc-in-ios-5-part-1 ================ 这篇的作者是iOS教程团队成员Matthijs Hollemans，一位经验丰富的iOS开发者与设计师。 iOS &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/2012/08/13/e5ada6e4b9a0ios-5e4b8ade79a84arc-e7acace4b880e983a8e58886-efbc88e8af91e69687efbc89">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">学习iOS 5中的ARC 第一部分 （译文）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T13:28:39+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>原文网址：<a href="http://www.raywenderlich.com/5677/beginning-arc-in-ios-5-part-1">http://www.raywenderlich.com/5677/beginning-arc-in-ios-5-part-1</a></p>
+
+<p>================</p>
+
+<p>这篇的作者是iOS教程团队成员<em><a href="http://twitter.com/#!/mhollemans">Matthijs Hollemans</a>，</em>一位经验丰富的iOS开发者与设计师。</p>
+
+<p>iOS 5中最大的变化是引入了自动引用计数，简称ARC。ARC是最新的LLVM3.0编译器的特性，它完全废除了所有iOS开发者都讨厌的手动内存管理。</p>
+
+<p>在项目中使用ARC极其简单。你还是跟往常一样写代码，只不过不要再用retain, release和autorelease了。基本上没什么大的变化。</p>
+
+<p>当开启了自动引用计数特性，编译器会自动在你程序的相应位置插入retain, release和autorelease。你不再需要考虑这些（何时在哪里插入retain/release/autorelease，译者注），因为编译器都为你搞定了。我觉得这超级赞。事实上，使用ARC太简单了，以至于你都不需要读这份教程了。:)</p>
+
+<p>但如果你依然对ARC有所怀疑——可能你觉得它不会一直都很靠谱，亦或者你觉得它会比你手动管理内存来得慢——那就继续阅读下去吧。接下来这篇教程将为你扫清疑云，向你展示在项目中开启ARC以后，背后会发生些什么。</p>
+
+<p>除此之外，你将会亲自将一个不使用ARC的项目转变为使用ARC。同样的，你可以将你自己以前的项目转为ARC，这样就能部位内存管理而烦恼啦。</p>
+
+<h2>工作原理</h2>
+
+<p>你肯定已经对手动内存管理比较熟悉了，它的工作原理如下：</p>
+
+<ul>
+<li><p>如果你要保留一个对象，你需要对它retain，除非它已经被retain过了。</p></li>
+<li><p>如果你不再需要这个对象了，你需要对它release，除非它已经被release过了（用了autorelease）。</p></li>
+</ul>
+
+
+<p>作为初学者，你肯定被它搞得头痛过，不过过段时间这概念就被条件反射般记住，你会保持retain和release数量的平衡，除非你忘了。</p>
+
+<p>手动内存管理的原理并不复杂，但很容易让你出错。这些小错误会导致可怕的后果。你的程序会在某一时刻崩溃，要么由于你对某个对象释放的次数太多，导致你的变量指向了不合法的数据，要么由于内存耗完了，因为你没释放对象，它们一直占着内存。</p>
+
+<p>Xcode的静态分析器可以帮你有效地发现这类问题，但是ARC可以更进一步。它自动帮你适时地插入retain和release，帮你完全摆脱内存管理问题！</p>
+
+<p>需要意识到，ARC是Objective-C编译器的一个特性，ARC发生在你构建程序时。ARC不是运行时特性（除了一小部分，弱指针系统），也不是你所知道的其他语言中的垃圾收集机制。</p>
+
+<p>ARC所做的只是编译时在你代码中插入retain和release，跟你自己来做没什么两样。这就使得ARC跟手动管理的代码一样快，甚至有时候还会更快一点，因为它会在后台执行一些优化。</p>
+
+<h2>通过指针保持对象存活</h2>
+
+<p>你需要学习的ARC的新规则非常简单。对于手动内存管理，你需要使用retain来保持对象存活，而现在都不需要了。你要做的只是用一个指针指向这个对象。只要有变量指向该对象，该对象就会一直存在内存中。当该指针指向了新的值，或者指针不存在了，与之关联的对象才会被release。对所有变量都是这样：实例变量，已合成属性，甚至局部变量。</p>
+
+<p>可以把这想成是一种拥有关系。如下代码：</p>
+
+<pre><code>NSString *firstName = self.textField.text;
+</code></pre>
+
+<p>firstName变量是一个指向NSString对象的指针，持有textField的内容。firstName变量现在就成为了字符串对象的拥有者。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers1.png" alt="" /></a></p>
+
+<p>一个对象可以有一个以上的拥有者。在用户改变UITextField里的内容之前，UITextField的text属性也是这个字符串对象的拥有者。有两个指针保持同一个字符串对象存活：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers2.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers2.png" alt="" /></a></p>
+
+<p>过一阵子，用户会在输入框中输入一些新的内容，这时输入框的text属性指向了一个新的字符串对象。但原来的字符串对象仍然有一个拥有者（firstName变量），因此它还在内存中。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers3.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers3.png" alt="" /></a></p>
+
+<p>只有当firstName也有了新值，或者不在其生命周期范围内了——因为它是局部变量而方法结束了，或者因为它是实例变量而它所属对象被回收了——这种拥有关系才会结束。原来的字符串对象没有拥有者了，它的引用计数降为0，因而该对象就被回收了。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers4.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers4.png" alt="" /></a></p>
+
+<p>We call pointers such as firstName and textField.text “strong” because they keep objects alive. By default all instance variables and local variables are strong pointers.</p>
+
+<p>There is also a “weak” pointer. Variables that are weak can still point to objects but they do not become owners:</p>
+
+<pre><code>__weak &lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSString_Class/"&gt;NSString&lt;/a&gt; *weakName = self.textField.text;
+</code></pre>
+
+<p>我们称像firstName和textField.text这样的指针为“强”类型，因为它们可以保持对象存活。默认情况下所有的实例变量和局部变量都是强指针。</p>
+
+<p>同时也存在“弱”指针。弱类型的变量仍然可以指向其他对象，但是它们并不拥有这些对象：</p>
+
+<pre><code>__weak NSString *weakName = self.textField.text;
+</code></pre>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers5.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers5.png" alt="" /></a></p>
+
+<p>weakName变量和textField.text属性指向了同一个变量，但并非是其拥有者。如果输入框中内容改变，那么字符串对象将没有了拥有者，从而被回收：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers6.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers6.png" alt="" /></a></p>
+
+<p>当这发生时，weakName的值将会自动变为nil。此弱指针被成为“自动清零”弱指针。</p>
+
+<p>这极其的方便，因为这能防止弱指针指向已经被回收的内存。这种事情会造成大量的bug——你肯定听说过“野指针”或者“僵尸”——但多亏这些自动清零的弱指针避免了这种情况！</p>
+
+<p>你可能不会经常使用弱指针。它最有用是用在两个对象有父子关系的时候。父对象拥有一个强指针指向子对象——即“拥有”了子对象——但为了避免循环引用，子对象只能用弱指针指回它的父对象。</p>
+
+<p>代理模式便是这种例子。你的view controller通过强指针拥有了UITableView。table view的数据源和代理指针指回view controller，但使用弱引用。我们一会再谈这个。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers7.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Pointers7.png" alt="" /></a></p>
+
+<p>以下代码并不是很有用：</p>
+
+<pre><code>__weak NSString *str = [[NSString alloc] initWithFormat:...];
+NSLog(@"%@", str);  // will output "(null)"
+</code></pre>
+
+<p>字符串对象没有拥有者（因为str是弱指针），因此它刚刚被创建完立马就被回收了。当你这么做的时候，Xcode会给出警告，因为结果并非你所预期（“警告：将retain对象赋给弱变量；对象在赋值结束后将被回收”）。</p>
+
+<p>你可以使用__strong关键字来表示一个强指针：</p>
+
+<pre><code>__strong NSString *firstName = self.textField.text;
+</code></pre>
+
+<p>但因为默认情况下变量就是强类型的，所以这有点多此一举。</p>
+
+<p>属性同样可以是强或弱类型。属性的表示法如下：</p>
+
+<pre><code>@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, weak) id &lt;MyDelegate&gt; delegate;
+</code></pre>
+
+<p>ARC很棒，它可以真正帮你去掉代码中一堆乱七八糟的东西。你不再需要去想何时retain，何时release，只需要去想你的对象之间是个什么关系。你只需要问自己：谁拥有什么？</p>
+
+<p>举例来说，以前是不可能这样写代码的：</p>
+
+<pre><code>id obj = [array objectAtIndex:0];
+[array removeObjectAtIndex:0];
+NSLog(@"%@", obj);
+</code></pre>
+
+<p>在手动内存管理下，将对象从数组中删除将会使obj变量中的内容失效。该对象一旦离开数组立马就被回收了。用NSLog()打印该对象很可能会使程序崩溃。使用了ARC以后，以上代码如预期一样正常工作。因为我们将对象放入了强指针obj，数组便不再是该对象的唯一拥有者了。即使我们从数组中删除了对象，该对象依然存活，因为obj保持着它的引用。</p>
+
+<p>自动引用计数同样也有一些限制。对初学者来说，ARC机制只对Objective-C对象有效。如果你的应用使用了Core Foundation或者malloc()和free()，那你还是需要在那些地方使用手动内存管理。我们将在这篇教程的下面看到例子。除此之外，为了确保ARC总能正确工作，某些语言规则更加地严格了（译者注：可能是指代码中不准出现retain, release等规则）。这些只是小的牺牲，你得到的远比失去的要多！</p>
+
+<p>ARC帮你在合适的地方retain和release，但并不意味着你可以完全将内存管理抛在脑后。因为强指针能使对象一直存活，所以仍然存在这样的情况：即你需要手动地将这些指针置为nil，否则你的应用将会耗尽内存。如果你始终保留着你创建的所有对象，那么ARC将永远没机会释放它们。因此，每当你创建一个新对象，你仍然需要思考谁拥有这个对象，以及该对象应该在内存中存在多长时间。</p>
+
+<p>毫无疑问ARC是Objective-C的一个特性。苹果鼓励开发者别用手动内存管理，转而开始使用ARC开发他们的新应用。这使得源代码更简洁，程序更健壮。使用了ARC，内存有关的崩溃问题将成为历史。</p>
+
+<p>但由于我们处在一个从手动到自动内存管理的转型时期，你会经常遇到一些和ARC尚不兼容的代码，不管是你自己的代码还是第三方库。幸运的是，你可以在同一个项目中同时使用ARC以及非ARC的代码，我会向你展示一些方法。</p>
+
+<p>ARC甚至与C++磨合得很好。在一些限制条件下，你也可以在iOS4中使用ARC， which should only help to speed up the adoption（译者注：这句不是很懂）。</p>
+
+<p>聪明的开发者尽可能地自动化自己的工作，ARC正能提供这样的好处：将以前你需要手动做的粗活累活自动化了。 对我来说，用脚趾头思考都会去改变。</p>
+
+<h2>The App</h2>
+
+<p>To illustrate how to use Automatic Reference Counting in practice, I have prepared a simple app that we are going to convert from manual memory management to ARC. The app, Artists, consists of a single screen with a table view and a search bar. When you type something into the search bar, the app employs the MusicBrainz API to search for musicians with matching names.</p>
+
+<p>The app looks like this:</p>
+
+<h2>应用</h2>
+
+<p>为了展示实践中如果使用自动引用计数，我准备了一个简单的应用，我们将把它从手动内存管理转为自动内存管理。这个艺术家应用只有一个屏幕，上面有一个表格视图和一个搜索框。当你在搜索框中输入的时候，应用会使用MusicBrainz API来查找匹配的音乐家的名字。</p>
+
+<p>这个应用是这样子的：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/The-Artists-app.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/The-Artists-app.png" alt="" /></a></p>
+
+<p>用他们自己的话来说，MusicBrainz是“一个开放的音乐百科全书，收集音乐元数据，并供大众使用”。他们有一个免费的XML web服务供你的应用使用。想了解MusicBrainz的话，请访问他们的网站<a href="http://musicbrainz.org/">http://musicbrainz.org</a>。</p>
+
+<p>继续，下载这篇教程的<a href="http://cdn1.raywenderlich.com/downloads/ArtistsStarter.zip">第一个项目</a>，在Xcode中打开。该项目有以下源代码：</p>
+
+<ul>
+<li><p><strong>AppDelegate.h/.m</strong>：应用代理。这儿没什么特别之处，每个应用都有。它负责加载view controller，把它放入窗口。</p></li>
+<li><p><strong>MainViewController.h/.m/.xib</strong>：应用的view controller，有一个表格视图和一个搜索框，大多数工作都在这进行。</p></li>
+<li><p><strong>SoundEffect.h/.m</strong>：一个播放音效的简单的类。应用会在MusicBrainz搜索完成后发出“哔”的一声。</p></li>
+<li><p><strong>main.m</strong>：应用的入口。</p></li>
+</ul>
+
+
+<p>除此之外，应用使用了第三方库。你的应用很可能使用了一些外部组件，正好让我们学习下如果让这些库支持ARC。</p>
+
+<ul>
+<li><p><strong>AFHTTPRequestOperation.h/.m</strong>：AFNetworking库中的一部分，简化了向web服务发请求的过程。我没有引入整个库，因为我们仅需要这一个类。你可以在这找到完整的包：<a href="https://github.com/gowalla/AFNetworking%E3%80%82">https://github.com/gowalla/AFNetworking%E3%80%82</a></p></li>
+<li><p><strong>SVProgresHUD.h/.m/.bundle</strong>： 一个进度指示器，当搜索发生时我们将展示在屏幕上。你以前可能没见过.bundle文件。这是一个特殊类型的文件夹，包括了SVProgressHUD用到的图片文件。要看到这些图片，在Finder中右键.bundle文件，选择显示包内容菜单选项。 了解更多该组件内容，请看： <a href="https://github.com/samvermette/SVProgressHUD%E3%80%82">https://github.com/samvermette/SVProgressHUD%E3%80%82</a></p></li>
+</ul>
+
+
+<p>让我们快速浏览view controller的代码以了解应用的工作机制。MainViewController是UIViewController的子类。它的nib文件包含了UITableView对象和UISearchBar对象：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Nib.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Nib.png" alt="" /></a></p>
+
+<p>表格视图展示了searchResults数组的内容。起初，该指针为nil。当用户搜索了，我们将MusicBrainz服务器的返回填入数组中。如果没有搜索结果，该数组为空（但不为nil），表格显示“（没找到）”。这一切都在UITableViewDataSource方法中发生：numberOfRowsInSection和cellForRowAtIndexPath。</p>
+
+<p>真正的搜索在searchBarSearchButtonClicked方法中初始化，该方法是UISearchBarDelegate协议的一部分。</p>
+
+<pre><code>- (void)searchBarSearchButtonClicked:(UISearchBar *)theSearchBar
+{
+    [SVProgressHUD showInView:self.view status:nil
+      networkIndicator:YES posY:-1
+      maskType:SVProgressHUDMaskTypeGradient];
+</code></pre>
+
+<p>首先，我们创建新的HUD，在表格数据和搜索条的上方展示它。网络请求返回前阻止用户输入：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/HUD.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/HUD.png" alt="" /></a></p>
+
+<p>然后我们创建HTTP请求用的URL。我们用MusicBrainz API来搜索艺术家。</p>
+
+<pre><code>SString *urlString = [NSString stringWithFormat:
+  @"http://musicbrainz.org/ws/2/artist?query=artist:%@&amp;limit=20",
+  [self escape:searchBar.text]];
+NSMutableURLRequest *request = [NSMutableURLRequest
+  requestWithURL:[NSURL URLWithString:urlString]];
+</code></pre>
+
+<p>搜索文本使用转义符进行URL编码：为确保我们使用合法的URL。空格以及其他特殊字符转为这样的东东：%20。</p>
+
+<pre><code>NSDictionary *headers = [NSDictionary dictionaryWithObject:
+  [self userAgent] forKey:@"User-Agent"];
+[request setAllHTTPHeaderFields:headers];
+</code></pre>
+
+<p>我们在HTTP请求里加入了自定义的User-Agent头。MusicBrainz API需要这个。所有的请求必须“有一个合适的能够标识应用以及应用版本的User-Agent头”。按照你使用的API说的去做就对了，因此我们构建了这样的User-Agent头：</p>
+
+<pre><code>com.yourcompany.Artists/1.0 (unknown, iPhone OS 5.0,
+  iPhone Simulator, Scale/1.000000)
+</code></pre>
+
+<p>（我从AFNetworking库的另一部分找到了以上东东，把它放到view controller里的userAgent方法中。）</p>
+
+<p>MusicBrainz API还有些其他的限制。客户端应用每秒钟不能调用超过一次web服务，否则他们可能会封IP。对我们的应用来说不是什么大问题——用户不大可能搜索那么多次——所以我们没有特别的预防措施。</p>
+
+<p>一旦我们构建了NSMutableURLRequest对象，我们把它交给AFHTTPRequestOperation来执行：</p>
+
+<pre><code>AFHTTPRequestOperation *operation = [AFHTTPRequestOperation
+  operationWithRequest:request completion:^(NSURLRequest *request,
+  NSHTTPURLResponse *response, NSData *data, NSError *error)
+  {
+    // ...
+
+  }];
+
+  [queue addOperation:operation];
+</code></pre>
+
+<p>AFHTTPRequestOperation是NSOperation的子类，意味着我们可以把它放进NSOperationQueue（在queue变量中），它将会被异步处理。由于HUD，应用在请求发生时忽略了任何用户输入。</p>
+
+<p>我们给AFHTTPRequestOperation加上了block，当请求完成会执行block。在block中我们首先检查请求是否成功（HTTP状态码200）。对该应用来说，我们对应用失败的原因并不是很感兴趣，因此就仅仅让HUD消失前展示特殊的“错误”动画而已。注意到完成block不一定是在主线程上执行的，所以我们要把对SVProgressHUD的调用包在dispatch_async()中。</p>
+
+<pre><code>if (response.statusCode == 200 &amp;&amp; data != nil)
+{
+    . . .
+}
+else  // something went wrong
+{
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+        [SVProgressHUD dismissWithError:@"Error"];
+    });
+}
+</code></pre>
+
+<p>现在到了有趣的部分。如果请求成功了，我们为searchResults数组分配控件，解析响应。响应是XML格式的，因此我们使用NSXMLParser来搞定。</p>
+
+<pre><code>self.searchResults = [NSMutableArray arrayWithCapacity:10];
+
+            NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+            [parser setDelegate:self];
+            [parser parse];
+            [parser release];
+
+            [self.searchResults sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+</code></pre>
+
+<p>你可以在NSXMLParserDelegate方法中查看解析XML的逻辑，但本质上我们仅仅是寻找名字为“sort-name”的元素而已。这些元素包括了艺术家们的名字。我们把这些名字作为NSString对象加入到searchResults数组中。当XML解析器工作完毕，我们将结果按照字母排序，然后在主线程中更新屏幕。</p>
+
+<pre><code>dispatch_async(dispatch_get_main_queue(), ^
+{
+    [self.soundEffect play];
+    [self.tableView reloadData];
+    [SVProgressHUD dismiss];
+});
+</code></pre>
+
+<p>程序就是这样工作的。它是用手动内存管理来写的，并没有用到iOS5的特性。现在让我们把它转成ARC。</p>
+
+<h2>自动转换</h2>
+
+<p>我们将会把艺术家应用转成ARC。基本上这意味着我们要去除所有的retain, release和autorelease调用，但我们也会遇到一些需要特别注意的地方。</p>
+
+<p>使得你的应用兼容ARC，你可以做以下三件事：</p>
+
+<ol>
+<li><p> Xcode有自动转换工具可以将你的代码整个迁移过去。</p></li>
+<li><p> 你可以手工转换。</p></li>
+<li><p> 你可以对一些你不想转换的源文件禁用ARC。这对于你不想乱改的第三方库来说很有用。</p></li>
+</ol>
+
+
+<p>在艺术家应用中我们将尝试每种方法，向你展示它的工作机制。在这一节中，我们将使用Xcode的自动转换工具来转换源代码，除了MainViewController和AFHTTPRequestOperation外。</p>
+
+<p>在做之前，你应当对你的项目做一个备份，因为工具会覆盖原来的文件。Xcode提供了源文件的快照，但保险起见我还是做一下备份。</p>
+
+<p>ARC是最新的LLVM3.0编译器的特性。你的现存项目很可能使用老的GCC 4.2或者LLVM-GCC编译器，因此可以先将项目换成用新的编译器来编译，先看看用非ARC模式来编译是否没问题。在Project Settings界面，选择艺术家target，在Build Settings的搜索框中输入“compiler”，Xcode会在列表中筛选出编译器选项：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Compiler-settings.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Compiler-settings.png" alt="" /></a></p>
+
+<p>点击 Compiler for C/C++/Objective-C 选项，选择Apple LLVM compiler 3.0：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/LLVM-compiler.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/LLVM-compiler.png" alt="" /></a></p>
+
+<p>在Warnings栏目下，将Other Warning Flags（译者注：原文 Other Linker Flags，为作者笔误）选项设置为 -Wall。编译器现在将会检查所有可能会导致问题的情况。默认情况下这些警告都是关掉的，但我觉得打开所有的警告，像严重错误一样对待它们很有用。换句话说，如果编译器给出了警告，我会在继续工作前先修复它。在你自己的项目中是否这么做由你决定，但在转换为ARC的过程中，我推荐你好好关注下编译器给出的任何抱怨。</p>
+
+<p>同样的原因，在Build Options栏目下打开 Run Static Analyzer选项：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Run-Static-Analyzer.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Run-Static-Analyzer.png" alt="" /></a></p>
+
+<p>现在Xcode会在你每次构建程序时运行静态分析器了。这使得构建过程稍微变慢，但对这么小的程序基本可以忽略。</p>
+
+<p>让我们构建程序，来看下新编译器有没有什么问题。首先来 清理一下，打开Product->Clean菜单选项（或者Shift-Cmd-K）。然后按下Cmd-B来构建程序。Xcode应该不会给出错误或警告，这很棒。如果你将自己的应用转换为ARC，在这里有警告信息的话，你得修复它们。</p>
+
+<p>单纯为了好玩，我们将编译器换成ARC模式，再次构建应用。我们将得到一堆错误消息，但都能看到具体是什么问题。</p>
+
+<p>仍然在Build Settings界面，换成&#8221;All&#8221;来看所有的变量设置（不是Basic，Basic只显示用的最多的一些设置）。搜索“automatic”，将Objective-C Automatic Reference Counting设为Yes。这是一个对整个项目都有效设置项，它告诉Xcode要对项目中所有的源文件使用ARC编译器。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Enable-ARC.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Enable-ARC.png" alt="" /></a></p>
+
+<p>再次构建应用。欧~出现一堆错误：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Errors.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Errors.png" alt="" /></a></p>
+
+<p>很明显我们有一些迁移工作需要做！大多数的错误都非常明显，提醒你不能再使用retain，release和autorelease了。我们可以手动把这些错误都修复，但使用自动转换工具更加简单。这个工具可以在ARC模式下编译应用，遇到错误就会修改源代码，直到编译成功。</p>
+
+<p>从Xcode的菜单上选择Edit\Refactor\Convert to Objective-C ARC。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Convert-to-ARC.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Convert-to-ARC.png" alt="" /></a></p>
+
+<p>跳出新窗口让你选择你想转换哪一部分程序：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Select-targets-to-convert.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Select-targets-to-convert.png" alt="" /></a></p>
+
+<p>这篇教程不打算让我们转换整个应用，所以只要选择以下文件：</p>
+
+<ul>
+<li><p>main.m</p></li>
+<li><p>AppDelegate.m</p></li>
+<li><p>SVProgressHUD.m</p></li>
+<li><p>SoundEffect.m</p></li>
+</ul>
+
+
+<p>这个对话框有个警告的图标，指示项目已经使用了ARC。那是因为我们之前在Build Settings中已经打开了 Automatic Reference Counting选项，现在转换工具就认为这已经是一个ARC项目了。这个警告可以忽略，不会影响转换结果。</p>
+
+<p>点击Precheck按钮开始转换。工具会首先检查你的代码是否能够被转换成ARC。我们之前使用最新的LLVM3.0编译器成功编译过程序，但很明显这还不够。Xcode给出了以下的错误信息：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Cannot-convert-error1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Cannot-convert-error1.png" alt="" /></a></p>
+
+<p>它抱怨你的程序中有“ARC准备就绪问题”，提示我们应该打开“Continue building after errors”选项。我们首先来做后者。打开Xcode Preferences窗口（从Xcode下的菜单栏中），切换到General选项卡。选中 Continue building after errors:</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Continue-building-after-errors.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Continue-building-after-errors.png" alt="" /></a></p>
+
+<p>我们再试一次。选择Edit\Refactor\Convert to Objective-C ARC，勾选除MainViewController.m和AFHTTPRequestOperation.m外的所有文件，点击Precheck按钮开始。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Cannot-convert-error-2.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Cannot-convert-error-2.png" alt="" /></a></p>
+
+<p>不幸的是，依然有错误信息。和之前不同的是，这一次编译器能够识别出在转换前我们需要修复所有的问题。幸运的是，只有一个问题：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Precheck-issues.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Precheck-issues.png" alt="" /></a></p>
+
+<p>（你的错误可能比这里显示的更多。有时编译器还会抱怨那些非“ARC准备就绪”的问题。）</p>
+
+<p>错误的详细描述如下：</p>
+
+<pre><code>Cast of Objective-C pointer type 'NSURL *' to C pointer type 'CFURLRef' (aka 'const struct __CFURL *') requires a bridged cast
+</code></pre>
+
+<p>在源代码编辑器中是这样的：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Cast-error.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Cast-error.png" alt="" /></a></p>
+
+<p>这里我一会儿会详细阐述。这里的代码试图将一个NSURL对象转成一个CFURLRef对象。AudioServicesCreateSystemSoundID()函数用CFURLRef做参数，用来表示声音文件所在位置，但我们却给了它一个NSURL的对象。CFURLRef和NSURL是“toll-free bridged”（译者注：如果开发者混合使用Foundation Objects 和Core Foundation类型，就能充分利用存在两个框架中的&#8221;toll-free bridging&#8221;。toll-free bridging意味着开发者能使用这两个框架中的任何一个的核心基础和基础类型），意味着在用CFURLRef对象的地方可以用NSURL对象，反之亦然。</p>
+
+<p>通常iOS中基于C的API会使用Core Foundation对象（CF的全称），而基于Objective-C的API使用继承于NSObject类的“真正”的对象。有时你需要在这两者之间转换，toll-free bridging技术允许你这么做。</p>
+
+<p>然而，当你使用ARC的时候，编译器需要知道如果处理这些toll-free bridged对象。如果你在用CFURLRef的地方用了NSURL，那最后谁来释放那块内存？为了解决这个难题，引入了一系列新的关键词：<strong>bridge, </strong>bridge_transfer 和 __bridge_retained。教程后面我们会深入了解如何使用它们。</p>
+
+<p>现在我们要把代码改成如下所示：</p>
+
+<pre><code>OSStatus error = AudioServicesCreateSystemSoundID((__bridge CFURLRef)
+  fileURL, &amp;theSoundID);
+</code></pre>
+
+<p>预检查过程可能给出了比这更多的错误。没事，你可以忽略那些错误，我们只需要在SoundEffect.m中如上面那样修改就行了。转换工具有时对什么是“ARC准备就绪问题”不太确定。</p>
+
+<p>让我们再运行一次转换工具—— Edit\Refactor\Convert to Objective-C ARC。这次预检查过程没出现任何问题，我们得到了如下界面：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Precheck-successful.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Precheck-successful.png" alt="" /></a></p>
+
+<p>点击Next继续。几秒钟以后，Xcode会展示出它将改动的所有文件，以及它将做出哪些改动。左边的窗口是改完的文件，右边的是原来的文件。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes.png" alt="" /></a></p>
+
+<p>逐个查看这些文件，确保Xcode没有搞错。我们来看下转换工具即将做出的改动。</p>
+
+<h2>AppDelegate.h</h2>
+
+<pre><code>@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) MainViewController *viewController;
+</code></pre>
+
+<p>应用代理有两个属性，一个是窗口，一个是主视图控制器。该项目中没使用MainWindow.xib文件，所以这两个对象是由AppDelegate在application:didFinishLaunchingWithOptions:中自己创建的，存在属性中是为了简化内存管理。</p>
+
+<p>这两个属性声明从这个</p>
+
+<pre><code>@property (retain, nonatomic)
+</code></pre>
+
+<p>变成了</p>
+
+<pre><code>@property (strong, non atomic)
+</code></pre>
+
+<p>strong关键字的意思你知道的。它告诉ARC，属性背后合成的ivar变量对涉及到的对象持有强引用。换句话说，window属性持有指向UIWindow对象的指针，扮演着UIWindow对象拥有者的角色。只要window属性的值不改变，UIWindow对象便始终存活。对viewController属性和MainViewController对象来说也是这样。</p>
+
+<h2>AppDelegate.m</h2>
+
+<p>在AppDelegate.m中，创建window和view controller对象的代码有改动，同时dealloc方法被完全删除了：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-AppDelegate-source.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-AppDelegate-source.png" alt="" /></a></p>
+
+<p>注意这两行代码之间的区别：</p>
+
+<pre><code>self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen]
+  bounds]] autorelease];
+</code></pre>
+
+<p>和</p>
+
+<pre><code>self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen]
+  bounds]];
+</code></pre>
+
+<p>这是正确的，autorelease不再需要了。如下创建view controller的代码也是这样：</p>
+
+<pre><code>self.viewController = [[[MainViewController alloc] initWithNibName:
+  @"MainViewController" bundle:nil] autorelease];
+</code></pre>
+
+<p>变成了</p>
+
+<pre><code>self.viewController = [[MainViewController alloc] initWithNibName:
+  @"MainViewController" bundle:nil];
+</code></pre>
+
+<p>在用ARC之前，如果你写出如下的代码，而你的属性又是&#8221;retain&#8221;的话，你将造成内存泄露：</p>
+
+<pre><code>self.someProperty = [[SomeClass alloc] init];
+</code></pre>
+
+<p>init方法返回了一个retain过的对象，把这个对象放进了属性中，这个属性又会将这个对象retain一次。这就是你必须使用autorelease的原因，来平衡init方法引起的retain数。但在ARC下以上代码没问题，编译器足够聪明，知道不应该在这里retain两次。（译者注：作者这一段有问题。不一定非要用autorelease吧，非ARC模式下，dealloc、viewDidUnload中都可以释放）</p>
+
+<p>我喜欢ARC的原因之一是大多数情况下完全没必要写dealloc方法。当一个对象被回收了，它的实例变量和已合成属性自动释放了，你不再需要这样写：</p>
+
+<pre><code>- (void)dealloc
+{
+    [_window release];
+    [_viewController release];
+    [super dealloc];
+}
+</code></pre>
+
+<p>因为Objective-C现在能自动处理这种情况了。实际上，甚至已经不可能写出以上代码了。在ARC模式下你不允许调用release和[super dealloc]。你仍然可以实现dealloc——过会儿会看到例子——但不再需要手动去释放那些变量了。</p>
+
+<p>转换工具不会帮你把AppDelegate的父类从NSObject变为UIResponder。当你用Xcode的某个模板创建应用的时候，AppDelegate类成了UIResponder类的子类。父类是NSObject也没什么不好，但只要你愿意你可以把它换成UIResponder类：</p>
+
+<pre><code>@interface AppDelegate : UIResponder &lt;UIApplicationDelegate&gt;
+</code></pre>
+
+<h2>Main.m</h2>
+
+<p>在使用手动管理内存的应用中，[autorelease]方法和“自动释放池”关系紧密，后者是由NSAutoreleasePool对象来表示。每个main.m文件都有一个自动释放池，如果你直接操纵过线程的话，你肯定会为每个线程创建你自己的NSAutoreleasePool。有时开发者为了保证在循环中创建的自动释放对象不至于占太多内存，时不时需要释放掉一些，他们也会在那些做很多处理的循环内部放入NSAutoreleasePools。</p>
+
+<p>Autorelease和ARC并不兼容，即使你没有直接在对象上调用过[autorelease]方法。每当你从一个不以alloc, int, copy, mutableCopy或new开头的方法得到返回对象的时候，ARC编译器都把为你它们自动释放掉。这些对象仍然会进入自动释放池。跟以前有很大区别的是，NSAutoreleasePool被一种新的语言指令所替代了——@autoreleasepool。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-main.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-main.png" alt="" /></a></p>
+
+<p>转换工具把main()方法从原先的：</p>
+
+<pre><code>&lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSAutoreleasePool_Class/"&gt;NSAutoreleasePool&lt;/a&gt;* pool = [[&lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSAutoreleasePool_Class/"&gt;NSAutoreleasePool&lt;/a&gt;alloc] init];
+int retVal = UIApplicationMain(argc, argv, nil,
+  NSStringFromClass([AppDelegate class]));
+[pool release];
+return retVal;
+</code></pre>
+
+<p>变成了：</p>
+
+<pre><code>@autoreleasepool {
+  int retVal = UIApplicationMain(argc, argv, nil,
+    NSStringFromClass([AppDelegate class]));
+    return retVal;
+}
+</code></pre>
+
+<p>不仅对程序员来说可读性增强了，而且在背后也做了很多改动，使得这些新的自动释放池比以前更快了。你几乎不需要在ARC模式下考虑autorelease，除了如果你在原先的代码中使用了NSAutoreleasePool，你需要将他们换成@autoreleasepool block。自动转换工具会帮你完成的。</p>
+
+<h2>SoundEffect.m</h2>
+
+<p>该文件没有改动很多，仅仅去掉了 [super dealloc]。在dealloc方法中不能再调用super了。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-SoundEffect.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-SoundEffect.png" alt="" /></a></p>
+
+<p>注意dealloc方法在这仍然是需要的。在大多数你的类中可以忽略掉dealloc方法，让编译器来帮你考虑。然而有时，你需要手动释放一些资源。这里就是个例子。随着SoundEffect对象被回收，我们还需要调用AudioServicesDisposeSystemSoundID()方法来清理声音对象，dealloc最适合做这个工作。</p>
+
+<h2>SVProgressHUD.m</h2>
+
+<p>这个文件的改动最大，但是都很琐碎。</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-SVProgressHUD.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Review-Changes-SVProgressHUD.png" alt="" /></a></p>
+
+<p>在SVProgressHUD.m顶部你能看到所谓的“类扩展”，@interface SVProgressHUD ()，其中有一些属性声明。如果你对类扩展不熟悉，（我告诉你们），它们就像分类，但是它们有其特殊的能力。类扩展的生命看起来跟分类很像，但在括号()中间没有名字。类扩展可以拥有属性和实例变量（分类有时则不行），但是你只能在.m文件中使用它们。（换句话说，你不能在别人的类中使用自己类中的类扩展。）</p>
+
+<p>类扩展的好处在于它们允许你给你的类加上私有属性及方法名。你如果不想在你的公共接口中暴露某些属性或方法，你可以将她们放入类扩展中。SVProgressHUD的作者也是这么做的。</p>
+
+<pre><code>@interface SVProgressHUD ()
+
+...
+@property (nonatomic, strong) &lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSTimer_Class/"&gt;NSTimer&lt;/a&gt; *fadeOutTimer;
+@property (nonatomic, strong) UILabel *stringLabel;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIActivityIndicatorView *spinnerView;
+...
+
+@end
+</code></pre>
+
+<p>跟我们之前看到的一样，retain属性将变成strong属性。如果你在预览窗口滚动下，你会看到其他所有的改动都是把retain和release语句去掉了而已。</p>
+
+<h2>真正开始转换</h2>
+
+<p>当你对转换工具所做的改动满意时，按下Save按钮来启动。Xcode首先询问你是否需要在改动文件之前保存快照：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Snapshots.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Snapshots.png" alt="" /></a></p>
+
+<p>你可以在这里选择Enable。如果你还需要以前的代码，你可以在Projects里的Organizer窗口中找到快照。</p>
+
+<p>在ARC转换工具结束后，按下Cmd+B来构建程序。构建应该能成功，但是SVProgressHUD.m中会有一些新的警告： <a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Expression-result-unused-warning.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/Expression-result-unused-warning.png" alt="" /></a></p>
+
+<p>再次注意，这个类里仍然使用了dealloc方法，在这里是为了停止定时器，并且从NSNotificationCenter注销订阅通知。很明显，这些不是ARC会为你做的。</p>
+
+<p>带警告的那行代码以前是这样的：</p>
+
+<pre><code>if(fadeOutTimer != nil)
+    [fadeOutTimer invalidate], [fadeOutTimer release], fadeOutTimer = nil;
+</code></pre>
+
+<p>现在是这样：</p>
+
+<pre><code>if(fadeOutTimer != nil)
+    [fadeOutTimer invalidate], fadeOutTimer, fadeOutTimer = nil;
+</code></pre>
+
+<p>工具删除了对[release]的调用，但把变量留在了那里。单单一个变量没什么用。这似乎是自动化转换工具所没有预见到的。</p>
+
+<p>如果你对逗号表示困惑，那么你得知道在Objective-C中它是用来将多个表达式合并为一个语句的一种方式。上面的技巧是释放对象且将变量设为nil的习惯用法。因为所有都发生在一个语句中，所以if不需要大括号。</p>
+
+<p>要消除警告，你可以将这几行代码改成：</p>
+
+<pre><code>if(fadeOutTimer != nil)
+    [fadeOutTimer invalidate], fadeOutTimer = nil;
+</code></pre>
+
+<p>Technically speaking we don’t need to do fadeOutTimer = nil; in dealloc, because the object will automatically release any instance variables when it gets deleted. In the other methods where the timer is invalidated, however, you definitely should set fadeOutTimer to nil. If you don’t, the SVProgressHUD keeps hanging on to the invalidated NSTimer object longer than it’s supposed to.</p>
+
+<p>Build the app again and now there should be no warnings. Conversion complete!</p>
+
+<p>But wait a minute… we skipped MainViewController and AFHTTPRequestOperation when we did the conversion. How come they suddenly compile without problems? When we tried building the project with ARC enabled earlier there were certainly plenty of errors in those files.</p>
+
+<p>The answer is simple: the conversion tool has disabled ARC for these two source files. You can see that in the Build Phases tab on the Project Settings screen:</p>
+
+<p>严格意义上来说，我们在dealloc中不需要让fadeOutTimer = nil; ，因为对象在被回收时会自动释放所有实例变量。在其他方法中，当定时器失效时，你必须得把fadeOutTimer设置为nil。否则，SVProgressHUD会在已失效的NSTimer上等待比预期更多的时间。</p>
+
+<p>再次构建应用，这次应该没有警告了。转换完成！</p>
+
+<p>但是稍等片刻&hellip; 我们在转换时跳过了MainViewController和AFHTTPRequestOperation。为什么他们会突然没任何问题就编译通过了呢？当我们之前试图在ARC模式下构建项目时，这两个文件里还有相当数量的错误的。</p>
+
+<p>答案很简单：转换工具对这两个文件禁用了ARC。你可以在Project Settings界面的Build Phases选项卡中看到：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/ARC-disabled-per-file1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/ARC-disabled-per-file1.png" alt="" /></a></p>
+
+<p>当我们把Build Settings下面的Objective-C Automatic Reference Counting setting设为Yes的时候，我们在项目范围内启用了ARC。但你可以用-fno-objc-arc符号告诉编译器来对特定的文件忽略ARC。Xcode会在非ARC模式下编译这些文件。</p>
+
+<p>因为指望开发者一次性将整个项目转成ARC并不合理，苹果的工作人员便使得ARC和非ARC代码可以在同一个项目中共存。小贴士：有一个简单的方法，单单用转换工具转换那些你想要迁移的文件，而让转换工具为剩下的文件自动加上 -fno-objc-arc符号。你也可以自己手动来加这个符号，但当你有很多不想ARC化的文件时你肯定会抓狂的。</p>
+
+<h2>转换过程中的困难</h2>
+
+<p>我们的转换过程很流畅。我们只需要在SoundEffect.m中做一个简单的改动（插入__bridge），工具会完成剩下的工作。</p>
+
+<p>然而，LLVM3.0编译器在ARC模式下比以前的编译器更严格，因而你有可能会在预检查的时候遇到一些额外的问题。在工具接管前你可能需要改更多的地方。</p>
+
+<p>这儿有一份简单参考，列出你可能遇到的一些问题，以及一些解决办法：</p>
+
+<p><strong>“Cast … requires a bridged cast”</strong></p>
+
+<p>这个我们之前看到过。当编译器自己不知道如何做转换时，它期望你能插入<strong>bridge描述符。还有两种桥接类型， </strong>bridge_transfer和__bridge_retained，用哪一个取决于你想做什么。更多信息请查询Toll-Free Bridging段落。</p>
+
+<p><strong>“Receiver type ‘X’ for instance message is a forward declaration”</strong></p>
+
+<p>如果你有一个类，比如说是UIView的子类MyView，然后你调用它的一个方法，或者使用它的属性，那么你需要#import该类的定义。通常这是使得你的代码顺利通过编译首先要做的，但也不总是这样。</p>
+
+<p>举个例子，你在你的.h文件中加一个前向声明来声明MyView是一个类：</p>
+
+<pre><code>@class MyView;
+</code></pre>
+
+<p>然后在.m文件中我们这样做：</p>
+
+<pre><code>[myView setNeedsDisplay];
+</code></pre>
+
+<p>在以前这种做法是能够通过编译且工作良好的，可以没有#import语句。在ARC模式下你总是需要显式地加上import：</p>
+
+<pre><code>#import "MyView.h"
+</code></pre>
+
+<p><strong>“Switch case is in protected scope”</strong></p>
+
+<p>如果你的代码如下所示，那么你会得到这个错误：</p>
+
+<pre><code>switch (X)
+{
+    case Y:
+        &lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSString_Class/"&gt;NSString&lt;/a&gt; *s = ...;
+        break;
+}
+</code></pre>
+
+<p>这种方法已经行不通了。如果你要在一个case语句中声明新的指针变量，你必须把整块都放入大括号中：</p>
+
+<pre><code>switch (X)
+{
+    case Y:
+    {
+        &lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSString_Class/"&gt;NSString&lt;/a&gt; *s = ...;
+        break;
+    }
+}
+</code></pre>
+
+<p>现在变量的生命范围就明了了，ARC需要知道此信息，因为它要在合适的时间释放对象。</p>
+
+<p><strong>“A name is referenced outside the NSAutoreleasePool scope that it was declared in”</strong></p>
+
+<p>你肯定会有一些代码会创建自己的自动释放池：</p>
+
+<pre><code>NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+// . . . do calculations . . .
+
+NSArray* sortedResults =
+  [[filteredResults sortedArrayUsingSelector:@selector(compare:)]
+    retain];
+
+[pool release];
+return [sortedResults autorelease];
+</code></pre>
+
+<p>转换工具需要把它们转成这样：</p>
+
+<pre><code>@autoreleasepool
+{
+  // . . . do calculations . . .
+  NSArray* sortedResults = [filteredResults sortedArrayUsingSelector:@
+    selector(compare:)];
+}
+return sortedResults;
+</code></pre>
+
+<p>但这段代码不再有效。sortedResults变量在@autoreleasepool范围内声明，因而在作用域外不可访问。为修复这个问题得把变量的声明移到NSAutoreleasePool创建之前：</p>
+
+<pre><code>&lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSArray_Class/"&gt;NSArray&lt;/a&gt;* sortedResults;
+&lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSAutoreleasePool_Class/"&gt;NSAutoreleasePool&lt;/a&gt;* pool = [[&lt;a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSAutoreleasePool_Class/"&gt;NSAutoreleasePool&lt;/a&gt; alloc] init];
+. . .
+</code></pre>
+
+<p>现在转换工具可以正确地覆盖你代码了。</p>
+
+<p><strong>“ARC forbids Objective-C objects in structs or unions”</strong></p>
+
+<p>ARC的限制之一是你不能再将Objective-C对象放在C的结构体中了。以下代码不再有效：</p>
+
+<pre><code>typedef struct
+{
+    UIImage *selectedImage;
+    UIImage *disabledImage;
+}
+ButtonImages;
+</code></pre>
+
+<p>推荐做法是用Objective-C类来替代这样的结构体。我们一会儿再谈这个，到时还会介绍一些解决办法。</p>
+
+<p>还会有一些预检查错误，但这几个是最常见的。</p>
+
+<p>注意：如果你使用自动化转换工具一次以上，你会发现它有点古怪。如果你跟我们之前那样没有选中所有文件来转换的话，下次你想转换剩下来那些文件时，转换工具貌似什么都不会做。我的建议是你运行这个工具一次就好，不好分批去转换你的文件。</p>
+
+<h2>接下来怎么办</h2>
+
+<p>继续完成<a href="http://www.raywenderlich.com/5773/beginning-arc-in-ios-5-tutorial-part-2">本系列的第二部分</a>，我们会如何手动将文件转换成ARC，ARC和Core Foundation的关系，弱属性，等等更多的内容！</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">njuxjy</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-13T13:28:39+08:00" pubdate data-updated="true">Aug 13<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/fan-yi/'>翻译</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/06/windows-phone-7-e68ea8e98081e58a9fe883bde79a84e5ae9ee78eb0/" title="Previous Post: windows phone 7 推送功能的实现">&laquo; windows phone 7 推送功能的实现</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/15/xcodee4b8ade79a84e5ad90e9a1b9e79baeefbc88e8af91e69687efbc89/" title="Next Post: Xcode中的子项目（译文）">Xcode中的子项目（译文） &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

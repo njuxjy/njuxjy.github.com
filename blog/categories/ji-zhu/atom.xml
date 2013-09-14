@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 技术 | 不可卷也]]></title>
+  <link href="http://njuxjy.github.io/blog/categories/ji-zhu/atom.xml" rel="self"/>
+  <link href="http://njuxjy.github.io/"/>
+  <updated>2013-09-14T11:10:37+08:00</updated>
+  <id>http://njuxjy.github.io/</id>
+  <author>
+    <name><![CDATA[njuxjy]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) 关于fork()]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork/"/>
+    <updated>2013-05-02T19:08:37+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork</id>
+    <content type="html"><![CDATA[<p>APUE上关于fork的使用有段比较经典的代码：   <br/>
+if ((pid = fork()) &lt; 0) {    <br/>
+err_sys(&ldquo;fork error&rdquo;);    <br/>
+} else if (pid == 0) { /<em> child </em>/    <br/>
+execlp(buf, buf, (char <em>)0);    <br/>
+err_ret(&ldquo;couldn&rsquo;t execute: %s&rdquo;, buf);    <br/>
+exit(127);    <br/>
+}    <br/>
+/</em> parent */    <br/>
+if ((pid = waitpid(pid, &amp;status, 0)) &lt; 0)    <br/>
+err_sys(&ldquo;waitpid error&rdquo;);    <br/>
+一开始看这段代码会有疑惑，比如说else if(pid==0)执行子进程代码那块，字面上理解这段代码就是说进程号为0则判断其为子进程，则执行里面的代码，可是，子进程号为0，这怎么可能？ 因此我觉得这里将fork的返回值取名为pid有误导读者的影响，改为fRetValue或者干脆叫i会不会好点？    <br/>
+下面是网上摘的一段fork的解释：    <br/>
+<strong>调用方法</strong></p>
+
+<h1>include</h1>
+
+<h1>include</h1>
+
+<p>pid_t fork(void);    <br/>
+正确返回：在父进程中返回子进程的进程号，在子进程中返回0    <br/>
+错误返回：-1    <br/>
+子进程是父进程的一个拷贝。即，子进程从父进程得到了数据段和堆栈段的拷贝，这些需要分配新的内存；而对于只读的代码段，通常使用共享内存的方式访问。fork返回后，子进程和父进程都从调用fork函数的下一条语句开始执行。    <br/>
+父进程与子进程的不同之处在于：fork的返回值不同——父进程中的返回值为子进程的进程号，而子进程为0    <br/>
+关于fork，还有个问题，就是print缓冲区被子进程复制的问题，如果执行下面这段代码：    <br/>
+pid_t fRetValue;    <br/>
+printf(“fork!”);    <br/>
+fRetValue=fork();    <br/>
+if (fRetValue &lt; 0)    <br/>
+printf(“error in fork!”);    <br/>
+else if (fRetValue == 0)    <br/>
+printf(“i am the child process, my process id is %d”,getpid());    <br/>
+else    <br/>
+printf(“i am the parent process, my process id is %d”,getpid());    <br/>
+父子进程都会打印出fork!，而如果将printf(“fork!”)改为printf(“fork!\n”)就只会打印出一个fork!，同样摘了段解释如下：    <br/>
+主要的区别是因为有了一个\n回车符号这就跟Printf的缓冲机制有关了,printf某些内容时,操作系统仅仅是把该内容放到了stdout的缓冲队列里了,并没有实际的写到屏幕上但是,只要看到有 n 则会立即刷新stdout,因此就马上能够打印了.运行了printf(“AAAAAA”) 后, AAAAAA 仅仅被放到了缓冲里,再运行到fork时,缓冲里面的 AAAAAA 被子进程继承了因此在子进程度stdout缓冲里面就也有了 AAAAAA.所以,你最终看到的会是 AAAAAA 被printf了2次!!!!而运行 printf(“AAAAAAn”)后, AAAAAA 被立即打印到了屏幕上,之后fork到的子进程里的stdout缓冲里不会有 AAAAAA 内容因此你看到的结果会是 AAAAAA 被printf了1次!!!!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) Android开发（二）——在Android应用程序中使用加速度传感器]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8/"/>
+    <updated>2013-05-02T18:57:53+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8</id>
+    <content type="html"><![CDATA[<p>最近工作需要看了点传感器的东西，顺便熟悉了下Android平台上开发传感器程序的流程，作为借鉴。好久没用Android，竟然发现搭环境也有些生疏了，于是打算从如何搭建环境写起，也算是复习一遍，题目就叫《从零开始构建Android加速度传感器程序》。</p>
+
+<p>由于国内Android官网（developer.android.com）没法访问（当然google下还是能找到访问的办法），图省事就找了公司文件服务器上的老版本sdk（android-sdk-1.5_r2-windows）装上，结果发现只要一用SensorManager.getSystemService(SENSOR_SERVICE)这句，程序就死了，折腾半天发现是sdk版本问题，说是1.5r3版本（不包括r3）以前的版本在传感器这块有bug，在r3开始以后的版本中已经修复，又搜遍了服务器没发现有更新的版本，只好自己去网上（<a href="http://androidappdocs.appspot.com/%EF%BC%89%E4%B8%8B%E4%B8%80%E4%B8%AA%E3%80%82">http://androidappdocs.appspot.com/%EF%BC%89%E4%B8%8B%E4%B8%80%E4%B8%AA%E3%80%82</a> 更多的废话请看下面……</p>
+
+<p>=======================================================================</p>
+
+<p><strong>配置Android</strong><strong>开发环境</strong></p>
+
+<ol>
+<li><p>下载eclipse3.5版（当然其他版本也可以，文中用的是此版本，其他版本情况基本类似）。当然jdk之类的是先要安装的。</p></li>
+<li><p>在这里（<a href="http://androidappdocs.appspot.com/sdk/index.html%EF%BC%89%E4%B8%8B%E8%BD%BDandroid">http://androidappdocs.appspot.com/sdk/index.html%EF%BC%89%E4%B8%8B%E8%BD%BDandroid</a> sdk的安装程序<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image002.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image002_thumb.jpg" alt="clip_image002" /></a></p></li>
+</ol>
+
+
+<p>并点AndroidSDKSetup.exe进行安装，注意勾选这个：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image004.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image004_thumb.jpg" alt="clip_image004" /></a></p>
+
+<p>这玩意的安装过程就是从网上下载你选择的sdk放到它自己的目录里，所以装完后你将这整个文件android-sdk_r5-windows随便放到你喜欢的路径下，并在环境变量Path后加上“……\android-sdk-windows\tools”</p>
+
+<ol>
+<li>接下来要安装的是ADT（Android Development Tool），是个eclipse插件，所以可以依次在eclipse里点击Help->Install new software->Add，按下图所示输入Name和Location：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image006.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image006_thumb.jpg" alt="clip_image006" /></a></p>
+
+<p>OK，在下拉列表里选择刚加入的站点，并勾选要下载的文件：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image008.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image008_thumb.jpg" alt="clip_image008" /></a></p>
+
+<p>一路next。要是有问题把站点路径的https改成http。要是还有问题的话，就先下载ADT的zip包（Android2.1要求ADT-0.9.6，在<a href="http://androidappdocs.appspot.com/sdk/eclipse-adt.html%E4%B8%8A%E6%9C%89%E4%B8%8B%E8%BD%BD%EF%BC%89%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E5%88%9A%E5%88%9A%E8%BE%93%E5%85%A5Location%E7%9A%84%E7%95%8C%E9%9D%A2%E7%82%B9%E5%87%BBArchive%E9%80%89%E6%8B%A9zip%E5%8C%85%E5%AE%89%E8%A3%85%EF%BC%9A">http://androidappdocs.appspot.com/sdk/eclipse-adt.html%E4%B8%8A%E6%9C%89%E4%B8%8B%E8%BD%BD%EF%BC%89%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E5%88%9A%E5%88%9A%E8%BE%93%E5%85%A5Location%E7%9A%84%E7%95%8C%E9%9D%A2%E7%82%B9%E5%87%BBArchive%E9%80%89%E6%8B%A9zip%E5%8C%85%E5%AE%89%E8%A3%85%EF%BC%9A</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image010.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image010_thumb.jpg" alt="clip_image010" /></a></p>
+
+<ol>
+<li>装完ADT，eclipse依次点击Window->Preferences->Android，选择SDK根目录。这样便装完了，可以新建个Android Project跑个helloworld看看效果。</li>
+</ol>
+
+
+<p>ps:    <br/>
+1. 要是启动simulator有问题，在命令行中输入android create avd –name mySimulatorName –target 2先创建AVD。</p>
+
+<ol>
+<li><p>要是控制台出现错误信息Android requires .class compatibility set to 5.0. Please fix project properties，选择 project &ndash;> Android Tools &ndash;>Fix Project Properties。</p></li>
+<li><p>Android界面可视化编辑工具——>DroidDraw，可以拖出界面，生成的XML布局文件拷贝进自己的工程里。</p></li>
+<li><p>模拟器要记得定时清理文件，不然有可能会占很多空间：c:\documents and settings\Administrator\Local Settings\Temp\AndroidEmulator中的.tmp文件都可以删除。</p></li>
+<li><p>每个SDK版本都有其相应的ADT版本。</p></li>
+</ol>
+
+
+<p><strong>简单的helloworld</strong><strong>程序</strong></p>
+
+<p>1.<a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image012.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image012_thumb.jpg" alt="clip_image012" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image014.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image014_thumb.jpg" alt="clip_image014" /></a></p>
+
+<ol>
+<li>包的目录结构如下所示：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image016.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image016_thumb.jpg" alt="clip_image016" /></a></p>
+
+<ol>
+<li>对项目右键Run as-> Android Application，等模拟器启动，第一次启动要很久（google上有解决办法），启动完毕运行应用程序，Hello World !</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image018.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image018_thumb.jpg" alt="clip_image018" /></a></p>
+
+<p>ps:   <br/>
+1. 如何看到System.out.println打印的信息？</p>
+
+<p>不像普通的java程序可以在控制台中看到，我们需要在logcat里查看调试信息。具体方法如下：</p>
+
+<p>1) 点击Window->Show View->Other->Android->Logcat</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image020.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image020_thumb.jpg" alt="clip_image020" /></a></p>
+
+<p>2) 于是在应用程序运行过程中所有的调试信息都可以在这里看到：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image022.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image022_thumb.jpg" alt="clip_image022" /></a></p>
+
+<ol>
+<li>在这里（<a href="http://androidappdocs.appspot.com/reference/packages.html%EF%BC%89%E5%8F%AF%E4%BB%A5%E6%9F%A5%E7%9C%8B%E5%88%B0Android">http://androidappdocs.appspot.com/reference/packages.html%EF%BC%89%E5%8F%AF%E4%BB%A5%E6%9F%A5%E7%9C%8B%E5%88%B0Android</a> API。</li>
+</ol>
+
+
+<p><strong>用SensorSimulator</strong><strong>向Android</strong><strong>模拟器发送模拟信号</strong></p>
+
+<p>Android中传感器的类型有方向、加速度、光线、磁场、临近性、温度等，本文以较有代表性的加速度传感器为例，旨在说清传感器应用开发的流程。</p>
+
+<p>我们要想办法向Android模拟器传送加速度改变的信号，以便让应用程序监控到事件并作出响应。Android SDK中貌似没有和模拟器搭配使用的类似工具，幸运的是国外有个OpenIntents团队开发的Sensor simulator工具（可以在<a href="http://code.google.com/p/openintents/downloads/">http://code.google.com/p/openintents/downloads/</a> list上找到sensorsimulator-1.0.0-beta1.zip下载，在<a href="http://openintents.org/en/node/6%E4%B8%8A%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E5%9C%A8%E7%BA%BF%E7%9A%84Applet%E6%BC%94%E7%A4%BA%E7%A8%8B%E5%BA%8F%EF%BC%89%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E3%80%82">http://openintents.org/en/node/6%E4%B8%8A%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E5%9C%A8%E7%BA%BF%E7%9A%84Applet%E6%BC%94%E7%A4%BA%E7%A8%8B%E5%BA%8F%EF%BC%89%E5%8F%AF%E4%BB%A5%E8%A7%A3%E5%86%B3%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E3%80%82</a></p>
+
+<p>关于加速度传感器是怎么回事，这里就不多解释了，有兴趣可以参考下这个网页（说的是iphone的，但Android原理类似，<a href="http://www.riameeting.com/node/538%EF%BC%89%E3%80%82">http://www.riameeting.com/node/538%EF%BC%89%E3%80%82</a></p>
+
+<p>首先介绍下加速度传感器Demo的应用场景：把手机当做一个平面，平面上有个小球在滚动，Demo中模拟出现实世界球在重力作用下的滚动轨迹。由于没有真机，要在模拟器上实现，所以必须有工具能制造出使模拟器“上下左右前后旋转”的错觉，Sensor simulator便是通过调整虚拟手机的摆放位置向Android模拟器传达信息。</p>
+
+<p>下面介绍如何使用Sensor Simulator：</p>
+
+<ol>
+<li><p>将文件解压，打开bin下的sensorsimulator.jar</p></li>
+<li><p>将bin下的SensorSimulatorSettings.apk安装到模拟器中，具体方法是先打开模拟器，然后在命令行中输入adb install SensorSimulatorSettings.apk，如图安装成功：</p></li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image024.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image024_thumb.jpg" alt="clip_image024" /></a></p>
+
+<ol>
+<li>在模拟器中打开Sensor Simulator Settings，在模拟器中将IP配置为和PC上Sensor Simulator中的IP相同，如图所示：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image026.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image026_thumb.jpg" alt="clip_image026" /></a></p>
+
+<ol>
+<li>在Sensor Simulator Settings中点击Testing，点击Connect，勾选几种传感器类型使之enable，如下图所示：</li>
+</ol>
+
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image028.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image028_thumb.jpg" alt="clip_image028" /></a></p>
+
+<p><strong>加速度传感器演示程序</strong></p>
+
+<p>Sensor Simulator配置完毕了，我们可以建个小项目来验证下：</p>
+
+<ol>
+<li><p>新建个SensorBall的项目，通过Add jars的方法将sensorsimulator-1.0.0-beta1\lib下的sensorsimulator-lib.jar添加到工程中来</p></li>
+<li><p>在AndroidManifest.xml中添加</p></li>
+</ol>
+
+
+<p>&lt;uses-permission android:name=&ldquo;android.permission.INTERNET&rdquo;/></p>
+
+<ol>
+<li>跟传统的mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);方式获取传感器服务不同，这里要用</li>
+</ol>
+
+
+<p>mSensorManager = SensorManagerSimulator.getSystemService(this, SENSOR_SERVICE);这种方式</p>
+
+<ol>
+<li>使用mSensorManager.connectSimulator();连接到Sensor simulator</li>
+</ol>
+
+
+<p>由于代码不是自己写的，网上看到的，就不在这里贴代码了，有兴趣的可以参考这里：</p>
+
+<p><a href="http://ophonesdn.com/article/show/183">http://ophonesdn.com/article/show/183</a></p>
+
+<p>最后的效果如下图所示：</p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image030.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image030_thumb.jpg" alt="clip_image030" /></a></p>
+
+<p>当调整Sensor simulator中虚拟手机位置时，Android模拟器中的小球位置也会发生变化。</p>
+
+<p>关于Sensor simulator的更详细的介绍和使用方法，可以参考下面这两个网页：<a href="http://openintents.org/en/node/23">http://openintents.org/en/node/23</a>   <br/>
+<a href="http://code.google.com/p/openintents/wiki/SensorSimulator">http://code.google.com/p/openintents/wiki/SensorSimulator</a></p>
+
+<p>（完）</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[(旧文迁移) Android开发（一）]]></title>
+    <link href="http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89/"/>
+    <updated>2013-05-02T18:56:02+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89</id>
+    <content type="html"><![CDATA[<p>1、环境配置</p>
+
+<ul>
+<li><p>安装Eclipse3.5，Android SDK，ADT插件（Help->Install New Softare->“<a href="https://dl-ssl.google.com/android/eclipse">https://dl-ssl.google.com/android/eclipse</a>”->弹出来的两个都选上->装好重启下），参考“<a href="http://androidappdocs.appspot.com/sdk/eclipse-adt.html">http://androidappdocs.appspot.com/sdk/eclipse-adt.html</a>”</p></li>
+<li><p>配置环境变量，在Path后添加“C:\android-sdk_r3-windows\android-sdk-windows\tools”</p></li>
+</ul>
+
+
+<p>2、导入已有项目不要用import，而要用File->New->Android Project，不然Eclipse无法识别为Android项目。</p>
+
+<p>3、模拟器打开后一直开着好了，不用每个程序运行完就关掉，第一次打开模拟器时间较长。</p>
+
+<p>4、在命令行输入adb shell可进入模拟器的Shell环境中，要删除模拟器中自己写的程序，则：cd /data/app –> ls –>rm *.apk。</p>
+
+<p>5、学习资料</p>
+
+<ul>
+<li><p>SDK中有很多Sample可以运行</p></li>
+<li><p><a href="http://android.toolib.cn/guide/index.php">http://android.toolib.cn/guide/index.php</a> 有API文档和开发向导，有很多教程和范例</p></li>
+<li><p><a href="http://www.rbgrn.net/">http://www.rbgrn.net/</a> 有Android 3D游戏开发日志</p></li>
+<li><p><a href="http://www.anddev.org/">http://www.anddev.org/</a> 最大的英文Android论坛</p></li>
+<li><p><a href="http://code.google.com/intl/zh-CN/android/index.html">http://code.google.com/intl/zh-CN/android/index.html</a> 不过经常性不能访问</p></li>
+<li><p><a href="http://www.hiapk.com/bbs/">http://www.hiapk.com/bbs/</a> 最大的中文Android论坛</p></li>
+<li><p><a href="http://www.chinaup.org/docs/documentation.html">http://www.chinaup.org/docs/documentation.html</a> 第二个的中文版</p></li>
+<li><p><a href="http://rayleung.javaeye.com/">http://rayleung.javaeye.com/</a> 关注Android的博客</p></li>
+<li><p><a href="http://www.android123.com.cn/">http://www.android123.com.cn/</a> 同上</p></li>
+<li><p><a href="http://code.google.com/p/androidbmi/wiki/IntroAndroid">http://code.google.com/p/androidbmi/wiki/IntroAndroid</a> 台湾资料</p></li>
+<li><p>《Android A Programmer&rsquo;s Guide》</p></li>
+<li><p>高焕堂的几本书</p></li>
+<li><p>《Android SDK开发范例大全》</p></li>
+<li><p>《深入浅出Google Android》</p></li>
+<li><p>《Android基础教程》</p></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[读技术书的几条tip]]></title>
+    <link href="http://njuxjy.github.io/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip/"/>
+    <updated>2011-01-28T10:47:01+08:00</updated>
+    <id>http://njuxjy.github.io/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip</id>
+    <content type="html"><![CDATA[<p>最近想学下python，搞了个电子版的《Head First Python》读下，才看了前言部分，作者关于阅读技术书籍有几条tip，目的是为了让读者理解透彻，让阅读有趣味，不至于瞌睡，现摘录如下：</p>
+
+<ol>
+<li><p> <strong>Slow down. The more you understand, the less you have to memorize.        <br/>
+</strong>多思，重在理解。</p></li>
+<li><p> <strong>Do the exercises. Write your own notes.        <br/>
+</strong>身边放一支笔和一张纸，做点题，在纸上涂涂画画。</p></li>
+<li><p> <strong>Read the “There are No Dumb Questions.”        <br/>
+</strong>书中的问题试着去解答。</p></li>
+<li><p> <strong>Make this the last thing you read before bed. Or at least the last challenging thing.        <br/>
+</strong>作者的意思是最好睡前读，因为学习了新的知识后大脑需要时间去消化记忆，如果这时间做了别的事情，学到的东西会遗忘。这条不太同意。</p></li>
+<li><p> <strong>Talk about it. Out loud.        <br/>
+</strong>直到能向别人清晰讲述一个知识点后，才算真正掌握了它。</p></li>
+<li><p> <strong>Drink water. Lots of it.        <br/>
+</strong>阅读时多喝水，脑子需要润滑剂。</p></li>
+<li><p> <strong>Listen to your brain.        <br/>
+</strong>一旦发现自己无法集中注意力，或很快忘记自己刚读的内容，立马休息片刻。</p></li>
+<li><p> <strong>Feel something.        <br/>
+</strong>最好阅读时能有情绪上的收获。要么拍着大腿说“这段写的太好了”，或者看完一章后抱怨说“这章简直在放屁”，或者觉得“这书写的太枯燥无聊了，我应该扔了出去玩一会”，这些都比翻完一本书一点反应也没有强。</p></li>
+<li><p> <strong>Write a lot of code!        <br/>
+</strong>不能同意得更多。</p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

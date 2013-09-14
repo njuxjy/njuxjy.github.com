@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>(旧文迁移) 关于fork() - 不可卷也</title>
+  <meta name="author" content="njuxjy">
+
+  
+  <meta name="description" content="APUE上关于fork的使用有段比较经典的代码： if ((pid = fork()) &lt; 0) { err_sys(&ldquo;fork error&rdquo;); } else if (pid == 0) { / child / execlp(buf, buf, (char )0 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">不可卷也</a></h1>
+  
+    <h2>njuxjy's blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:njuxjy.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">(旧文迁移) 关于fork()</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:08:37+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>APUE上关于fork的使用有段比较经典的代码：   <br/>
+if ((pid = fork()) &lt; 0) {    <br/>
+err_sys(&ldquo;fork error&rdquo;);    <br/>
+} else if (pid == 0) { /<em> child </em>/    <br/>
+execlp(buf, buf, (char <em>)0);    <br/>
+err_ret(&ldquo;couldn&rsquo;t execute: %s&rdquo;, buf);    <br/>
+exit(127);    <br/>
+}    <br/>
+/</em> parent */    <br/>
+if ((pid = waitpid(pid, &amp;status, 0)) &lt; 0)    <br/>
+err_sys(&ldquo;waitpid error&rdquo;);    <br/>
+一开始看这段代码会有疑惑，比如说else if(pid==0)执行子进程代码那块，字面上理解这段代码就是说进程号为0则判断其为子进程，则执行里面的代码，可是，子进程号为0，这怎么可能？ 因此我觉得这里将fork的返回值取名为pid有误导读者的影响，改为fRetValue或者干脆叫i会不会好点？    <br/>
+下面是网上摘的一段fork的解释：    <br/>
+<strong>调用方法</strong></p>
+
+<h1>include</h1>
+
+<h1>include</h1>
+
+<p>pid_t fork(void);    <br/>
+正确返回：在父进程中返回子进程的进程号，在子进程中返回0    <br/>
+错误返回：-1    <br/>
+子进程是父进程的一个拷贝。即，子进程从父进程得到了数据段和堆栈段的拷贝，这些需要分配新的内存；而对于只读的代码段，通常使用共享内存的方式访问。fork返回后，子进程和父进程都从调用fork函数的下一条语句开始执行。    <br/>
+父进程与子进程的不同之处在于：fork的返回值不同——父进程中的返回值为子进程的进程号，而子进程为0    <br/>
+关于fork，还有个问题，就是print缓冲区被子进程复制的问题，如果执行下面这段代码：    <br/>
+pid_t fRetValue;    <br/>
+printf(“fork!”);    <br/>
+fRetValue=fork();    <br/>
+if (fRetValue &lt; 0)    <br/>
+printf(“error in fork!”);    <br/>
+else if (fRetValue == 0)    <br/>
+printf(“i am the child process, my process id is %d”,getpid());    <br/>
+else    <br/>
+printf(“i am the parent process, my process id is %d”,getpid());    <br/>
+父子进程都会打印出fork!，而如果将printf(“fork!”)改为printf(“fork!\n”)就只会打印出一个fork!，同样摘了段解释如下：    <br/>
+主要的区别是因为有了一个\n回车符号这就跟Printf的缓冲机制有关了,printf某些内容时,操作系统仅仅是把该内容放到了stdout的缓冲队列里了,并没有实际的写到屏幕上但是,只要看到有 n 则会立即刷新stdout,因此就马上能够打印了.运行了printf(“AAAAAA”) 后, AAAAAA 仅仅被放到了缓冲里,再运行到fork时,缓冲里面的 AAAAAA 被子进程继承了因此在子进程度stdout缓冲里面就也有了 AAAAAA.所以,你最终看到的会是 AAAAAA 被printf了2次!!!!而运行 printf(“AAAAAAn”)后, AAAAAA 被立即打印到了屏幕上,之后fork到的子进程里的stdout缓冲里不会有 AAAAAA 内容因此你看到的结果会是 AAAAAA 被printf了1次!!!!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">njuxjy</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:08:37+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ji-zhu/'>技术</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89/" title="Previous Post: (旧文迁移) 为什么Windows7那么贵？（译文）">&laquo; (旧文迁移) 为什么Windows7那么贵？（译文）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/" title="Next Post: (旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文）">(旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文） &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - njuxjy -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
