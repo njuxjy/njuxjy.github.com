@@ -15,7 +15,7 @@ categories:
 
 原图如下：
 
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/Nostalgia1.bmp)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/Nostalgia1.bmp)
+{% img /images/2011/11/Nostalgia1.bmp %}
 
 
 
@@ -27,36 +27,41 @@ a. 基础效果
 
 	
   1. 黑白
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/blackwhite.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/blackwhite.png)
+  
+{% img /images/2011/11/blackwhite.png %}
 
 	
   2. 浮雕
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/emboss.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/emboss.png)
 
+{% img /images/2011/11/emboss.png %}
 	
   3. 素描
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/sumiao.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/sumiao.png)
 
+{% img /images/2011/11/sumiao.png %}
 	
   4. lomo
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/lomo.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/lomo.png)
+
+{% img /images/2011/11/lomo.png %}
 
 	
   5. 马赛克
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/mosaic.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/mosaic.png)
+
+{% img /images/2011/11/mosaic.png %}
 
 	
   6. 扫描线
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/scanline.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/scanline.png)
+
+{% img /images/2011/11/scanline.png %}
 
 	
   7. 波普
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/bopo.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/bopo.png)
+
+{% img /images/2011/11/bopo.png %}
 
 	
   8. 鱼眼
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/fisheye.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/fisheye.png)
 
+{% img /images/2011/11/fisheye.png %}
 
 
 
@@ -76,12 +81,12 @@ b. 进阶效果
 
 	
   1. 早晨
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/morning.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/morning.png)
 
+{% img /images/2011/11/morning.png %}
 	
   2. 星光
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/star.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/star.png)
 
+{% img /images/2011/11/star.png %}
 
 
 
@@ -109,12 +114,12 @@ c.高级特效
 
 	
   1. 老照片
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/old-photo.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/old-photo.png)
 
+{% img /images/2011/11/old-photo.png %}
 	
   2. Nostalgia
-[![](http://www.xiaojiayi.com/wp-content/uploads/2011/11/nostalgia.png)](http://www.xiaojiayi.com/wp-content/uploads/2011/11/nostalgia.png)
 
+{% img /images/2011/11/nostalgia.png %}
 
 
 
