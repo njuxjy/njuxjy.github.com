@@ -17,9 +17,9 @@ categories:
 
   1. 论文题目叫“××系统的设计与实现”  
   2. 文章的整体结构如下图所示：  
-![image](http://www.xiaojiayi.com/wp-content/uploads/2011/07/image.png)  
+{% img /images/2011/07/image.png %}
   3. 每章内部章节结构如下图所示：  
-![image](http://www.xiaojiayi.com/wp-content/uploads/2011/07/image14.png)  
+{% img /images/2011/07/image14.png %}
   4. 摘要和第五张写满一页，可超出。  
   5. 废话一定要多，要使得文字看着有血有肉，“不要写的像技术文档，要像论文，但也不能写的像博客”--原话。 
 
@@ -34,9 +34,9 @@ categories:
   7. 图片不要太靠页面的边缘。  
   8. 不要出现一章之内大面积留白的情况。会出现这种情况，大部分是因为有图片要放在那块空白区却放不下，只好移到下一页去。可以考虑把下面的文字提上来补全这块空白，然后下面放图片，在上面的文字中用图几点几指示一下图片的位置。  
   9. 不要有不加任何标注的短语。举个例子，不能出现以下情况：  
-![image](http://www.xiaojiayi.com/wp-content/uploads/2011/07/image8.png)  
+{% img /images/2011/07/image8.png %}
 而应该写成以下样子：  
-![image](http://www.xiaojiayi.com/wp-content/uploads/2011/07/image11.png)  
+{% img /images/2011/07/image11.png %}
 即要给它们加上标注，按照原话说是“不加像技术文档，不像论文”。  
   10. 所有要贴的代码不能用截图的方式，应该用文本框，在框内黏贴。  
   11. 注意所有的图、表、代码框等带框的东西和上面下面的文字之间的距离要保持一致。  
