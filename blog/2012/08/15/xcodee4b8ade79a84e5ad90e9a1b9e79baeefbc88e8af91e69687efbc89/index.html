@@ -107,7 +107,7 @@
 
 <p>这是我自己第一次使用子项目。我的DTRichTextEditor框架很多地方用到了我的两个开源项目。我机器上的项目结构是这样的：</p>
 
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/1.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/1.png" alt="" /></a></p>
+<p><img src="/images/2012/08/1.png"></p>
 
 <p>文件系统结构和组结构基本一致。我有一个叫Externals的文件夹，里面有这两个GitHub项目的克隆。当你把xcodeproj加入到你项目中时，它会变成如图所示这样，你可以同时看到子项目中的源代码。更赞的是，当你调试的时候，你可以单步调试到子项目中的代码，就好像它们在本地一样。</p>
 
@@ -119,7 +119,7 @@
 
 <p>你至少需要有一个用来编译iOS静态库的target。在你项目根文件中添加这么一个target。然后选择头文件和实现文件加入这个库。</p>
 
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/11.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/11.png" alt="" /></a></p>
+<p><img src="/images/2012/08/11.png"></p>
 
 <p>我喜欢将target的命名和产品不一样。我想让target名叫“Static Library”，然后在build settings中将产品命名为DTWebArchive，这样Producs下便产生了一个叫libDTWebArchive.a的产品。</p>
 
@@ -135,13 +135,13 @@
 
 <p>接下来你需要在build settings中添加路径，以便可以寻找到子项目的头文件。你不能将.h文件加入你的主项目中，但你可以告诉编译器哪里可以找到它们。指定相对于你项目跟文件夹的路径。我选择了recursive，因为我有多个子项目，这样的话我仅需要指定该设置一次。</p>
 
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/12.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/12.png" alt="" /></a></p>
+<p><img src="/images/2012/08/12.png"></p>
 
 <p>这样搭建好以后，你可以跟往常一样使用import语句来导入子项目中的头文件了。</p>
 
 <p>你告诉链接器在子项目中链接静态库。在Build Phasese选项卡的“Link Binary With Libraries”下设置。你可能想把静态库改为&#8221;Required&#8221;，因为我们无法构建动态库（dylib），苹果在他们的框架中已经使用了。</p>
 
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2012/08/13.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2012/08/13.png" alt="" /></a></p>
+<p><img src="/images/2012/08/13.png"></p>
 
 <p>你还要将静态库targets加为依赖。这样的话编译系统就知道如果在依赖中的代码有变更的话，它需要重新编译应用目标代码。</p>
 
