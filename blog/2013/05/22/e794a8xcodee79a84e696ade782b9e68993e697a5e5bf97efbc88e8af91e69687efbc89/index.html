@@ -9,7 +9,7 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="原文地址：http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/ ========================================= If you don’t already know about it, &hellip;">
+  <meta name="description" content="原文地址：http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/ ========================================= 你知道不，为Xcode里的断点设置一些动作就可以很好地反复监控你的代码， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,6 @@
 
 <p>=========================================</p>
 
-<p>If you don’t already know about it, setting actions for breakpoints in Xcode is a great way to monitor repetitive code without adding a bunch of NSLog() to your code.</p>
-
-<p>After setting a breakpoint, right-click and select “Edit Breakpoint…”. Then select “Debugger Command” for the Action. You can enter any valid debugger command at this point. When you check “Automatically continue after evaluating”, the debugger will run your command and your code doesn’t stop. Sweet.</p>
-
-<p>This approach works great when you want to log the contents of a variable by entering a command like <code>po myVar</code>. But there’s a problem: I often want to know where this variable is getting logged, so I ended up creating another breakpoint with a <code>script print "myMethod in myClass"</code> (in lldb) or <code>echo myMethod in MyClass\n</code> (in gdb) command.</p>
-
-<p>Great. Now you have to manage two breakpoints instead of one. Worse, when you have code like this:</p>
-
 <p>你知道不，为Xcode里的断点设置一些动作就可以很好地反复监控你的代码，而不需要在代码中加上一堆的NSLog()。</p>
 
 <p>在设置了断点后，右键点击选择&#8221;编辑断点&#8221;，然后在Action处选择“Debugger Command”。你可以在这里输入任何正确的调试命令。当你勾上&#8221;Automatically continue after evaluating&#8221;后，调试器会执行你的命令，而你的代码不会停下来。赞啊。</p>
@@ -124,7 +116,7 @@
 
 <p>举例来说：</p>
 
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/NSLog.png"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/NSLog.png" alt="" /></a></p>
+<p><img src="/images/2013/05/NSLog.png"></p>
 
 <p>我们来分析下这个命令：</p>
 
