@@ -1237,46 +1237,6 @@ fi
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/02/e69992e587a0e5bca0e78ca5e79090e785a7/">(旧文迁移) 晒几张猥琐照</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-02T19:13:31+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>流出自iBay</p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05100.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05100_thumb.jpg" alt="DSC05100" /></a></p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05075.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC05075_thumb.jpg" alt="DSC05075" /></a> <a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC0147.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/DSC0147_thumb.jpg" alt="_DSC0147" /></a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/">(旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文）</a></h1>
     
     
@@ -1424,6 +1384,64 @@ else    <br/>
 printf(“i am the parent process, my process id is %d”,getpid());    <br/>
 父子进程都会打印出fork!，而如果将printf(“fork!”)改为printf(“fork!\n”)就只会打印出一个fork!，同样摘了段解释如下：    <br/>
 主要的区别是因为有了一个\n回车符号这就跟Printf的缓冲机制有关了,printf某些内容时,操作系统仅仅是把该内容放到了stdout的缓冲队列里了,并没有实际的写到屏幕上但是,只要看到有 n 则会立即刷新stdout,因此就马上能够打印了.运行了printf(“AAAAAA”) 后, AAAAAA 仅仅被放到了缓冲里,再运行到fork时,缓冲里面的 AAAAAA 被子进程继承了因此在子进程度stdout缓冲里面就也有了 AAAAAA.所以,你最终看到的会是 AAAAAA 被printf了2次!!!!而运行 printf(“AAAAAAn”)后, AAAAAA 被立即打印到了屏幕上,之后fork到的子进程里的stdout缓冲里不会有 AAAAAA 内容因此你看到的结果会是 AAAAAA 被printf了1次!!!!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89/">(旧文迁移) 为什么Windows7那么贵？（译文）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:06:59+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://www.cringely.com/2009/10/why-windows-7-costs-so-much/">http://www.cringely.com/2009/10/why-windows-7-costs-so-much/</a></p>
+
+<p>我用Windows7已经好几天了，跟Vista和Xp比起来它当然进步许多，相比之下，它需要更少的资源（比Vista少得多），启动的更快，可用性非常好。恩，但它为什么那么贵呢？我知道原因。</p>
+
+<p>为了形成鲜明对比，让我们比较Windows7和可能的竞争对手Mac OS X10.6雪豹。我在这里并非要争论他们谁将谁视为竞争对手，还是两者皆是。然而在市场上，雪豹的升级版是49.95美元 29.95美元（对于五台机器的家庭装来说是99.95美元 49.95美元），而可供用户选择的20种不同的Windows7的版本里最流行的一种（Windows7家庭高级版）要119.95美元。</p>
+
+<p>Windows7是真的要比雪豹贵70美元90美元吗？</p>
+
+<p>（这价格定的明显是在扯淡嘛——Bob说）</p>
+
+<p>问得更好一点应该是为什么微软要把价格设定在以往那么高的标准上？这个问题的答案非常简单：微软压根就没想要你升级到Windows7。</p>
+
+<p>微软是想要你去买一台全新的装有Windows7的电脑。</p>
+
+<p>把价格设定在119.95美元是微软一次成功的运作。他们不希望用户来升级系统，所以通过将价格定得很高这一手段，微软实质上将Windows7的升级税强加在了用户头上。在斯台普斯买一台新的Windows7电脑，软件价格便降到了49.95美元，跟雪豹一样。</p>
+
+<p>从Windows7的税来看，微软热衷于赚钱，但他们将价格定那么高的主要原因是能让我们都去买新电脑。那会使得微软在每个小单元上收入减少一些，但是在整体业务上会带来跟多的收入，例如用户将会决定升级为新电脑上的整套Office软件，而不是单单为了一个新软件在每台机上花费119.95美元。对微软来说，卖一台新的电脑比零售一个软件升级在支持服务上花费少得多。这种定价策略使得微软受到广泛欢迎，同样受益的还有其原始设备制造商，像惠普、戴尔以及其他上百家厂商。</p>
+
+<p>这里还有一个证据可以说明微软的意图：你确实做过Windows7的升级吗？我升级用了七个钟头！这原本不应该要花那么长时间，除非这其中有一部分意图是要阻碍用户升级。雪豹的升级花了我20分钟，但是苹果公司没有取悦任何一家员原始设备制造商（这是关键），并且甚至定价在49.95美元的情况下还是在升级上赚了很多钱。</p>
+
+<p>当Windows95刚刚引进的时候（那时我正在拍摄《书呆子的胜利》），比尔盖茨和杰雷诺那天的部分表演是将一台486/66机器从Windows3.1升级到Windows95。升级过程用了半个钟头。而如今有了更为现代的处理器、内存、磁盘驱动器和声称精简而平凡的新型操作系统，为什么升级Windows7要比其他的多花那么多时间？</p>
+
+<p>不应该是这样的，除非一开始并没有把升级的速度放在特性列表上加以考虑。</p>
 </div>
   
   

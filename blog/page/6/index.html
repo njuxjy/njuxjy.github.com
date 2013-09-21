@@ -9,8 +9,7 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="本文内容非原创，属于网上资源的整理。 ======================================== 8位：（TDesC8），用于二进制数据或者ASCII字符串
-16位：（TDesC16），默认，Unicode 描述符可以分为五类： 抽象类（Abstract）：（TDes、 &hellip;">
+  <meta name="description" content="本文内容非原创，属于网上资源的整理。 ======================================== 基本数据类型  在Symbian中，很多C++基本类型都被重新定义了，最好使用Symbian的，理由如下： 所有Symbian API都是用的Symbianc重定义的 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,327 +65,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2/">Symbian学习笔记二（字符串）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-01T16:18:15+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文内容非原创，属于网上资源的整理。</p>
-
-<p>========================================</p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/cfdb8e3b00aa7e6fb9998fd9.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/cfdb8e3b00aa7e6fb9998fd9.jpg" alt="" /></a></p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/a3b3aa30c8e67cb31b4cffa13.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/a3b3aa30c8e67cb31b4cffa13.jpg" alt="" /></a></p>
-
-<ul>
-<li><p>8位：（TDesC8），用于二进制数据或者ASCII字符串</p></li>
-<li><p>16位：（TDesC16），默认，Unicode</p></li>
-</ul>
-
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/32.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/32.jpg" alt="" /></a></p>
-
-<p>描述符可以分为五类：</p>
-
-<ol>
-<li><p> 抽象类（Abstract）：（TDes、TDesC、Tdes8、TdesC8），其他描述符的基类，仅提供接口和基本功能，不能被实例化，一般只用作函数的参数。</p></li>
-<li><p>  文字常量（Literal）：（TlitC、<em>LIT()），用于存储文字字符串（literal string），即C中字符串常量，通常使用</em>LIT()这种方式（当然还有<em>L()和</em>L8()的描述方式，但都不提倡用）。</p></li>
-<li><p>  栈类（Buffer）：（Tbuf、TbufC、 Tbuf8、TbufC8），数据存储于栈上，最基本的描述符变量类型，大小在编译时确定，包含描述符本身数据，使用最为普遍</p></li>
-<li><p> 堆类（Heap）：（HbufC、HbufC8），数据存储于堆上，大小在运行时确定，也就是是用来处理动态申请的描述符类。</p></li>
-<li><p> 指针类（Pointer）：（TPtr、TPtrC、TPtr8、TPtrC8），本身不包含描述符数据，但是包含长度数据，而且还包含一个指向位于描述符之外数据的指针。</p></li>
-</ol>
-
-
-<p>1、  文字描述符常量</p>
-
-<ol>
-<li> LIT(KMyFile, &#8221;c:\System\Apps\MyApp\MyFile.jpg&#8221;);  </li>
-</ol>
-
-
-<p><em>L()可以生成一个指向字符值的地址（TPtrC），它经常被用来传递字符串到函数中（包括描述符的构造函数和格式化函数）；同理</em>L8()则可以生成一个指向二进制数据的地址（TPtrC8）举例如下：</p>
-
-<ol>
-<li><p> NEikonEnvironment::MessageBox(_L(&ldquo;Error: init file not found!&rdquo;));   </p></li>
-<li><p> //数字转字符串   </p></li>
-<li><p> TBuf16<20> buf;   </p></li>
-<li><p> TInt iNum = 20;   </p></li>
-<li><p> buf.Format( _L( &#8221;%d&#8221; ) , iNum  );  </p></li>
-</ol>
-
-
-<p>2、  栈描述符</p>
-
-<ol>
-<li><p> LIT(Ktext , &#8221;Test Text&#8221;);   </p></li>
-<li><p> _LIT(Ktext1 , &#8221;Test1 Text&#8221;);   </p></li>
-<li><p> _LIT(KXtraText , &#8221;New:&ldquo;);   </p></li>
-<li><p> _LIT(NewText , &#8221;New1&#8221;);   </p></li>
-<li><p> _LIT(NewText1 , &#8221;New2&#8221;);   </p></li>
-<li><p> TBufC<10> Buf1 ( Ktext );//Buf1长度为9 内容 “Test Text”   </p></li>
-<li><p> TBufC<10> Buf2 ( Ktext1 );//Buf2长度为10 内容 “Test1 Text”   </p></li>
-<li><p> // 通过赋值的方式改变数据   </p></li>
-<li><p> Buf2 = Buf1; //Buf2长度变为9 内容 “Test Text”   </p></li>
-<li><p>. //通过使用Des()生成指针改变TBufC的数据   </p></li>
-<li><p>. TPtr Pointer = Buf1.Des();   </p></li>
-<li><p>. // 删除后四个字符   </p></li>
-<li><p>. Pointer.Delete(Pointer.Length()-4, 4 ); //Buf1长度变为5 内容“Test ”//但是内存应该没变   </p></li>
-<li><p>. // 增加新的数据   </p></li>
-<li><p>. Pointer.Append(KXtraText);//Buf1长度为9 内容为“Test New：”   </p></li>
-<li><p>. // 也可以使用下列方式改变数据   </p></li>
-<li><p>. TBufC<10> Buf3(NewText);   </p></li>
-<li><p>. Pointer.Copy(Buf3);//Buf1长度为4，内容为New1   </p></li>
-<li><p>. // 或直接从字符串里获得数据   </p></li>
-<li><p>. Pointer.Copy(NewText1);//Buf1长度为4，内容为New2  </p></li>
-</ol>
-
-
-<p>    以上介绍的是不可修改的栈描述符，而可修改的描述符就不用通过那么复杂的方法来实现修改，它直接可以用Copy、Delete等方法，但是无论可修改的还是不可修改的，一旦指定最大的数据长度后，最大长度就不能进行修改了。</p>
-
-<p>在内存中如下所示:</p>
-
-<ol>
-<li> TBuf<16> helloWorld = KHelloWorld; TInt len = KHelloWorld().Length(); helloWorld[len-1]=&lsquo;?&rsquo;;  </li>
-</ol>
-
-
-<p>TBufC的用法如下：</p>
-
-<ol>
-<li> _LIT(KHelloWorld, &#8221;Hello World&#8221;); const TInt maxBuf = 32; TBufCbuf; TInt currentLen = buf.Length(); // == 0 buf = KHelloWorld; currentLen = buf.Length(); // == 11 TText ch = buf[2]; // == &#8217;l&#8217;  </li>
-</ol>
-
-
-<p> TBuf的用法如下：</p>
-
-<ol>
-<li> const TInt bufLen = 6; TUInt8 objType = 1; TUInt8 objId = 1; TUInt8 xCoord = 128; TUInt8 yCoord = 192; &hellip;. TBuf8<bufLen> buf; buf.Append(objType); buf.Append(objId); &hellip; //we can now do something with the buffer such as writting it to a binary file or send via socket.  </li>
-</ol>
-
-
-<p>3、  堆描述符</p>
-
-<p>堆描述符虽然都是不可修改类型的，但是它仍然具有构造和修改，与栈描述符不同的是：首先对内存需要显示释放，其次是堆描述符没有最大长度的限制，任何时候都可以用ReAlloc（）函数重新申请分配。具体见示例：</p>
-
-<ol>
-<li><p> //例1、构造   </p></li>
-<li><p> //有两种方式来生成一个Heap Descriptor   </p></li>
-<li><p> //第一种方式用New(),NewL(),或NewLC()   </p></li>
-<li><p> //如下操作便可以构建一个存放数据的空间，空间为15，不过目前大小为0   </p></li>
-<li><p> HBufC * Buf = HBufC::NewL(15);   </p></li>
-<li><p> //第二种方式是采用Alloc()，AllocL()或AllcLC()来处理，   </p></li>
-<li><p> //不过这是已经存在的数据的管理方式。新的Heap Descriptor   </p></li>
-<li><p> //可以自动的根据这个内容来构造。   </p></li>
-<li><p> _LIT (KText , &#8221;Test Text&#8221;);   </p></li>
-<li><p>. TBufC<10>  CBuf = KText;   </p></li>
-<li><p>. HBufC * Buf1 = CBuf.AllocL();   </p></li>
-<li><p>. CleanupStack::PushL(Buf1);   </p></li>
-<li><p>. //例2、修改   </p></li>
-<li><p>. //下面是通过赋值方式改变其数据的方法   </p></li>
-<li><p>. _LIT ( KText1 , &#8221;Text1&#8221;);   </p></li>
-<li><p>. *Buf1 = KText1;   </p></li>
-<li><p>. // 通过可修改指针来改变数据的方式   </p></li>
-<li><p>. TPtr Pointer = Buf1->Des();   </p></li>
-<li><p>. //添加数据   </p></li>
-<li><p>. Pointer.Delete(Pointer.Length() - 2, 2);   </p></li>
-<li><p>. //删除数据   </p></li>
-<li><p>. _LIT ( KNew, &#8221;New:&ldquo;);   </p></li>
-<li><p>. Pointer.Append(KNew);   </p></li>
-<li><p>. //例3、重新申请内存   </p></li>
-<li><p>. Buf1 = Buf1->ReAllocL(KText().Length() + KNew().Length());   </p></li>
-<li><p>. CleanupStack::PushL(Buf1);   </p></li>
-<li><p>. //例4、释放内存   </p></li>
-<li><p>. //直接用delete   </p></li>
-<li><p>. delete Buf;   </p></li>
-<li><p>. Buf = NULL;   </p></li>
-<li><p>. //如果在使用NewL、ReAllocL等异常函数后我们使用清除栈压入的话   </p></li>
-<li><p>. //那么我们也可以用清除栈来释放内存   </p></li>
-<li><p>. CleanupStack::PopAndDestroy();   </p></li>
-<li><p>. Buf1 = NULL;  </p></li>
-</ol>
-
-
-<p>注：关于以上用清除栈的方式，个人只是猜测，因为对Symbian的异常处理三部曲，至今仍没有很好的掌握，所以如果有什么误用还望指点。</p>
-
-<ol>
-<li> HBufC<em> heapBuf = HBufC::NewL(KHelloWorld().Length()); </em>heapBuf = KHelloWorld(); delete heapBuf;  </li>
-</ol>
-
-
-<p>     在内存中的情况如下图所示：</p>
-
-<p>    HBufC通常在以下几种情况下使用：</p>
-
-<ul>
-<li><p> 在运行时从资源文件中加载字符串</p></li>
-<li><p> 从用户界面中接收用户输入的字符串</p></li>
-<li><p>从应用程序引擎中接收字符串，如contacts database中的名字</p></li>
-</ul>
-
-
-<p>     对HBufC中的内容进行修改：</p>
-
-<ol>
-<li> HBufC<em> heapBuf = HBufC::NewL(KHelloWorld().Length()); </em>heapBuf = KHelloWorld(); delete heapBuf;  </li>
-</ol>
-
-
-<p>4、  指针描述符</p>
-
-<ol>
-<li><p> //例1、用TBuf和TBufC构造出TPtrC对象   </p></li>
-<li><p> _LIT(KText , &#8221;Test Code&#8221;);   </p></li>
-<li><p> TBufC<10> Buf ( KText );   </p></li>
-<li><p> //或者为 TBuf<10> Buf ( KText );   </p></li>
-<li><p> // Creation of TPtrC using Constructor   </p></li>
-<li><p> TPtrC  Ptr (Buf);   </p></li>
-<li><p> // Creation of TPtrC using Member Function   </p></li>
-<li><p> TPtrC     Ptr1;   </p></li>
-<li><p> Ptr1.Set(Buf);   </p></li>
-<li><p>. //例2、用TText*构造TPtrC   </p></li>
-<li><p>. const TText* text = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
-<li><p>. TPtrC ptr(text);   </p></li>
-<li><p>. // 或者   </p></li>
-<li><p>. TPtrC Ptr2;   </p></li>
-<li><p>. Ptr2.Set(text);   </p></li>
-<li><p>. //如果要存储TText的一部分数据，我们使用下列方法   </p></li>
-<li><p>. TPtrC   ptr4(text, 5);   </p></li>
-<li><p>. //例3、从另一个TPtrC中构造TPtrC   </p></li>
-<li><p>. const TText * text1 = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
-<li><p>. TPtrC Ptr3(text1);   </p></li>
-<li><p>. // 从一个TPtrC中获得另一个TPtrC   </p></li>
-<li><p>. TPtrC p1(Ptr3);   </p></li>
-<li><p>. // 或   </p></li>
-<li><p>. TPtrC p2;   </p></li>
-<li><p>. p2.Set(Ptr3);  </p></li>
-</ol>
-
-
-<p>以上是不可修改的TPtrC的构造，相对应的也有可修改的TPtr的构造，不过我们下面省略了用Set()函数的构造方法</p>
-
-<ol>
-<li><p>  //例1、通过TBufC,HBufC的Des()方法获取   </p></li>
-<li><p> _LIT(KText, &#8221;Test Data&#8221;);   </p></li>
-<li><p> TBufC<10> NBuf ( KText );   </p></li>
-<li><p> TPtr Pointer = NBuf.Des();   </p></li>
-<li><p> //例2、通过指定内存区域和大小来生成   </p></li>
-<li><p> const TText * Text = _S(&ldquo;Test Second&rdquo;);   </p></li>
-<li><p> TPtr Pointer1((TText*)Text, 11, 12);   </p></li>
-<li><p> //例3、 通过另一个TPtr对象来生成   </p></li>
-<li><p> TPtr Pointer2 ( Pointer );  </p></li>
-</ol>
-
-
-<p>对于可修改的TPtr虽然前面用过，但是我们在这里在简单的添加两个例子加深下印象，并且说明指针修改的始终是它指向的描述符：</p>
-
-<ol>
-<li><p> //例1、改变已有TPtr数据的方式：赋值和Copy()方法   </p></li>
-<li><p> _LIT(KText, &#8221;Test Data&#8221;);   </p></li>
-<li><p> _LIT(K1, &#8221;Text1&#8221;);   </p></li>
-<li><p> _LIT(K2, &#8221;Text2&#8221;);   </p></li>
-<li><p> TBufC<10> NBuf ( KText );//NBuf内容为“Test Data”   </p></li>
-<li><p> TPtr Pointer = NBuf.Des(); //Pointer指向NBuf的内容   </p></li>
-<li><p> Pointer = K1; // NBuf内容为“Text1”   </p></li>
-<li><p> Pointer.Copy(K2); // NBuf内容为“Text2”   </p></li>
-<li><p> //例2、直接通过修改长度改变数据内容   </p></li>
-<li><p>. Pointer.SetLength(2); // NBuf内容为&#8221;Te&#8221; 注：实际内存的内容应该没变   </p></li>
-<li><p>. const unsigned char KBuffer[ ] = {0x00, 0x33, 0x66, 0x99, 0xbb, 0xff}; TPtrC8 bufferPtr( KBuffer, sizeof(KBuffer)); iSocket.Write(bufferPtr, iStatus);  </p></li>
-</ol>
-
-
-<p>在内存中如下所示：</p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/4.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/4.jpg" alt="" /></a></p>
-
-<p>TPtr的用法：</p>
-
-<ol>
-<li> _LIT(KHelloWorld, &#8221;Hello World&#8221;); const TInt maxBuf = 32; TBufC<maxBuf> buf; buf = KHelloWorld; TPtr ptr = buf.Des(); ptr[7] = &#8217;a&#8217;;  ptr[8] = &#8217;l&#8217;;  ptr[9] = &#8217;e&#8217;;  ptr[10] = &rsquo;s&#8217;; CEikonEnv::Static()&ndash;>InfoMsg(ptr); // &#8221;Hello Wales&#8221;  </li>
-</ol>
-
-
-<p>5、  抽象描述符</p>
-
-<p>抽象描述符，没有什么好说的，正如前面所说，只用在函数的形参中，通常要强调参数是不可修改的，就用const TDesC&amp;表示，可修改的参数用TDesC&amp;表示。</p>
-
-<ul>
-<li><p>在函数参数中尽量使用基类</p></li>
-<li><p>使用中性的描述符，一般情况下使用TDesC而不是TDesC8或者TDesC16</p></li>
-<li><p>当描述符内容不应该改变时，使用const修饰符</p></li>
-<li><p>经典用法：void SetText(const TDesC&amp; aText);    TPtrC Text() const;</p></li>
-</ul>
-
-
-<p>描述符之间的转换</p>
-
-<p><strong>不可修改向可修改描述符的转换</strong></p>
-
-<p>原则1：通过不可修改描述符类内的Des()函数，将不可修改的描述符转换成可修改的指针描述符</p>
-
-<p>示例1：TBufC转换成TPtr</p>
-
-<ol>
-<li><p> _LIT(KText, &#8221;Test Data&#8221;);   </p></li>
-<li><p> TBufC<10> NBuf ( KText );   </p></li>
-<li><p> TPtr Pointer = NBuf.Des();  </p></li>
-</ol>
-
-
-<p>示例2：HBufC转换成TPtr</p>
-
-<ol>
-<li><p> HBufC * Buf = HBufC::NewL(15);   </p></li>
-<li><p> _LIT (KText , &#8221;Test Text&#8221;);   </p></li>
-<li><p> *Buf = KText;   </p></li>
-<li><p> TPtr Pointer = Buf->Des();  </p></li>
-</ol>
-
-
-<p>原则2：通过TPtr的构造函数或Set()函数可以将TPtrC描述转换为可修改的指针描述符</p>
-
-<p>示例3：TPtrC到TPtr</p>
-
-<ol>
-<li><p> const TText * text1 = _S(&ldquo;Hello World\n&rdquo;);   </p></li>
-<li><p> TPtrC Ptr1(text1);   </p></li>
-<li><p> TPtrC Ptr2(Ptr1);   </p></li>
-<li><p> //可以通过构造函数   </p></li>
-<li><p> TPtr Ptr3((TUint16 *)(Ptr1.Ptr()), Ptr1.Length());   </p></li>
-<li><p> //也可以通过Set()函数   </p></li>
-<li><p> Ptr3.Set((TUint16 *)(Ptr1.Ptr()),Ptr1.Length(), Ptr1.Length());  </p></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -1498,6 +1176,69 @@ njuxjy @ 09.01.15</p>
 <img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/2013458674.jpg" alt="2013458674" /></p></li>
 </ol>
 
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89/">Symbian学习笔记二（字符串）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-01T09:19:13+08:00" pubdate data-updated="true">Jul 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>12213123</p>
+
+<p>123</p>
+
+<p>12</p>
+
+<p>3</p>
+
+<ol>
+<li><p> _LIT(KHello, &#8221;Hello!&ldquo;);   </p></li>
+<li><p> _LIT(KWorld, &#8221;World!&ldquo;);    </p></li>
+<li><p> HBufC* heapBuf = HBufC::NewL(KHello().Length());   </p></li>
+<li><p> *heapBuf = KHello;    //buf holds &#8221;Hello!&ldquo;   </p></li>
+<li><p>   </p></li>
+<li><p> heapBuf = heapBuf->ReAllocL(KHello().Length()   KWorld().Length());   </p></li>
+<li><p> CleanupStack::PushL(heapBuf);   </p></li>
+<li><p>   </p></li>
+<li><p> TPtr ptr (heapBuf->Des());  //DON&#8221;T use TPtr ptr = heapBuf->Des(); this will set maxlen to 6 but not 12&hellip;   </p></li>
+<li><p>. ptr[KHello().Length() - 1] = &#8221; &#8221;;   </p></li>
+<li><p>. ptr  = KWorld;   </p></li>
+<li><p>. iTopLabel -> SetTextL(ptr);   </p></li>
+<li><p>. CleanupStack::PopAndDestroy();   </p></li>
+<li><p>. DrawNow();   </p></li>
+<li><p>.   </p></li>
+</ol>
+
+
+<p> <a href="http://italyslotscasinos.it/">casino online</a></p>
 </div>
   
   
