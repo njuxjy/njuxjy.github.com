@@ -13,6 +13,7 @@ categories:
 之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。
 
 [![](http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png)](http://www.xiaojiayi.com/wp-content/uploads/2013/02/1.png)
+{# img /images/2013/02/1.png #}
 
 界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时，向上滑动时画面中央出现“松开手指取消发送”的提示，向下滑动时出现其他提示，同时一直在录着音。手势的滑动可以发生在该界面的任何部分，在上面的tableview伤滑动也有效。
 

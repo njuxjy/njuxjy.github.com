@@ -301,7 +301,7 @@ httpChannel_ChannelUriUpdated函数在MPNS返回最新URI时被调用，这里�
 SubscribeToService中只是简单地调用了客户端现存的一个接口，将device id和URI上传到服务端，服务端此时已经能做好device id，userid, URI的对应了。这个接口由于加上了URI，所以会比较长，因此少调为妙。
 此时可以telnet db3.notify.live.net 80，post一些数据给微软，顺利的话应该能在客户端接收到push：
 
- [![](http://www.xiaojiayi.com/wp-content/uploads/2012/04/1.png)](http://www.xiaojiayi.com/wp-content/uploads/2012/04/1.png)
+ {% img /images/2012/04/1.png %}
 
 
 #### Step 3. 处理push跳转

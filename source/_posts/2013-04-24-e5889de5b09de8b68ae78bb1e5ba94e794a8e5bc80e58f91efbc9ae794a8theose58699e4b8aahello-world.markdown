@@ -20,7 +20,7 @@ http://iphonesdkdev.blogspot.com/2012/06/how-to-install-thoes-under-xcode-44.htm
 
 环境是Xcode4.6，SDK iOS5.1和6.1。要写个程序让系统在刚启动时弹出hello world对话框，like this:
 
-[![](http://www.xiaojiayi.com/wp-content/uploads/2013/04/11111.jpg)](http://www.xiaojiayi.com/wp-content/uploads/2013/04/11111.jpg)
+{% img /images/2013/04/11111.jpg %}
 
 首先是安装开发工具：
 
