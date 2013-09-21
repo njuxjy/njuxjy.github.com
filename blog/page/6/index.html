@@ -9,7 +9,8 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="本文内容非原创，属于网上资源的整理。 ======================================== 二阶段构造 问题1：为什么需要二阶段构造？ 首先考虑如下的语句： CClassName* ptr = new (ELeave) CClassName();   &hellip;">
+  <meta name="description" content="本文内容非原创，属于网上资源的整理。 ======================================== 8位：（TDesC8），用于二进制数据或者ASCII字符串
+16位：（TDesC16），默认，Unicode 描述符可以分为五类： 抽象类（Abstract）：（TDes、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,353 +66,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89/">Symbian学习笔记三（内存管理）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-01T20:12:48+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本文内容非原创，属于网上资源的整理。</p>
-
-<p>========================================</p>
-
-<p><strong>二阶段构造</strong></p>
-
-<p>问题1：为什么需要二阶段构造？</p>
-
-<p>首先考虑如下的语句：</p>
-
-<ol>
-<li> CClassName* ptr = new (ELeave) CClassName();  </li>
-</ol>
-
-
-<p>在内存有足够空间的情况下，代码首先在堆上分配一个CClassName类型的对象，并将地址赋给ptr指针，然后调用类的构造函数初始化这个对象。</p>
-
-<p>这样，如果类的构造函数出现了异常，则会发生问题，这种异常发生时没有任何指针指向成功分配给CClassName对象的内存区域，因此这些内存成为孤立内存，发生内存泄漏。这就引出了symbian内存处理的一个重要规则：构造函数绝对不能异常退出。</p>
-
-<p>问题2：为什么二阶段函数能够避免内存泄漏？</p>
-
-<p>二阶段构造函数，顾名思义就是将一个对象的构造分为两个阶段：</p>
-
-<p>第一个阶段是常规的的构造函数，在该构造函数中，没有可能导致异常退出的代码；</p>
-
-<p>第二个阶段是可能会产生异常的构造阶段，实现为函数ConstructL()；</p>
-
-<p>这样，对象的构造过程就应当包括了如下的代码：</p>
-
-<ol>
-<li><p> CClassName* self = new (ELeave) CClassName();   </p></li>
-<li><p> CleanupStack::PushL(self);   </p></li>
-<li><p> self->ConstructL();   </p></li>
-<li><p> CleanupStack::Pop(self);  </p></li>
-</ol>
-
-
-<p>这样的构造方式为什么就能够避免内存泄漏呢？下面我们来逐行分析代码：</p>
-
-<ol>
-<li> CClassName* self = new (ELeave) CClassName();  </li>
-</ol>
-
-
-<p>重载的运算符new首先将内存分配给新的self实例，如果分配失败，那么程序异常退出，如果成功给新的对象分配了内存，那么接着执行不会异常退出的第一阶段构造函数；</p>
-
-<ol>
-<li> CleanupStack::PushL(self);  </li>
-</ol>
-
-
-<p>接着我们将本地指针self推入清除栈，因为下面要调用可能发生异常的退出函数。</p>
-
-<ol>
-<li> self->ConstructL();  </li>
-</ol>
-
-
-<p>如果该二阶段构造函数在执行时异常退出，那么新的CClassName的指针由清楚栈负责清楚，避免了内存泄漏；另外，如果该函数没有异常退出，则拥有了一个完全构造的CClassName实例。</p>
-
-<ol>
-<li> CleanupStack::Pop(self);  </li>
-</ol>
-
-
-<p>安全的将本地指针从清除栈中弹出；</p>
-
-<p>每实例化一个对象就要写上述代码确实有些啰嗦了，Symbian OS为了简化实例化的步骤，又引入了NewL(),NewLC()两个函数(其实也可以写成一个NewL(),然而大家都比较推崇同时创建NewL()和NewLC())，其具体的实现方式见问题3；</p>
-
-<p>问题3：如何在新的类中创建二阶段构造函数？</p>
-
-<p>.h头文件：</p>
-
-<ol>
-<li><p> Class CClassName : public CBase   </p></li>
-<li><p> {   </p></li>
-<li><p> public:   </p></li>
-<li><p>        static CClassName* NewL();   </p></li>
-<li><p>        static CClassName* NewlC();   </p></li>
-<li><p>        ~CClassName();   </p></li>
-<li><p> private:   </p></li>
-<li><p>        CClassName(); //第一阶段构造   </p></li>
-<li><p>        void ConstructL(); //第二阶段构造   </p></li>
-<li><p>. ……   </p></li>
-<li><p>. }  </p></li>
-</ol>
-
-
-<p>cpp源文件:</p>
-
-<ol>
-<li><p> CClassName* CClassName::NewL()   </p></li>
-<li><p> {   </p></li>
-<li><p>        CClassName* self = CClassName::NewLC();   </p></li>
-<li><p>        CleanupStack::Pop(self);   </p></li>
-<li><p>        return self;   </p></li>
-<li><p> }   </p></li>
-<li><p> CClassName* CClassName::NewLC()   </p></li>
-<li><p> {   </p></li>
-<li><p>        CClassName* self = new (ELeave) CClassName();   </p></li>
-<li><p>.        CleanupStack::PushL(self);   </p></li>
-<li><p>.        self->ConstructL(); //二阶段构造   </p></li>
-<li><p>.        return self;   </p></li>
-<li><p>. }   </p></li>
-<li><p>. void CClassName::ConstructL()   </p></li>
-<li><p>. {   </p></li>
-<li><p>. /<strong><strong><strong><strong><strong><strong>**可能产生异常的代码</strong></strong></strong></strong></strong></strong>/  </p></li>
-<li><p>. }  </p></li>
-</ol>
-
-
-<p><strong>Why Memory Management</strong></p>
-
-<p>    <a href="http://www.sf.org.cn/symbian-os.html">Symbian OS</a>本身就是为<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=2473&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.zfjd.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=802405&amp;k=%E5%86%85%E5%AD%98">内存</a>和<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5143&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=210306&amp;k=%E8%B5%84%E6%BA%90">资源</a>受限的设备开发的，应用<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4744&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cnzz.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=436188&amp;k=%E7%A8%8B%E5%BA%8F">程序</a>运行过程中很可能碰到内存用光，或者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=6038&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.weibo800.cn&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=638529&amp;k=%E7%A1%AC%E4%BB%B6">硬件</a>资源不可用的情况。而这种exceptions是通过修改程序无法解决的，所以遵守以下几条：</p>
-
-<ul>
-<li><p>尽量不要<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5383&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//biyela.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=167752&amp;k=%E4%BD%BF%E7%94%A8">使用</a>不必要的RAM</p></li>
-<li><p>尽早释放资源，如文件server等</p></li>
-<li><p>当你每次申请内存时，都须准备处理out-of-memory错误</p></li>
-<li><p>当 out-of-memory错误发生时，返回到<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5373&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.hongniang.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=378695&amp;k=%E4%B8%80%E4%B8%AA">一个</a>stable的状态，并释放所有期间申请到的资源</p></li>
-</ul>
-
-
-<p><strong> Stack and Heap</strong></p>
-
-<p>    Stack：默认大小8kb，自动删除，如 TInt i = 0;</p>
-
-<p>    Heap ：至少０.5Mb，由程序员手动删除，如 CMyObj* obj = new (ELeave) CMyObj;</p>
-
-<p><strong>Leaves</strong></p>
-
-<p>    首先介绍Conventional C++ Memory Management，在Symbian看来，这是非常低效率的。</p>
-
-<ul>
-<li><p>NULL Pointer Checking  if ((myObj = new CMyObj( ) ) == NULL) { //Error Handling }</p></li>
-<li><p>ANSI C++ Exeption Handling   try { //throw an Exception } catch (int e) { //Error Handling }</p></li>
-</ul>
-
-
-<p>    在Symbian中<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5301&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//bbs.21our.com&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=465235&amp;k=%E6%8E%A8%E8%8D%90">推荐</a><a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=755&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.cntvs.net&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=260104&amp;k=%E9%87%87%E7%94%A8">采用</a>Leave，如果内存或者资源不能分配到，这个<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=4864&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.llf535.com/&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=198436&amp;k=%E4%BB%A3%E7%A0%81">代码</a>就会Leave，沿着Call Stack，直到操作系统或者在某个函数中被Handle掉。</p>
-
-<p>    所有可能Leave的函数最好以L结尾，保证该函数的用户知道这个函数可能Leave。</p>
-
-<p>    Leave的例子：</p>
-
-<ul>
-<li><p>动态内存分配： return new (ELeave) TUint8[1000];</p></li>
-<li><p>产生一个Leave：User::Leave(KErrNotFound);</p></li>
-<li><p>内存不足时Leave：User::LeaveNoMemory();</p></li>
-<li><p>NULL的时候Leave：User::LeaveIfNull(aNotify);</p></li>
-<li><p>当发生错误时Leave：RFs fs; TInt err = fs.Connect(); User::LeaveIfError(err);</p></li>
-</ul>
-
-
-<p>    处理Leave：</p>
-
-<p>    操作系统有默认的处理Leave的方式：</p>
-
-<ul>
-<li><p>在程序启动过程中：直接关闭应用程序。</p></li>
-<li><p>应用程序启动后：显示一个错误消息。</p></li>
-</ul>
-
-
-<p>    开发者<a href="http://action.vogate.com/c/c.php?r=http%3A//www.sf.org.cn/Article/symbiandev/List_12.html&amp;aid=5145&amp;sid=6235007045036118&amp;click=1&amp;url=http%3A//www.vogate.com/flow2.php&amp;v=0&amp;s=http%3A//www.sf.org.cn/Article/symbiandev/200610/19136.html&amp;rn=858573&amp;k=%E5%8F%AF%E4%BB%A5">可以</a>通过trap装置来处理Leave。TRAP(<em>r, </em>s)和TRAPD(<em>r, </em>s)，其中：</p>
-
-<ul>
-<li><p>_r：是一个TInt类型的leave code，默认值为TErrNone。</p></li>
-<li><p>_s：一系列可能Leave的C++ Statements。</p></li>
-<li><p> TRAPD(err, DoFunctionL());   </p></li>
-<li><p> if (err != KErrNone)   </p></li>
-<li><p>     { //Error Handling }   </p></li>
-<li><p> else  </p></li>
-<li><p>     { //Everything is well }  </p></li>
-</ul>
-
-
-<p><strong>  The Cleanup Stack</strong></p>
-
-<p>    Cleanup stack用于存储在leave发生后需要deallocating的局部变量(指针)。即：当一个函数leave了，所有在cleanup stack上的对象会被全部删除掉。</p>
-
-<p>    Cleanup Stack的使用方法：</p>
-
-<p>CleanupStack::PushL(ptr) ：当发生leave时所有内存都会被释放
-CleanupClosePushL(handle)：当发生leave时这个句柄（handler）会被关闭</p>
-
-<p>CleanupStack::Pop(pointer)：第一个元素出栈
-CleanupStack::PopAndDestroy(pointer)：第一个元素出栈并释放内存</p>
-
-<p>    如果一个函数可能leave，检查一下两种情况：</p>
-
-<ul>
-<li><p>如果leave了，是否所有在堆（heap）上的元素都在cleanup stack中了</p></li>
-<li><p>如果没有leave，你是否自己恰当地将他cleanup了</p></li>
-<li><p> CMyClass* CMyClass::NewL(TInt aBufSize)   </p></li>
-<li><p>    {   </p></li>
-<li><p>    CMyClass* self = new (ELeave) CMyClass;   </p></li>
-<li><p>    CleanupStack::PushL(self);   </p></li>
-<li><p>    self->ConstructL(aBufSize);   </p></li>
-<li><p>    CleanupStack::Pop(self);   </p></li>
-<li><p>    return self;   </p></li>
-<li><p>    }  </p></li>
-</ul>
-
-
-<p>    如果某个函数会在cleanup stack上留下一个对象，那么他必须以C结尾。</p>
-
-<p><strong>Two Phase Construction</strong></p>
-
-<p>    C++构造函数一定不能leave。所有内存和资源的分配应该在第二阶段构造函数ConstructL( )中完成。</p>
-
-<p>编码指南，所有用户定义的C类必须：</p>
-
-<ul>
-<li><p>定义NewL和NewLC函数为public static</p></li>
-<li><p>定义ConstructL和C++ Constructor为private</p></li>
-</ul>
-
-
-<p><strong>Best Practise</strong></p>
-
-<p>     Construction的规则：</p>
-
-<ul>
-<li><p>默认的C++构造函数中不能含有可能leave的代码</p></li>
-<li><p>可能发生leave的函数必须在ConstructL中被调用</p></li>
-<li><p>如果基类也有ConstructL，必须首先调用，不要忘了explicit scoping</p></li>
-</ul>
-
-
-<p>    Destruction的规则：</p>
-
-<ul>
-<li><p>C类必须在析构函数中删除它自己所包含的对象</p></li>
-<li><p>在删除一个对象后，把它的指针设为NULL</p></li>
-<li><p>不要删除不是本类所拥有的对象</p></li>
-<li><p>在reallocation前首先删除对象，并且将其指针设为NULL</p></li>
-</ul>
-
-
-<p>    Further Discussion：</p>
-
-<ul>
-<li><p>Preserve Stack Memory：每个进程只有8K，以引用的方式传递参数，大的对象放在堆上</p></li>
-<li><p>Preallocation vs last moment allocation：一般的原则是只在使用前分配资源并且在使用后马上释放。但是preallocation的好处是节约处理时间，并且在没有内存的情况下照常运行（资源已经分配到了）</p></li>
-<li><p>where to put trap harness：最基本的情况是依靠GUI应用程序的框架。根据应用的不同，可以自定义粒度。</p></li>
-<li><p>Error Code Returns vs. leaving functions：在执行某个处理前检测是否会出现问题，如下代码：</p></li>
-</ul>
-
-
-<p>                                    User::LeaveIfError(fs.Connect());</p>
-
-<p><strong>Memory Leaks</strong></p>
-
-<p>    如果你的程序有内存泄露，在模拟器上关闭时会crash。尽早发现并解决你的内存泄露，因为你可以追查到你可能导致内存泄露的代码改动。如果实在找不到，可用下面方法：</p>
-
-<p>    Heap Balance Checking：</p>
-
-<ul>
-<li><p>_UHEAP_MARK</p></li>
-<li><p>_UHEAP_MARKEND</p></li>
-</ul>
-
-
-<p>    用上述这两个宏放在你要检查的代码的开头和结尾，如果发生panic，则说明这段代码中发生了内存泄露。可以嵌套使用。</p>
-
-<p><strong>Panics </strong></p>
-
-<p>    Panic是一个未经处理的exception，暗示着一个无法解决的错误。</p>
-
-<p>一般程序有以下三类错误：</p>
-
-<ul>
-<li><p>程序错误：如引用一个超过数组范围的元素</p></li>
-<li><p>环境错误：内存、磁盘空间不够，或缺少其他资源等</p></li>
-<li><p>用户错误：输入错误数据</p></li>
-</ul>
-
-
-<p>    可以使用trap和cleanup stack技术来解决环境和用户错误，但是对于第一类的程序错误，我们无法恢复，最好是使用User::Panic()函数，它带有两个参数，第一个是string，第二个是Tint。</p>
-
-<p>内存管理的二十二条军规</p>
-
-<p>1、C类必须有析构函数，这是CBase的一个虚函数。
-2、C类的构造函数和ConstructL()必须为protect或private类型的成员函数
-3、在C class中必须有一个NewLC()函数，除非它是嵌套类。NewL()是可选的，并且总是根据NewLC()来实现。
-4、NewL()和NewLC()在c class中必须是static函数。
-5、C类通过指针和引用来传递。
-6、拷贝构造函数在symbian中没有用。
-7、不要一定在析构函数中删除类的成员对象。（生命期结束即可删除）
-8、析构函数中必须对对象进行if检查。即</p>
-
-<ol>
-<li> if(iObject) delete iObject;iObject = NULL;  </li>
-</ol>
-
-
-<p>9、R类没有明确的构造、析构或拷贝构造函数以及赋值操作。
-10、delete a;a=NULL;a=b;标准重新分配过程。
-11、任何可能导致异常退出的函数皆加L后缀。
-12、不要删除非拥有对象（也就是，那些仅仅只使用的对象）
-13、分配动态数组前定义一个合适粒度。
-14、把new换成new(ELeave).
-15、if(函数不能异常退出&amp;&amp;要自己处理错误时)使用TRAP&amp;&amp;不要过多嵌套。
-16、if(aObject被一个自动变量指针引用&amp;&amp;将进行一个可能在aObject生存期内Leave的操作）
-CleanupStack::PushL(aObject);
-17、决不能把一个i前缀的成员变量PushL入清理栈。
-18、构造函数决不能Leave，把可能异常退出的语句放到ConstructL()中去。
-19、Symbian的默认栈容量为8k，小心使用递归。
-20、TBuf的长度最好不超16，必要的情况下用HBufC代替TBuf.
-21、使用__UHEAP_MAEK 宏来检测你的内存状况。
-22、尽可能早的删除一切失去使用价值的东西，不要等到函数尾部（自动变量）或在析构函数中才删除（成员变量）。</p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -1778,6 +1432,72 @@ njuxjy @ 09.01.15</p>
 
 
 <p>　　论文做成这样，答辩基本就是个过场了。因为你用论文表明了你的态度，而你的<strong>表现在纸上的态度</strong>是他们看重的唯一一点而已。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/14/e68891e794a8e8bf87e79a84e6898be69cba/">我用过的手机</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T23:29:12+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>手机真正成为我的必需品是在读大学以后。在那以前，我并没有属于自己的一部手机。家长和学校也默契地达成了学生不准带手机进课堂的协议。那时候，课业压力大，人际圈子窄，找谁站起来在班级里喊一声就行了，犯不着那几毛钱短信费。手机的功能也不像今天那么强大，实在是没有欲望冒着写检查的危险在课桌底下偷偷地玩几局贪吃蛇之类的游戏。在家里也用不着手机，有事一个电话解决，右手在那时候是用来握笔杆子算数学公式的，不是用来偷偷按键点发送信息骚扰姑娘的。所以说，没有手机在那时中学生眼里是不能再正常的事，就跟不准进网吧不准早恋不准看毛片一样正常。<br/>
+扯远了，简单介绍下用过的手机 吧。</p>
+
+<ol>
+<li><p> 科健——这是我上初中时爸爸用的手机，可能是他的第一部手机，也是我玩过的第一部。网上已经不可能找到图片了，找了张样子相像的放下面，不过颜色是黑色的。<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/99a09e562a73.jpg" alt="科健" /> <br/>
+特意查了下，科健公司在1984年就成立了。当时貌似科健还不错的，现在还不知道有没有人去买了。这玩意麻雀虽小五脏俱全，不像现在有些手机啥功能都有就是不能打电话（我不是说iPhone4）。窄窄的蓝色液晶屏幕，按键饱满，音量适中，质感柔和，机身呈流线型……可惜早已断货，不然实属馈赠亲友之上品。此手机第一次让我感到了科技的力量，因为它所具备的语音拨号功能是当时计算机白痴的我前所未见的。虽然爸爸经常对着喇叭喊半天它也识别不出来。</p></li>
+<li><p> 熊猫——爸爸用的第二款手机，我高中时候他用的，是翻盖手机，16和弦。当时觉得从单调的电子音过度到和弦太酷了，这款手机肯定特牛逼。以至于高考结束后的日子还带着它出去参加各种同学聚会，太囧了。样子大概是这样：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/panda.jpg" alt="panda" /> <br/>
+貌似熊猫现在倒闭了吧，搜出来两个像官网的网址都打不开，淘宝上搜熊猫手机也没有卖的，这张图也是找了好久才找到的一张。<br/>
+对它的记忆并不多，现在只记得它爽朗的铃声了。但是看到它就会想起高中那段青葱岁月。</p></li>
+<li><p> 迪比特——高中里妈妈用的手机。通体红色，信号不好，响应慢，系统落后。现在只记得来短信时那一短促的嘀声。网上找到了它的图片：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/dibite.jpg" alt="dibite" /> <br/>
+妈妈用的第一部手机，舅妈给她的，她没买过手机，现在用的都是爸爸和我用下来的手机。她用手机的目的有两个，一个是给我发几个字提醒我注意身体，一个是带在身上方便我和爸爸找她。</p></li>
+<li><p> 松下X300——属于我自己的第一款手机。高考结束后买的，当时价格是2500左右。可以翻开屏幕拍照摄像。样子如下图：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/songxia.jpg" alt="songxia" /> <br/>
+我用它用了两年，最后被我自己忘在了软院的自习室里，第二天一大早赶过去发现已经没有了。那一个月是我本科时最倒霉的一个月，连着丢了两个手机，自行车轮胎被人拆了，教材被人偷了，笔记本被人偷了。<br/>
+我挺喜欢这手机的，外观小巧，五官精致，拍摄有dv的感觉，唯一的缺点是不是诺基亚系统。当时周围人都是诺基亚，觉得自己从来没用过手机中的王者及传说中的塞班系统，还是有些羡慕的。所以最后手机丢了也不是很心疼，囧。。 这款手机不支持数据的导入和导出，所以没法把里面的短信导出来，铃声也只能用GPRS下载。我记得大一刚刚进大学，还没开始上课的那段日子里，我经常拿着我的手机，跟yxy一起校园里到处乱转，手机里装上唐伯虎点秋香里周星驰烤鸡翅膀的那段很聒噪的音乐，两个混球走到星湖边，往湖边看星星看月亮的情侣堆里一屁股坐下来，很拉风地拿出手机，很拉风地调大音量，轻巧地按下播放按钮……</p></li>
+<li><p> 诺基亚3110E——这款就是上文提到的那个杯具手机。<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/2008119134442299.jpg" alt="2008119134442299" /> <br/>
+松下被偷后，父母都很不悦，我也有些愧疚就买了个便宜点的诺基亚，1100左右。打算用到大学毕业再说吧。可仅仅10天就在回家的公交上被摸走了。我和另一个同学大包小包挤159去南京火车站，我手机就放在上衣的口袋里，满腔的回家热情，毫无戒备的心理，终于让我献出了处女被偷手机经历。从此以后，我就只买那些有内袋的上衣了。</p></li>
+<li><p> 三星SGH-Z150——那个月被偷了两个手机后，我老老实实去国网三百块钱拿了个这个。好像还送了多少话费。<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/16621.jpg" alt="16621" /> <br/>
+虚荣如我，上课时都不好意思拿出来放桌上，忍辱负重地过了段日子。它也是命途多舛，从我手中到了我妈手中，现在又轮回般回到了我身边，活得还好好的。当然是静静躺在我的G3身边，插了张可以报销话费的卡，充当专用的电话机。</p></li>
+<li><p> 诺基亚5700——传说中的变形金刚。这是我感情最深印象最深刻的一款手机。要不是被我摔得摇杆坏了，修过一次还是不行以后，我才不会想用G3去代替它。它是这样子的：<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/2009817203934553217.jpg" alt="2009817203934553217" /> <br/>
+我第一次用上了真正意义上的智能手机。其实我对手机的要求不高，除了基本的两个功能外，有关机闹铃，能看电子书，能导出短信，数据传输，简单的备忘录。感谢它陪伴了我的考研生涯、本科最快乐的时光和在鼓楼的那段日子。</p></li>
+<li><p> G3——现在用的。还没研究过。以后可以写点Android程序放进去玩玩。我也挺喜欢的。<br/>
+<img src="http://www.xiaojiayi.com/wp-content/uploads/2011/07/2013458674.jpg" alt="2013458674" /></p></li>
+</ol>
+
 </div>
   
   
