@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: 技术 | 不可卷也]]></title>
-  <link href="http://njuxjy.github.io/blog/categories/ji-zhu/atom.xml" rel="self"/>
-  <link href="http://njuxjy.github.io/"/>
-  <updated>2013-09-21T18:15:05+08:00</updated>
-  <id>http://njuxjy.github.io/</id>
+  <link href="http://xiaojiayi.com/blog/categories/ji-zhu/atom.xml" rel="self"/>
+  <link href="http://xiaojiayi.com/"/>
+  <updated>2013-09-27T17:15:49+08:00</updated>
+  <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 关于fork()]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e585b3e4ba8efork/"/>
     <updated>2013-05-02T19:08:37+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e585b3e4ba8efork</id>
     <content type="html"><![CDATA[<p>APUE上关于fork的使用有段比较经典的代码：   <br/>
 if ((pid = fork()) &lt; 0) {    <br/>
 err_sys(&ldquo;fork error&rdquo;);    <br/>
@@ -59,9 +59,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) Android开发（二）——在Android应用程序中使用加速度传感器]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8/"/>
     <updated>2013-05-02T18:57:53+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/androide5bc80e58f91efbc88e4ba8cefbc89e59ca8androide5ba94e794a8e7a88be5ba8fe4b8ade4bdbfe794a8e58aa0e9809fe5baa6e4bca0e6849fe599a8</id>
     <content type="html"><![CDATA[<p>最近工作需要看了点传感器的东西，顺便熟悉了下Android平台上开发传感器程序的流程，作为借鉴。好久没用Android，竟然发现搭环境也有些生疏了，于是打算从如何搭建环境写起，也算是复习一遍，题目就叫《从零开始构建Android加速度传感器程序》。</p>
 
 <p>由于国内Android官网（developer.android.com）没法访问（当然google下还是能找到访问的办法），图省事就找了公司文件服务器上的老版本sdk（android-sdk-1.5_r2-windows）装上，结果发现只要一用SensorManager.getSystemService(SENSOR_SERVICE)这句，程序就死了，折腾半天发现是sdk版本问题，说是1.5r3版本（不包括r3）以前的版本在传感器这块有bug，在r3开始以后的版本中已经修复，又搜遍了服务器没发现有更新的版本，只好自己去网上（<a href="http://androidappdocs.appspot.com/%EF%BC%89%E4%B8%8B%E4%B8%80%E4%B8%AA%E3%80%82">http://androidappdocs.appspot.com/%EF%BC%89%E4%B8%8B%E4%B8%80%E4%B8%AA%E3%80%82</a> 更多的废话请看下面……</p>
@@ -228,9 +228,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) Android开发（一）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89/"/>
     <updated>2013-05-02T18:56:02+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/androide5bc80e58f91efbc88e4b880efbc89</id>
     <content type="html"><![CDATA[<p>1、环境配置</p>
 
 <ul>
@@ -270,9 +270,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[读技术书的几条tip]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip/"/>
+    <link href="http://xiaojiayi.com/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip/"/>
     <updated>2011-01-28T10:47:01+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip</id>
+    <id>http://xiaojiayi.com/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip</id>
     <content type="html"><![CDATA[<p>最近想学下python，搞了个电子版的《Head First Python》读下，才看了前言部分，作者关于阅读技术书籍有几条tip，目的是为了让读者理解透彻，让阅读有趣味，不至于瞌睡，现摘录如下：</p>
 
 <ol>

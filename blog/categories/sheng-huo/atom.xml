@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: 生活 | 不可卷也]]></title>
-  <link href="http://njuxjy.github.io/blog/categories/sheng-huo/atom.xml" rel="self"/>
-  <link href="http://njuxjy.github.io/"/>
-  <updated>2013-09-21T18:15:05+08:00</updated>
-  <id>http://njuxjy.github.io/</id>
+  <link href="http://xiaojiayi.com/blog/categories/sheng-huo/atom.xml" rel="self"/>
+  <link href="http://xiaojiayi.com/"/>
+  <updated>2013-09-27T17:15:49+08:00</updated>
+  <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
     
@@ -15,18 +15,18 @@
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 商业大厦停车场上坡处的栏杆机被第一天开车的我一个溜坡撞烂了]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/"/>
     <updated>2013-05-02T19:03:12+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
     <content type="html"><![CDATA[<p>RT</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 搭完，标记下]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/"/>
     <updated>2013-05-02T19:02:19+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2</id>
     <content type="html"><![CDATA[<p>这是用live writer写的第一篇日志。   <br/>
 在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：</p>
 
@@ -47,9 +47,9 @@
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移)今日奇事]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e4bb8ae697a5e5a587e4ba8b/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e4bb8ae697a5e5a587e4ba8b/"/>
     <updated>2013-05-02T18:45:15+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e4bb8ae697a5e5a587e4ba8b</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e4bb8ae697a5e5a587e4ba8b</id>
     <content type="html"><![CDATA[<p>今早睡得正香甜。突然蚊帐的一个角因为绳子松了，掉下来了。
 这是一件再普通不过的事情，理论上系上去，洗洗手接着睡就好了。
 可是，我偏偏做出了那样的决定。下面的条件中，只要有一个不满足，我就不会那样做了。</p>
@@ -75,7 +75,7 @@
 
 <p>于是很长一段时间内，床上的景观是这样的：</p>
 
-<p><img src="/images/2013/05/image.png"></p>
+<p>{% img /images/2013/05/image.png %}</p>
 
 <p>后来，我拨云见日般将蚊帐撕开一道口子，正好容得下我两只手在帐外作业。一会功夫就系好了。
 舍友说，蚊子飞进来怎么办。
@@ -85,9 +85,9 @@
   
   <entry>
     <title type="html"><![CDATA[最近]]></title>
-    <link href="http://njuxjy.github.io/blog/2012/03/04/e69c80e8bf91/"/>
+    <link href="http://xiaojiayi.com/blog/2012/03/04/e69c80e8bf91/"/>
     <updated>2012-03-04T01:28:06+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2012/03/04/e69c80e8bf91</id>
+    <id>http://xiaojiayi.com/blog/2012/03/04/e69c80e8bf91</id>
     <content type="html"><![CDATA[<p>单位最近抛弃了symbian，结束了我和它这段短暂而意外的缘分。因为业务的需要而转投wp7新项目的开发，项目未启动，技术储备中。出于兴趣之前开始自学iOS，由于和白天wp7的冲突，故放到晚上抽空学习下。</p>
 
 <p>工作后greader使用频率大幅减少，最近一个月就没用过，也许是心态比较浮躁吧，把大把时间都花在微博上了，时间被拆分的支离破碎。</p>
@@ -106,9 +106,9 @@
   
   <entry>
     <title type="html"><![CDATA[工作一月小记]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/08/07/e5b7a5e4bd9ce4b880e69c88e5b08fe8aeb0/"/>
+    <link href="http://xiaojiayi.com/blog/2011/08/07/e5b7a5e4bd9ce4b880e69c88e5b08fe8aeb0/"/>
     <updated>2011-08-07T17:10:45+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/08/07/e5b7a5e4bd9ce4b880e69c88e5b08fe8aeb0</id>
+    <id>http://xiaojiayi.com/blog/2011/08/07/e5b7a5e4bd9ce4b880e69c88e5b08fe8aeb0</id>
     <content type="html"><![CDATA[<p>从入职到现在差不多一个月的时间。只不过是在大半年的张江男生活上又增添了一个月而已，没有什么新奇的地方。由于有过另外两家公司的实习经历，所以难免在工作中会进行些比对。不再是打酱油的实习生，而是需要产出的劳动者，辛苦是自然的，能学到东西是唯一的期许，薪资福利等等不在重点考虑范围。互联网行业，不慎落入LBS的从业人员。业务上的事情需要关注，但不需过多掺杂，有没有钱途不是我说了算，当然愿景是美好的。作为一名入司不久的新人，挨好你的踢才是根本，其他神马都是浮云。
 跟两同学住在玉兰这块熟悉不过的地方，买了电瓶车，从益江路到居里路，天天20分钟路，算是很近了，路上听听有声小说。对面就是浦东软件园，是我吃饭的地方，一天两顿。平时基本9点走，周末加班是常事。组内都是年轻人，大多比我大个两三岁，但有的已经四五年经验了。如果现在让我决定的话，宁愿两年经验换两年的烟酒僧生活。挨踢这个行业，经验才是王道，除非你是学术男。会的太杂，深入的太少，一贯的老问题，面试时有几家重技术（百姓、阿里云）的公司都指出了这一点，“要么做产品经理，要么在某个技术上深入下去，否则是很恐怖的事情”。说的时候打击挺大，事后又成了云烟。想学的太多，今天在看php，明天买了mac又扔了php去看IOS开发，问题的根本是什么都想抓住，结果是什么都没能坚持、专注。</p>
 

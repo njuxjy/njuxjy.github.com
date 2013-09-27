@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: symbian | 不可卷也]]></title>
-  <link href="http://njuxjy.github.io/blog/categories/symbian/atom.xml" rel="self"/>
-  <link href="http://njuxjy.github.io/"/>
-  <updated>2013-09-21T18:15:05+08:00</updated>
-  <id>http://njuxjy.github.io/</id>
+  <link href="http://xiaojiayi.com/blog/categories/symbian/atom.xml" rel="self"/>
+  <link href="http://xiaojiayi.com/"/>
+  <updated>2013-09-27T17:15:49+08:00</updated>
+  <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
     
@@ -15,14 +15,14 @@
   
   <entry>
     <title type="html"><![CDATA[图像滤镜之程序实现]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0/"/>
+    <link href="http://xiaojiayi.com/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0/"/>
     <updated>2011-11-13T23:43:28+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0</id>
+    <id>http://xiaojiayi.com/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0</id>
     <content type="html"><![CDATA[<p>前段时间做了一段时间塞班平台的图像处理研究，想要做出类似于instagram、Q拍那样的滤镜特效，在手机拍完照后可以用我们提供的滤镜对照片进行美化处理（有空再做个ios版的）。看了一些instagram、Q拍、美图秀秀、可牛快拍等软件做出来的效果，对于图像处理零基础的我表示鸭梨很大。从RGB通道、alpha通道、位图结构、灰度图、图层、颜色表等概念看起，然后了解基本的图像处理方法如锐化、柔化、扩散、雕刻、黑白、反色等基本特效的原理，到高斯模糊、图像混合、柏林噪声等进阶的玩法，到最后总结出了一套做图像特效的方法，给我一个.psd的photoshop源文件，我便可以根据里面的拆分步骤用程序去实现该效果。其中参考了不少国外站点的东西，尤其是StackOverflow上找到了很多有用的东东，东拼西凑组成了我图像处理这块的一些心得。先上图吧。</p>
 
 <p>原图如下：</p>
 
-<p><img src="/images/2011/11/Nostalgia1.bmp"></p>
+<p>{% img /images/2011/11/Nostalgia1.bmp %}</p>
 
 <ol type="a">
 <li>基础效果</li>
@@ -36,56 +36,56 @@
 </ol>
 
 
-<p><img src="/images/2011/11/blackwhite.png"></p>
+<p>{% img /images/2011/11/blackwhite.png %}</p>
 
 <ol>
 <li> 浮雕</li>
 </ol>
 
 
-<p><img src="/images/2011/11/emboss.png"></p>
+<p>{% img /images/2011/11/emboss.png %}</p>
 
 <ol>
 <li> 素描</li>
 </ol>
 
 
-<p><img src="/images/2011/11/sumiao.png"></p>
+<p>{% img /images/2011/11/sumiao.png %}</p>
 
 <ol>
 <li> lomo</li>
 </ol>
 
 
-<p><img src="/images/2011/11/lomo.png"></p>
+<p>{% img /images/2011/11/lomo.png %}</p>
 
 <ol>
 <li> 马赛克</li>
 </ol>
 
 
-<p><img src="/images/2011/11/mosaic.png"></p>
+<p>{% img /images/2011/11/mosaic.png %}</p>
 
 <ol>
 <li> 扫描线</li>
 </ol>
 
 
-<p><img src="/images/2011/11/scanline.png"></p>
+<p>{% img /images/2011/11/scanline.png %}</p>
 
 <ol>
 <li> 波普</li>
 </ol>
 
 
-<p><img src="/images/2011/11/bopo.png"></p>
+<p>{% img /images/2011/11/bopo.png %}</p>
 
 <ol>
 <li> 鱼眼</li>
 </ol>
 
 
-<p><img src="/images/2011/11/fisheye.png"></p>
+<p>{% img /images/2011/11/fisheye.png %}</p>
 
 <ol type="a">
 <li>进阶效果</li>
@@ -99,14 +99,14 @@
 </ol>
 
 
-<p><img src="/images/2011/11/morning.png"></p>
+<p>{% img /images/2011/11/morning.png %}</p>
 
 <ol>
 <li> 星光</li>
 </ol>
 
 
-<p><img src="/images/2011/11/star.png"></p>
+<p>{% img /images/2011/11/star.png %}</p>
 
 <p>这里就放出两张图了，因为做法其实都一样，最多传的参数不同罢了。当然图像混合也是有学问的，可以参考国外一哥们的系列文章：<a href="http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/">http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/</a></p>
 
@@ -119,14 +119,14 @@
 </ol>
 
 
-<p><img src="/images/2011/11/old-photo.png"></p>
+<p>{% img /images/2011/11/old-photo.png %}</p>
 
 <ol>
 <li> Nostalgia</li>
 </ol>
 
 
-<p><img src="/images/2011/11/nostalgia.png"></p>
+<p>{% img /images/2011/11/nostalgia.png %}</p>
 
 <p>做的方法受这个老外的影响很大：<a href="http://taptaptap.com/blog/creating-a-camera-plus-fx/">http://taptaptap.com/blog/creating-a-camera-plus-fx/</a></p>
 
@@ -136,9 +136,9 @@
   
   <entry>
     <title type="html"><![CDATA[移植zlib到Symbian实现gzip内存流解压]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b/"/>
+    <link href="http://xiaojiayi.com/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b/"/>
     <updated>2011-08-17T22:11:00+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b</id>
+    <id>http://xiaojiayi.com/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b</id>
     <content type="html"><![CDATA[<p>客户端（v3版本）原先在处理服务器端传回gzip数据时采用的策略是先将gzip流保存成.gz文件，再用解压文件的方式将数据解压出来。这种方式显然不如直接从内存中实现gzip解压来得高效，但由于Symbian SDK中zlib的版本过低（1.1.3）等原因，网上介绍的很多内存流解压方法并不适用于此：</p>
 
 <ul>
@@ -261,9 +261,9 @@
   
   <entry>
     <title type="html"><![CDATA[symbian学习笔记三（内存管理）]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89/"/>
     <updated>2011-08-01T20:12:48+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89</id>
+    <id>http://xiaojiayi.com/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4b889efbc88e58685e5ad98e7aea1e79086efbc89</id>
     <content type="html"><![CDATA[<p>本文内容非原创，属于网上资源的整理。</p>
 
 <p>========================================</p>
@@ -581,9 +581,9 @@ CleanupStack::PushL(aObject);
   
   <entry>
     <title type="html"><![CDATA[symbian学习笔记二（字符串）]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2/"/>
+    <link href="http://xiaojiayi.com/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2/"/>
     <updated>2011-08-01T16:18:15+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2</id>
+    <id>http://xiaojiayi.com/blog/2011/08/01/symbiane5ada6e4b9a0e7ac94e8aeb0e4ba8cefbc88e5ad97e7aca6e4b8b2efbc89-2</id>
     <content type="html"><![CDATA[<p>本文内容非原创，属于网上资源的整理。</p>
 
 <p>========================================</p>
@@ -875,9 +875,9 @@ CleanupStack::PushL(aObject);
   
   <entry>
     <title type="html"><![CDATA[symbian学习笔记一（基本数据类型及命名规范）]]></title>
-    <link href="http://njuxjy.github.io/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89/"/>
     <updated>2011-07-27T11:16:17+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89</id>
+    <id>http://xiaojiayi.com/blog/2011/07/27/symbiane5ada6e4b9a0e7ac94e8aeb0e4b880efbc88e59fbae69cace695b0e68daee7b1bbe59e8be58f8ae591bde5908de8a784e88c83efbc89</id>
     <content type="html"><![CDATA[<p>本文内容非原创，属于网上资源的整理。</p>
 
 <p>========================================</p>

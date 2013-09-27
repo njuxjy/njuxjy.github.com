@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[不可卷也]]></title>
-  <link href="http://njuxjy.github.io/atom.xml" rel="self"/>
-  <link href="http://njuxjy.github.io/"/>
-  <updated>2013-09-21T18:15:05+08:00</updated>
-  <id>http://njuxjy.github.io/</id>
+  <link href="http://xiaojiayi.com/atom.xml" rel="self"/>
+  <link href="http://xiaojiayi.com/"/>
+  <updated>2013-09-27T17:15:29+08:00</updated>
+  <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS 开发者必知的 75 个工具（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/"/>
     <updated>2013-08-25T17:48:45+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://benscheirman.com/2013/08/the-ios-developers-toolbelt">http://benscheirman.com/2013/08/the-ios-developers-toolbelt</a> （需翻墙）</p>
 
 <p>=================================================</p>
@@ -239,9 +239,9 @@
   
   <entry>
     <title type="html"><![CDATA[objc.io之并发编程：API和挑战（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/"/>
+    <link href="http://xiaojiayi.com/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/"/>
     <updated>2013-08-20T23:29:53+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898</id>
+    <id>http://xiaojiayi.com/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html">http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html</a></p>
 
 <p>==============================================</p>
@@ -406,7 +406,7 @@ for (NSUInteger i = 0; i &lt; threadCount; i++) {
 
 <p>GCD有五个不同的队列：在主线程上运行的主队列，三个拥有不同优先级的后台队列，一个有着更低优先级的I/O受限的后台队列。另外，你也可以创建自定义队列，可以是串行或者并行队列。自定义队列的抽象层次很高，所有你调度在它上面运行的代码块最终都会分配到系统全局队列之一和它的线程池里。</p>
 
-<p><img src="http://njuxjy.github.io/images/2013/08/gcd-queues@2x.png"></p>
+<p><img src="http://xiaojiayi.com/images/2013/08/gcd-queues@2x.png"></p>
 
 <p>使用不同优先级的几个队列一开始听起来还不错，然而我们强烈推荐你在几乎任何情况下都使用默认优先级的队列。如果几个任务访问了共享资源，那么在不同优先级的队列上调度任务会导致无法预期的行为。最坏可以导致你的程序慢慢停下来，因为低优先级的任务阻止了高优先级的任务执行。你可以了解一下这种现象，称为优先级反转。</p>
 
@@ -517,7 +517,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>想象两个线程都试着同时去这么做的危险。举个例子，线程A和B都从内存中读取到了计数器的值，假设是17。然后线程A给计数器+1并将结果18写回内存。同时，线程B紧随其后也给计数器加1，将结果18写回到内存。在这一刻数据就错误了，因为计数器的值17在加了两次1以后变成了18。</p>
 
-<p><img src="http://njuxjy.github.io/images/2013/08/race-condition@2x.png"></p>
+<p><img src="http://xiaojiayi.com/images/2013/08/race-condition@2x.png"></p>
 
 <p>这个问题叫做“竞态”，如果多个线程访问某个共享资源情况下，一个线程还没访问结束，另一个就开始访问它，就会发生这个问题。如果你不光是写入一个简单的整型到内存，而是一个更复杂的结构，另一个线程在你写到一半的时候去读取内存的话，甚至可能会读到一半新数据一半老数据，或者未初始化数据。 为了防止这种情况，多线程必须以互斥的方式去访问共享资源。</p>
 
@@ -527,7 +527,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>互斥访问的意思是一次只有一个线程可以访问某个资源。为了保证互斥，每个需要访问资源的线程需要事先获取该资源的一把互斥锁。当这个线程结束了它的操作，它会释放这把锁，这样其他线程就有机会来访问这个资源了。</p>
 
-<p><img src="http://njuxjy.github.io/images/2013/08/locking@2x.png"></p>
+<p><img src="http://xiaojiayi.com/images/2013/08/locking@2x.png"></p>
 
 <p>为了确保互斥访问，锁还必须处理乱序执行带来的问题。如果CPU访问内存的顺序不是严格按照你的程序指令顺序，光确保互斥访问是不够的。为了解决CPU优化策略所带来的这个副作用，得使用内存屏障技术。设置了内存屏障以后可以确保乱序执行问题只发生在屏障的一边。</p>
 
@@ -547,7 +547,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>互斥锁解决了竞态的问题，但不幸的是它们同时也带来了一个新问题：死锁。死锁在多个线程都在互相等待对方运行结束的时候发生。</p>
 
-<p><img src="http://njuxjy.github.io/images/2013/08/dead-lock@2x.png"></p>
+<p><img src="http://xiaojiayi.com/images/2013/08/dead-lock@2x.png"></p>
 
 <p>考虑下面的示例代码，交换两个变量的值：</p>
 
@@ -588,7 +588,7 @@ swap(Y, X); // thread 2
 
 <p>这个问题在高低优先级任务共享资源的情况下可能会发生。当低优先级任务拥有了公共资源上的一把锁，它理应迅速完成任务以便释放锁让高优先级任务执行不至于等待太久。由于低优先级任务有锁，高优先级任务得不到运行，期间有可能被中优先级的任务钻了空子，抢占了低优先级特任务的运行时间，是因为中优先级任务拥有当前所有可运行任务中最高的优先级。这样，中优先级任务阻止了低优先级任务释放锁，因此成功地从还在等待运行的高优先级任务那抢到了优先运行的机会。</p>
 
-<p><img src="http://njuxjy.github.io/images/2013/08/priority-inversion@2x.png"></p>
+<p><img src="http://xiaojiayi.com/images/2013/08/priority-inversion@2x.png"></p>
 
 <p>在你的代码中，可能不会像火星探测器那样发生那么戏剧性的事情，因为优先级反转带来的后果往往不会那么严重。</p>
 
@@ -608,9 +608,9 @@ swap(Y, X); // thread 2
   
   <entry>
     <title type="html"><![CDATA[《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/"/>
     <updated>2013-05-28T13:57:08+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0</id>
+    <id>http://xiaojiayi.com/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0</id>
     <content type="html"><![CDATA[<p>无法在分类中增加成员变量，但是可以用关联引用来实现这一点。</p>
 
 <p>假设有一个Person类：</p>
@@ -714,9 +714,9 @@ UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
   
   <entry>
     <title type="html"><![CDATA[iPad UIModalpresentationPageSheet视图的resize和dismiss]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/"/>
     <updated>2013-05-27T16:38:00+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss</id>
+    <id>http://xiaojiayi.com/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss</id>
     <content type="html"><![CDATA[<p>自定义弹出视图的frame:</p>
 
 <pre><code>- (void)viewDidLoad
@@ -800,9 +800,9 @@ UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
   
   <entry>
     <title type="html"><![CDATA[用Xcode的断点打日志（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/"/>
     <updated>2013-05-22T14:29:14+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/">http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/</a></p>
 
 <p>=========================================</p>
@@ -828,7 +828,7 @@ UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
 
 <p>举例来说：</p>
 
-<p><img src="http://njuxjy.github.io/images/2013/05/NSLog.png"></p>
+<p><img src="http://xiaojiayi.com/images/2013/05/NSLog.png"></p>
 
 <p>我们来分析下这个命令：</p>
 
@@ -843,9 +843,9 @@ UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
   
   <entry>
     <title type="html"><![CDATA[接触iOSOpenDev]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/07/e68ea5e8a7a6iosopendev/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/07/e68ea5e8a7a6iosopendev/"/>
     <updated>2013-05-07T23:01:24+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/07/e68ea5e8a7a6iosopendev</id>
+    <id>http://xiaojiayi.com/blog/2013/05/07/e68ea5e8a7a6iosopendev</id>
     <content type="html"><![CDATA[<ol>
 <li><p>安装时遇到问题：</p>
 
@@ -898,9 +898,9 @@ fi
   
   <entry>
     <title type="html"><![CDATA[NSTimer的retain cycle问题解决]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3/"/>
     <updated>2013-05-04T09:46:02+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3</id>
+    <id>http://xiaojiayi.com/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3</id>
     <content type="html"><![CDATA[<p>环境为iOS 5.1，6.1，开启了ARC。</p>
 
 <p>在某个Custom的UIView里开启了一个定时器，原想在其dealloc函数中将timer invalidate并置为nil，但发现退出view controller时view没有被释放，timer也在在不停的fire。原来的写法是这样的：</p>
@@ -984,9 +984,9 @@ fi
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:09:13+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<h1>原文地址：<a href="http://www.developer.com/open/article.php/3883891/Top-10-Android-22-Features-Developers-Cant-Wait-to-Use.htm">http://www.developer.com/open/article.php/3883891/Top-10-Android-22-Features-Developers-Cant-Wait-to-Use.htm</a>     </h1>
 
 <p>Android2.2（开发代号：Froyo）是个次要SDK版本，但它仍然很有影响力，给开发者及用户提供了一些期待已久的特性。在参加了Google I/O会议，见证了Froyo的宣告之后，我们认为有10个特性（排名不分先后）是开发者最迫不及待跃跃欲试的。</p>
@@ -1045,9 +1045,9 @@ Android2.2包括许多新的Microsoft Exchange特性，比如：</p>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 关于fork()]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e585b3e4ba8efork/"/>
     <updated>2013-05-02T19:08:37+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e585b3e4ba8efork</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e585b3e4ba8efork</id>
     <content type="html"><![CDATA[<p>APUE上关于fork的使用有段比较经典的代码：   <br/>
 if ((pid = fork()) &lt; 0) {    <br/>
 err_sys(&ldquo;fork error&rdquo;);    <br/>
@@ -1089,9 +1089,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 为什么Windows7那么贵？（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:06:59+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e4b8bae4bb80e4b988windows7e982a3e4b988e8b4b5efbc9fefbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://www.cringely.com/2009/10/why-windows-7-costs-so-much/">http://www.cringely.com/2009/10/why-windows-7-costs-so-much/</a></p>
 
 <p>我用Windows7已经好几天了，跟Vista和Xp比起来它当然进步许多，相比之下，它需要更少的资源（比Vista少得多），启动的更快，可用性非常好。恩，但它为什么那么贵呢？我知道原因。</p>
@@ -1120,9 +1120,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 只要这些人中有百分之一…（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:06:34+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e58faae8a681e8bf99e4ba9be4babae4b8ade69c89e799bee58886e4b98be4b880efbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://sivers.org/1pct">http://sivers.org/1pct</a></p>
 
 <p>一个音乐家邀请我的朋友来帮他做一间发送CD邮件的大房间。   <br/>
@@ -1141,9 +1141,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 尖端项目和时间管理（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:06:06+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e5b096e7abafe9a1b9e79baee5928ce697b6e997b4e7aea1e79086efbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://www.joelonsoftware.com/items/2009/10/26.html">http://www.joelonsoftware.com/items/2009/10/26.html</a></p>
 
 <p>令人吃惊的是，现在的学生要顺利从一所顶尖大学拿到计算机学位是多么的容易，他们没有学习过如何使用软件开发人员的基本工具，没有在团队里工作过，没有上过一门需要团队合作的课。许多计算机系还是用80年代的老套路，老是教那么几个一样的课程，这些课在现在看来已经完全和现代软件开发脱离开来了。   <br/>
@@ -1165,9 +1165,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 实时搜索究竟能走多远？（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:05:25+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e5ae9ee697b6e6909ce7b4a2e7a9b6e7ab9fe883bde8b5b0e5a49ae8bf9cefbc9fefbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文网址：<a href="http://www.nytimes.com/2009/10/25/business/25ping.html?_r=1&amp;hpw">http://www.nytimes.com/2009/10/25/business/25ping.html?_r=1&amp;hpw</a></p>
 
 <p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image0011.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb1.jpg" alt="clip_image001" /></a></p>
@@ -1224,9 +1224,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) Nook——一款新型的电子阅读器进入了市场（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba/"/>
     <updated>2013-05-02T19:04:43+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/nooke4b880e6acbee696b0e59e8be79a84e794b5e5ad90e99885e8afbbe599a8e8bf9be585a5e4ba86e5b882e59cba</id>
     <content type="html"><![CDATA[<p>原文网址：<a href="http://www.nytimes.com/2009/10/21/technology/21nook.html?em">http://www.nytimes.com/2009/10/21/technology/21nook.html?em</a></p>
 
 <p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/popup_thumb.jpg" alt="popup" /></a></p>
@@ -1251,9 +1251,9 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 为什么人人都爱Twitter（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:04:16+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文网址：<a href="http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html">http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html</a></p>
 
 <p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb.jpg" alt="clip_image001" /></a>    <br/>
@@ -1285,9 +1285,9 @@ Twitter的实时搜索功能给人一种在线谈话的感受</p>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) Emily Howell: 一个会创作古典音乐的计算机程序（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:03:44+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文网址：<a href="http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html">http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html</a></p>
 
 <p>Emily Howell，这个会创作原版古典音乐的计算机程序已经签订了唱片协议，并将于明年发行她的第一张原创唱片。    <br/>
@@ -1304,18 +1304,18 @@ Cope教授主张Emily Howell的音乐仍然主要是由人来创作的。“计�
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 商业大厦停车场上坡处的栏杆机被第一天开车的我一个溜坡撞烂了]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/"/>
     <updated>2013-05-02T19:03:12+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
     <content type="html"><![CDATA[<p>RT</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 搭完，标记下]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/"/>
     <updated>2013-05-02T19:02:19+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2</id>
     <content type="html"><![CDATA[<p>这是用live writer写的第一篇日志。   <br/>
 在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：</p>
 
@@ -1336,9 +1336,9 @@ Cope教授主张Emily Howell的音乐仍然主要是由人来创作的。“计�
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 撰写世界级技术文档的7条规则（译文）]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e692b0e58699e4b896e7958ce7baa7e68a80e69cafe69687e6a1a3e79a847e69da1e8a784e58899efbc88e8af91e69687efbc89/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e692b0e58699e4b896e7958ce7baa7e68a80e69cafe69687e6a1a3e79a847e69da1e8a784e58899efbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:01:20+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e692b0e58699e4b896e7958ce7baa7e68a80e69cafe69687e6a1a3e79a847e69da1e8a784e58899efbc88e8af91e69687efbc89</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e692b0e58699e4b896e7958ce7baa7e68a80e69cafe69687e6a1a3e79a847e69da1e8a784e58899efbc88e8af91e69687efbc89</id>
     <content type="html"><![CDATA[<p>原文网址：<a href="http://www.developer.com/mgmt/article.php/11085_3848981_1/The-7-Rules-for-Writing-World-Class-Technical-Documentation.htm">http://www.developer.com/mgmt/article.php/11085_3848981_1/The-7-Rules-for-Writing-World-Class-Technical-Documentation.htm</a></p>
 
 <p>=================================================================</p>
@@ -1521,9 +1521,9 @@ Trafalgabors是Weebietatas框架的基本组件。本文将介绍Trafalgabors是
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 和菜头：我的无尽之路]]></title>
-    <link href="http://njuxjy.github.io/blog/2013/05/02/e5928ce88f9ce5a4b4efbc9ae68891e79a84e697a0e5b0bde4b98be8b7af/"/>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e5928ce88f9ce5a4b4efbc9ae68891e79a84e697a0e5b0bde4b98be8b7af/"/>
     <updated>2013-05-02T18:59:37+08:00</updated>
-    <id>http://njuxjy.github.io/blog/2013/05/02/e5928ce88f9ce5a4b4efbc9ae68891e79a84e697a0e5b0bde4b98be8b7af</id>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e5928ce88f9ce5a4b4efbc9ae68891e79a84e697a0e5b0bde4b98be8b7af</id>
     <content type="html"><![CDATA[<p>我辞职了。</p>
 
 <p>几年前，当网易刚刚推出《梦幻西游》的时候，我们四个老朋友约了一起去打网游。在游戏里，老鬼庆叫鸳鸯蝴蝶扇，吕少叫逍遥吕少，晖晖叫吴霜剑，我还 是叫和菜头。虽然出生地有不同，但是我们基本都在昆明开始念小学，一直读到高中。家里能有钱供我们念大学，毕业以后都回到昆明，拥有一份稳定的工作。打 《梦幻西游》的时候，他们三个人已经结婚，日子细水长流。四个人中间，只有老鬼庆是自由人。他原来在一家效益很好的国企，和所有红火的国企一样，他的公司 最后破产倒闭，注册新壳重新再来。在破产之前，他辞职创业，开了自己的公司。大家都很忙，所以在游戏里见面的时间反而多过喝茶的时间。曾经我们一度玩得很 投入，每个人每个月为网易支付1000元人民币。而如果是大家见面吃饭，大概三个月都花不了那么多钱。世界已经在慢慢变化，但在当时我们懵然不觉。</p>
