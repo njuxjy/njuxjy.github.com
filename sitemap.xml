@@ -359,16 +359,22 @@
         <lastmod>2013-09-28T08:17:35+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/
+        </loc>
+        <lastmod>2013-09-28T09:34:38+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://xiaojiayi.com/about/</loc>
         <lastmod>2013-09-28T08:07:08+08:00</lastmod>
     </url>
     <url>
         <loc>http://xiaojiayi.com/blog/archives/</loc>
-        <lastmod>2013-09-28T08:17:35+08:00</lastmod>
+        <lastmod>2013-09-28T09:34:38+08:00</lastmod>
     </url>
     <url>
         <loc>http://xiaojiayi.com/</loc>
-        <lastmod>2013-09-28T08:17:35+08:00</lastmod>
+        <lastmod>2013-09-28T09:34:38+08:00</lastmod>
     </url>
     <url>
         <loc>http://xiaojiayi.com/robots.txt</loc>

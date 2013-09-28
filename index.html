@@ -9,7 +9,7 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="原文地址：http://benscheirman.com/2013/08/the-ios-developers-toolbelt （需翻墙） ================================================= 如果你去到一位熟练的木匠的工作室，你总是能发现他/ &hellip;">
+  <meta name="description" content="A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,109 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/">Writing Octopress Blog on a Second Machine</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-28T08:21:00+08:00" pubdate data-updated="true">Sep 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.</p>
+
+<h3>Clone existing repository into the new machine</h3>
+
+<p>Following command will clone your <code>source</code> branch to your local octopress folder.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone -b source git@github.com:username/username.github.com.git octopress</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It was necessary to clone the <code>master</code> branch into your octopress/_deploy, but because of recent version of octopress, you first clone it somewhere else in your system, eg: on the desktop.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone git@github.com:username/username.github.com.git _deploy </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Set up your environment for octopress</h3>
+
+<p>That means in order to run octopress, precondition is to let your terminal not complain about the following commands: <code>ruby</code>, <code>gem</code>, <code>rbenv</code>, <code>rake</code>. So that you can run the rake command to configure your octopress.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd octopress
+</span><span class='line'>$ gem install bundler
+</span><span class='line'>$ rbenv rehash    # If you use rbenv, rehash to be able to run the bundle command
+</span><span class='line'>$ bundle install
+</span><span class='line'>$ rake setup_github_pages</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In recent versions of Octopress, running <code>rake setup_github_pages</code> will remove your _deploy folder and init a new repo inside of it, that&rsquo;s why in the above step you shouldn&rsquo;t clone your <code>maser</code> branch into your octopress/_deploy, or else you will get an error when you do <code>rake deploy</code> at last.</p>
+
+<p>Then you move your desktop local clone of <code>master</code> branch (_deploy folder) into your octopress folder.</p>
+
+<h3>Pushing changes from multiple machines</h3>
+
+<p>Each time you want to do some changes, you need to do a pull op first.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd octopress
+</span><span class='line'>$ git pull origin source  # update the local source branch
+</span><span class='line'>$ cd ./_deploy
+</span><span class='line'>$ git pull origin master  # update the local master branch</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can safely change and push, without worring the merge or push error.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake generate
+</span><span class='line'>$ git add .
+</span><span class='line'>$ git commit -am "Some comment here." 
+</span><span class='line'>$ git push origin source  # update the remote source branch 
+</span><span class='line'>$ rake deploy             # update the remote master branch</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>References:</h3>
+
+<p><a href="http://wywon.com/blog/2012/11/25/build-octopress-on-another-pc/">http://wywon.com/blog/2012/11/25/build-octopress-on-another-pc/</a>
+<a href="http://blog.zerosharp.com/clone-your-octopress-to-blog-from-two-places/">http://blog.zerosharp.com/clone-your-octopress-to-blog-from-two-places/</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1361,94 +1464,6 @@ fi
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/">(旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-02T19:09:13+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>原文地址：<a href="http://www.developer.com/open/article.php/3883891/Top-10-Android-22-Features-Developers-Cant-Wait-to-Use.htm">http://www.developer.com/open/article.php/3883891/Top-10-Android-22-Features-Developers-Cant-Wait-to-Use.htm</a>     </h1>
-
-<p>Android2.2（开发代号：Froyo）是个次要SDK版本，但它仍然很有影响力，给开发者及用户提供了一些期待已久的特性。在参加了Google I/O会议，见证了Froyo的宣告之后，我们认为有10个特性（排名不分先后）是开发者最迫不及待跃跃欲试的。</p>
-
-<p><strong>1.Flash10.1</strong><strong>及</strong><strong>AIR</strong><strong>支持</strong>    <br/>
-对于手机上Flash的可行性可能有一些争议，但它即将登陆Android手机。未来是否属于Flash真的不重要，眼下看来，Flash在web上相当流行，因此排斥Flash实际上就相当于排斥了许多用户已经乐在其中的动态web应用。    <br/>
-从Froyo版本开始，Android用户将能够从Android市场下载Flash10.1及AIR支持（以Android应用程序的形式）的公开测试版。这个决定实质上扩大了Android用户可访问的web应用和站点的数量，扩大了Android开发社区的队伍。    <br/>
-然而这也可能成为Android开发者的一把双刃剑。这将如何改变Android市场的内容呢？外面有那么多的Flash应用（如德州扑克，每个人都有吧？），谁还会去创建一个本地Android应用版本呢？好吧，理由当然是能想出来的，但是我们认为这样一来，很多公司要有足够的理由才会去创建本地应用了，因为本地应用需要他们针对不同平台满足客户要求。也许Flash应用可以帮助清除掉那些写得糟糕的本地Android应用程序的竞争，但它能够增强Android开发社区的整体实力吗？让我们拭目以待吧。</p>
-
-<p><strong>2.</strong><strong>推送消息</strong>    <br/>
-开发者现在可以利用谷歌的另一项服务了，即Android Cloud to Device Messaging(C2DM) 框架。这个框架提供了一项服务可以通过谷歌的服务（负责发送至设备的轻量级消息的排队以及安全交付）使Android设备支持有限的推送功能。在解决框架问题的同时，开发者可以在Google Labs网站上注册。谷歌的一些应用程序，例如Web版的Android Market将很快使用这个特性把用户通过Web购买的Android应用程序通过无线电推送至手机上。这项技术能帮助解决目前由Android应用程序产生的严重的轮询拥堵问题（导致电池寿命减少、性能降低等问题）。</p>
-
-<p><strong>3.</strong><strong>全新的企业级特性</strong>    <br/>
-Android终于将自身定位于重要的企业级应用了。Android2.2 SDK包括了全新的设备管理API，用于远程设备管理和设备的安全管理。你可以看到用来管理设备安全的API，包括密码策略实施、远程锁定及抹除设备的能力。举个例子，如果有员工丢失了他或她的带有敏感数据及凭证的手机，手机会迅速锁定并清除掉那些数据。    <br/>
-Froyo还引进了健壮性更强的Microsoft Exchange支持（见第9个特性）。我们也听到了一些关于类似Android市场的企业及部署方案的声音，但这些特性可能以后会有的（Froyo中没有）。</p>
-
-<p><strong>4.</strong><strong>性能提升</strong>    <br/>
-开发者和用户能够从Froyo巨大而深远的性能提升中受益。谷歌的那些极度追求质量和性能的极客们似乎曾经把这个平台贬作“垃圾”（这个词是从谷歌哥们那里听来的，意味着很差的性能和响应性），并在后台内置了很多性能的测量仪和基准。这种急需的性能大检查最终诞生了一个更为流畅简洁的活跃平台，以及一份保持平台今后也同样简洁快速的计划。    <br/>
-性能的提升部分原因是Dalvik虚拟机中包括了一个JIT编译器。据谷歌Android团队所说，Froyo运行时的性能比之前的Android平台快了2到5倍。你可以在应用程序的Android清单文件中关闭JIT优化。Android浏览器由于使用了V8 Javascript引擎，速度也显著提升，比起Android2.1浏览器在性能提升了2到3倍（见第10个特性）。</p>
-
-<p><strong>5.</strong><strong>声音和媒体</strong><strong>API</strong><strong>改进</strong>    <br/>
-随着Froyo版本的发布，人们也提出了很多关于Android媒体API的问题。举个例子，其中加入了声音聚焦API来管理竞争应用间的声音播放规范。声音池API也进行了更新，其中加入了一个回调函数当某项加载完毕时调用，也融入了暂停和继续所有流的能力，这样应用程序不再需要跟踪每个流的状态，也不需要在单独的流上进行操作。这些改进简化了实现，提高了效率。</p>
-
-<p><strong>6.</strong><strong>全面的</strong><strong>SDK</strong><strong>改进</strong>    <br/>
-许多Android API加进了2.2发布版中。图像和游戏开发者们将为OpenGL ES2.0及ETC1向量纹理压缩的支持而欢呼雀跃。像语音识别（android.speech）这样的服务取得了实质性的进展，其他一些如支持拍照和摄像的API也改进很多。全新的UI模式管理器（android.app.UIModeManager）服务能将设备的配置调整为支持夜间模式、汽车模式以及桌面模式（停靠状态）。（译者注：最后一句不会翻）    <br/>
-从Android2.2开始，应用程序不光可以安装在主设备上，还可以安装在SD卡等外部存储上。Android应用还可以使用全新的通用数据备份服务让用户无缝地在Android设备间迁移。    <br/>
-就合理但令人沮丧的API变更来说，布局属性fill_parent已重命名为match_parent（是的，目前还不会影响你原有的那些应用程序）。通过使用按照DropBoxManager的形式且基于blob的“logcat”风格的数据队列，调试功能甚至也得到了改进。这份列表还会继续。（译者注：猜想意思是还有很多SDK的改进之处，就先不列举了）</p>
-
-<p><strong>7.Android</strong><strong>市场更新</strong>    <br/>
-随着Froyo版本的发布，Android市场也有不少更新。对发布者而言最有用的新特性之一便是内建的错误报告了。如果你的应用程序在用户的手机里崩溃了，用户可以选择是否将错误报告通过Android市场发回给相应的发布者。这样开发者和用户之间便形成了一个反馈的良性循环，使得发布者可以设法解决问题（可以收到有价值的崩溃诊断信息，比如设备配置和堆栈跟踪），避免被打低分。</p>
-
-<p><em>让我们始终把<strong>Android</strong>开发者和用户放在心上。除了大家所期待的性能改进以及加入到<strong>Froyo</strong>平台中的<strong>“Chrome”</strong>浏览器外，<strong>Froyo</strong>中还有很多让人欲罢不能的用户特性，比如：</em></p>
-
-<p><strong>8.</strong><strong>数据系链及便携式热点</strong>    <br/>
-Froyo发布了USB数据系链和将Android设备变为便携式Wi-Fi热点的功能。这是个很酷的特性，但我们不清楚有多少使用者/携带者会隐藏且/或关闭此功能，因为有些人已经在竞争者的平台上实现了类似的特性。如果不得不让我们来猜的话，我们觉得这是个迷人的特性，也许能够增加Android的使用者数量（尽管每天增加100000个新用户，对Android来说还不算太差），但如果这群用户无法在他们的航程中使用这个特性的话，也很有可能让他们感到失望。我们走着瞧吧。</p>
-
-<p><strong>9.Microsoft Exchange</strong><strong>支持</strong>    <br/>
-没有人会喜欢根据工作用途还是私人用途等不同的使用目的来在不同的手机间捣腾。有相当一类人由于他们公司的IT需求–显而易见是对Microsoft Exchange的支持，在选择他们的手机时觉得捉襟见肘。（坦白说，如果手机不支持Microsoft Exchange的话，我们都不好意思称之为“智能手机”，但这仅仅是我们的观点。）    <br/>
-Android2.2包括许多新的Microsoft Exchange特性，比如：</p>
-
-<ul>
-<li><p>增强的安全特性，允许管理员强制密码策略</p></li>
-<li><p>对Exchange管理员来说，在设备丢失或被盗时可以远程抹除其数据</p></li>
-<li><p>Exchange日历支持目前已和Android日历应用相兼容</p></li>
-<li><p>使用自动发现简化账户建立及同步</p></li>
-<li><p>使用Microsoft Exchange Global Address Lists使Android Email支持自动补全收信人姓名及地址</p></li>
-</ul>
-
-
-<p><strong>10.“</strong><strong>世界上最快的移动浏览器</strong><strong>”</strong>    <br/>
-在Google I/O主题会上，谷歌全球副总裁Vic Gundotra宣布Android2.2使用了全球最快的移动浏览器。他用行动来证明一点，他让iPad浏览器和Android浏览器在一个基于SunSpider JavaScript标准的比赛中“赛跑”（之后甚至让iPad浏览器先跑，<a href="http://bit.ly/dq5Lb7">在这里</a>可以尝试下）。不管这是不是一个公平的比较，大家都接受了这么一个观点：对Froyo的性能改进使它变得速度奇快。Android浏览器的性能让大家都很开心（好吧，竞争对手除外…），随着HTML5的成熟会得到大家的认可。</p>
-
-<p><em>好啦！这些就是让我们迫不及待想得到的<strong>Android2.2</strong>特性了。你们的看法呢？新的<strong>SDK</strong>可以通过更新机制来下载，更多的信息可以在<strong>Android2.2</strong>平台主页上找到。</em></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1464,6 +1479,10 @@ Android2.2包括许多新的Microsoft Exchange特性，比如：</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/">Writing Octopress Blog on a Second Machine</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
       </li>
     
@@ -1477,10 +1496,6 @@ Android2.2包括许多新的Microsoft Exchange特性，比如：</p>
     
       <li class="post">
         <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/">用Xcode的断点打日志（译文）</a>
       </li>
     
   </ul>
