@@ -9,7 +9,7 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="原文地址：http://multitasked.net/complexities-of-iOS-programming/ ===================================== 我做iOS开发已经有两年了。我很享受这个过程。我喜欢苹果所带来的流畅度和一流的用户体验， &hellip;">
+  <meta name="description" content="参考：http://senry.me/post/2012-10-25/40041673640 这篇中提到的获取某SDK方法列表的方法： int unsigned methodCount; Method *methods = class_copyMethodList([SDKCLASS class &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/e88eb7e58f96e4b880e4b8aae7b1bbe4b8ade68980e69c89e79a84e696b9e6b395e58897e8a1a8/">获取3rd SDK类中所有的方法列表</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T14:26:05+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>参考：<a href="http://senry.me/post/2012-10-25/40041673640">http://senry.me/post/2012-10-25/40041673640</a> 这篇中提到的获取某SDK方法列表的方法：</p>
+
+<pre><code> int unsigned methodCount;
+   Method *methods = class_copyMethodList([SDKCLASS class], &amp;methodCount);
+   for (int i = 0;i&lt;methodCount;i++){
+       NSLog(@"%@", NSStringFromSelector(method_getName(methods[i])));
+   }
+</code></pre>
+
+<p>不过这个方法只能取到所有实例方法，稍加改动就能取类方法：</p>
+
+<pre><code>    int unsigned methodCount;
+    Method *methods = class_copyMethodList(object_getClass([MainViewController class]), &amp;methodCount);
+    for (int i = 0;i&lt;methodCount;i++){
+        NSLog(@"%@", NSStringFromSelector(method_getName(methods[i])));
+    }
+</code></pre>
+
+<p>因为[SDKClass class]的返回值本身还是个class object，要通过object_getClass取得该class object的class。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/23/iose68a93e58c85e587a0e7a78de696b9e6b395/">iOS抓包几种方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-23T16:23:15+08:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ol>
+<li><p>在有以太网口的情况下， 可以打开mac的互联网共享，共享以下来源的连接选择“以太网”，用以下端口共享给电脑选“wifi”，然后设置共享密码，在iPhone上连接该共享wifi即可。然后mac上用Charles等工具来抓包</p></li>
+<li><p>由于air没有以太网口，可用tcpdump+Charles方法（可参考：<a href="http://res0w.com/?p=977%EF%BC%89%EF%BC%8C%E6%88%96%E8%99%9A%E6%8B%9F%E6%9C%BA+fiddler%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/974%EF%BC%89%EF%BC%8C%E6%88%96%E4%BB%85%E7%94%A8Charles%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/1272%EF%BC%89%E3%80%82%E6%9C%80%E5%90%8E%E4%B8%80%E7%A7%8D%E6%84%9F%E8%A7%89%E6%9C%80%E7%AE%80%E5%8D%95%E4%BA%9B%E3%80%82">http://res0w.com/?p=977%EF%BC%89%EF%BC%8C%E6%88%96%E8%99%9A%E6%8B%9F%E6%9C%BA+fiddler%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/974%EF%BC%89%EF%BC%8C%E6%88%96%E4%BB%85%E7%94%A8Charles%E6%96%B9%E6%B3%95%EF%BC%88%E5%8F%AF%E5%8F%82%E8%80%83%EF%BC%9Ahttp://www.99css.com/archives/1272%EF%BC%89%E3%80%82%E6%9C%80%E5%90%8E%E4%B8%80%E7%A7%8D%E6%84%9F%E8%A7%89%E6%9C%80%E7%AE%80%E5%8D%95%E4%BA%9B%E3%80%82</a></p></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -652,127 +746,6 @@
 
 <pre><code>&lt;code&gt;cell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];&lt;/code&gt;
 </code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/07/cfurlcreatewithstringe59ca8e6a8a1e68b9fe599a8e4b88ae8bf94e59b9enulle79a84e997aee9a298/">CFURLCreateWithString在模拟器上返回null的问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-07T12:50:45+08:00" pubdate data-updated="true">Nov 7<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在程序中用到了</p>
-
-<p>CFURLRef  url = CFURLCreateWithString(kCFAllocatorDefault, (CFStringRef)fileName, NULL);</p>
-
-<p>其中fileName的值是应用目录下的某个文件，在真机上一切正常，但在模拟器上url始终为Null。</p>
-
-<p>最后查出是因为fileName的值在模拟器上是“~/Library/Application Support/iPhone Simulator/&hellip;/”，路径中间有空格，而真机上没有，所以要对fileName中的空格进行处理：</p>
-
-<p>CFStringRef fileNameEscaped = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)fileName, NULL, NULL, kCFStringEncodingUTF8);</p>
-
-<p>这下就对了。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/31/iose69187e58aa8e6a380e6b58b/">iOS摇动检测</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-31T10:51:38+08:00" pubdate data-updated="true">Oct 31<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>首先在AppDelegate中开启摇动支持：</p>
-
-<p>安师大</p>
-
-<pre><code>- (void)applicationDidFinishLaunching:(UIApplication *)application {
-        application.applicationSupportsShakeToEdit = YES;
-        [window addSubview:viewController.view];
-        [window makeKeyAndVisible];
-}
-</code></pre>
-
-<p>首先在AppDelegate中开启摇动支持：ViewController中增加三个方法：canbecomeFirstResponder:, viewDidAppear:和viewWillDisappear:。</p>
-
-<pre><code>-(BOOL)canBecomeFirstResponder {
-    return YES;
-}
-
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self becomeFirstResponder];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [self resignFirstResponder];
-    [super viewWillDisappear:animated];
-}
-</code></pre>
-
-<p>增加motionEnded方法:</p>
-
-<pre><code>- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    if (motion == UIEventSubtypeMotionShake)
-    {
-        // your code
-    }
-}
-</code></pre>
-
-<p>ok, that&rsquo;s it.</p>
 </div>
   
   

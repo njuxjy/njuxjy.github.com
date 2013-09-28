@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 图像处理 | 不可卷也]]></title>
   <link href="http://xiaojiayi.com/blog/categories/tu-xiang-chu-li/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-09-27T17:15:49+08:00</updated>
+  <updated>2013-09-28T08:16:47+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -22,7 +22,7 @@
 
 <p>原图如下：</p>
 
-<p>{% img /images/2011/11/Nostalgia1.bmp %}</p>
+<p><img src="/images/2011/11/Nostalgia1.bmp"></p>
 
 <ol type="a">
 <li>基础效果</li>
@@ -36,56 +36,56 @@
 </ol>
 
 
-<p>{% img /images/2011/11/blackwhite.png %}</p>
+<p><img src="/images/2011/11/blackwhite.png"></p>
 
 <ol>
 <li> 浮雕</li>
 </ol>
 
 
-<p>{% img /images/2011/11/emboss.png %}</p>
+<p><img src="/images/2011/11/emboss.png"></p>
 
 <ol>
 <li> 素描</li>
 </ol>
 
 
-<p>{% img /images/2011/11/sumiao.png %}</p>
+<p><img src="/images/2011/11/sumiao.png"></p>
 
 <ol>
 <li> lomo</li>
 </ol>
 
 
-<p>{% img /images/2011/11/lomo.png %}</p>
+<p><img src="/images/2011/11/lomo.png"></p>
 
 <ol>
 <li> 马赛克</li>
 </ol>
 
 
-<p>{% img /images/2011/11/mosaic.png %}</p>
+<p><img src="/images/2011/11/mosaic.png"></p>
 
 <ol>
 <li> 扫描线</li>
 </ol>
 
 
-<p>{% img /images/2011/11/scanline.png %}</p>
+<p><img src="/images/2011/11/scanline.png"></p>
 
 <ol>
 <li> 波普</li>
 </ol>
 
 
-<p>{% img /images/2011/11/bopo.png %}</p>
+<p><img src="/images/2011/11/bopo.png"></p>
 
 <ol>
 <li> 鱼眼</li>
 </ol>
 
 
-<p>{% img /images/2011/11/fisheye.png %}</p>
+<p><img src="/images/2011/11/fisheye.png"></p>
 
 <ol type="a">
 <li>进阶效果</li>
@@ -99,14 +99,14 @@
 </ol>
 
 
-<p>{% img /images/2011/11/morning.png %}</p>
+<p><img src="/images/2011/11/morning.png"></p>
 
 <ol>
 <li> 星光</li>
 </ol>
 
 
-<p>{% img /images/2011/11/star.png %}</p>
+<p><img src="/images/2011/11/star.png"></p>
 
 <p>这里就放出两张图了，因为做法其实都一样，最多传的参数不同罢了。当然图像混合也是有学问的，可以参考国外一哥们的系列文章：<a href="http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/">http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/</a></p>
 
@@ -119,14 +119,14 @@
 </ol>
 
 
-<p>{% img /images/2011/11/old-photo.png %}</p>
+<p><img src="/images/2011/11/old-photo.png"></p>
 
 <ol>
 <li> Nostalgia</li>
 </ol>
 
 
-<p>{% img /images/2011/11/nostalgia.png %}</p>
+<p><img src="/images/2011/11/nostalgia.png"></p>
 
 <p>做的方法受这个老外的影响很大：<a href="http://taptaptap.com/blog/creating-a-camera-plus-fx/">http://taptaptap.com/blog/creating-a-camera-plus-fx/</a></p>
 
