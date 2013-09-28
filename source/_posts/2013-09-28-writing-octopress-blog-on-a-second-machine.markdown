@@ -3,7 +3,7 @@ layout: post
 title: "Writing Octopress blog on a second machine"
 date: 2013-09-28 08:21
 comments: true
-categories: 
+categories: [生活]
 ---
 
 A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.
