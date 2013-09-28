@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 生活 | 不可卷也]]></title>
   <link href="http://xiaojiayi.com/blog/categories/sheng-huo/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-09-28T09:35:12+08:00</updated>
+  <updated>2013-09-28T11:23:22+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Writing Octopress blog on a second machine]]></title>
+    <link href="http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/"/>
+    <updated>2013-09-28T08:21:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine</id>
+    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.</p>
+
+<h3>Clone existing repository into the new machine</h3>
+
+<p>Following command will clone your <code>source</code> branch to your local octopress folder.</p>
+
+<p><code>
+$ git clone -b source git@github.com:username/username.github.com.git octopress
+</code>
+It was necessary to clone the <code>master</code> branch into your octopress/_deploy, but because of recent version of octopress, you first clone it somewhere else in your system, eg: on the desktop.</p>
+
+<p><code>
+$ git clone git@github.com:username/username.github.com.git _deploy
+</code></p>
+
+<h3>Set up your environment for octopress</h3>
+
+<p>That means in order to run octopress, precondition is to let your terminal not complain about the following commands: <code>ruby</code>, <code>gem</code>, <code>rbenv</code>, <code>rake</code>. So that you can run the rake command to configure your octopress.</p>
+
+<p><code>
+$ cd octopress
+$ gem install bundler
+$ rbenv rehash    # If you use rbenv, rehash to be able to run the bundle command
+$ bundle install
+$ rake setup_github_pages
+</code></p>
+
+<p>In recent versions of Octopress, running <code>rake setup_github_pages</code> will remove your _deploy folder and init a new repo inside of it, that&rsquo;s why in the above step you shouldn&rsquo;t clone your <code>maser</code> branch into your octopress/_deploy, or else you will get an error when you do <code>rake deploy</code> at last.</p>
+
+<p>Then you move your desktop local clone of <code>master</code> branch (_deploy folder) into your octopress folder.</p>
+
+<h3>Pushing changes from multiple machines</h3>
+
+<p>Each time you want to do some changes, you need to do a pull op first.</p>
+
+<p><code>
+$ cd octopress
+$ git pull origin source  # update the local source branch
+$ cd ./_deploy
+$ git pull origin master  # update the local master branch
+</code></p>
+
+<p>Now you can safely change and push, without worring the merge or push error.</p>
+
+<p><code>
+$ rake generate
+$ git add .
+$ git commit -am "Some comment here."
+$ git push origin source  # update the remote source branch
+$ rake deploy             # update the remote master branch
+</code></p>
+
+<h3>References:</h3>
+
+<p><a href="http://wywon.com/blog/2012/11/25/build-octopress-on-another-pc/">http://wywon.com/blog/2012/11/25/build-octopress-on-another-pc/</a>
+<a href="http://blog.zerosharp.com/clone-your-octopress-to-blog-from-two-places/">http://blog.zerosharp.com/clone-your-octopress-to-blog-from-two-places/</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[(旧文迁移) 晒几张猥琐照]]></title>
@@ -93,27 +157,6 @@
 <p>后来，我拨云见日般将蚊帐撕开一道口子，正好容得下我两只手在帐外作业。一会功夫就系好了。
 舍友说，蚊子飞进来怎么办。
 我说，没关系，蚊子找不到那么隐蔽的入口。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[最近]]></title>
-    <link href="http://xiaojiayi.com/blog/2012/03/04/e69c80e8bf91/"/>
-    <updated>2012-03-04T01:28:06+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2012/03/04/e69c80e8bf91</id>
-    <content type="html"><![CDATA[<p>单位最近抛弃了symbian，结束了我和它这段短暂而意外的缘分。因为业务的需要而转投wp7新项目的开发，项目未启动，技术储备中。出于兴趣之前开始自学iOS，由于和白天wp7的冲突，故放到晚上抽空学习下。</p>
-
-<p>工作后greader使用频率大幅减少，最近一个月就没用过，也许是心态比较浮躁吧，把大把时间都花在微博上了，时间被拆分的支离破碎。</p>
-
-<p>工作大半年内集齐了除iPhone外的几乎apple全系列产品，当然不全是自己买的。有时候开着Carbide敲着symbian代码，想起自己的果粉身份，觉得真是好笑。</p>
-
-<p>wp7的学习打算用和iOS学习不同的方法，相比iOS的“学院派”，打算用“野兽派”，试试哪个效果好。</p>
-
-<p>跟甲鱼说好下次他去北京出差时，我有空的话跟着去蹭吃蹭喝两个礼拜，坐穿北京的地铁。</p>
-
-<p>给LP打了个赌，尽早实现。</p>
-
-<p>自律。</p>
 ]]></content>
   </entry>
   

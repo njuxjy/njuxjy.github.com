@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 技术 | 不可卷也]]></title>
   <link href="http://xiaojiayi.com/blog/categories/ji-zhu/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-09-28T09:35:12+08:00</updated>
+  <updated>2013-09-28T11:23:22+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -269,33 +269,494 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[读技术书的几条tip]]></title>
-    <link href="http://xiaojiayi.com/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip/"/>
-    <updated>2011-01-28T10:47:01+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2011/01/28/e8afbbe68a80e69cafe4b9a6e79a84e587a0e69da1tip</id>
-    <content type="html"><![CDATA[<p>最近想学下python，搞了个电子版的《Head First Python》读下，才看了前言部分，作者关于阅读技术书籍有几条tip，目的是为了让读者理解透彻，让阅读有趣味，不至于瞌睡，现摘录如下：</p>
+    <title type="html"><![CDATA[windows phone 7 推送功能的实现]]></title>
+    <link href="http://xiaojiayi.com/blog/2012/04/06/windows-phone-7-e68ea8e98081e58a9fe883bde79a84e5ae9ee78eb0/"/>
+    <updated>2012-04-06T15:30:46+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2012/04/06/windows-phone-7-e68ea8e98081e58a9fe883bde79a84e5ae9ee78eb0</id>
+    <content type="html"><![CDATA[<p>最近负责了某移动互联网产品wp7平台的推送模块，在这分享一些关于客户端推送的经验。</p>
+
+<p>我们需要实现的是服务端能根据用户id向客户端推送私信、评论、好友请求、以及基于地理位置的一些信息。</p>
+
+<h2>wp7与iOS push的不同</h2>
+
+<h2> </h2>
+
+<p>搞过symbian的push，也了解过iOS和android的相关内容，wp7的push和iOS的大致类似，也有一些不同，结合我网产品，主要在下面几个方面，也是没搞过wp7 push的我网服务端需要知道的：</p>
+
+<p>1. <strong>Push</strong><strong>类型不同</strong></p>
+
+<p>wp7有三种类型的push：
+Toast：程序前后台都能收到，后台时弹出系统toast框，前台时程序自定义处理方式，push数据为xml格式
+Raw：push数据为任意格式(json,xml等等)，但程序仅在前台时能收到，不满足我网客户端需求，本文不考虑这种类型
+Tile：在客户端桌面的大图标上显示push（图片，文字等），xml格式数据，本期客户端暂时不需要
+因此，暂时只需要考虑Toast类型的push。</p>
+
+<p>2. <strong>客户端token</strong><strong>与userid</strong><strong>之间的对应</strong></p>
+
+<p>wp7在建立push初期，检查客户端是否存在push通道。若不存在，先创建新通道，向微软MPNS（Microsoft Push Notification Service）索取到一个通道URI（这个URI我网push服务要用），并向我网push服务进行注册。若已存在，询问微软MPNS是否需要更新通道URI，同时使用已保存的通道URI向我网push服务进行注册。若MPNS反馈了新的URI，客户端需要向我网push服务更新注册信息。
+注册方式有以下几种方案吧：
+a) 用户登陆以后，将userid, URI, device id一起发给服务端作对应
+b) 不管用户登陆与否，先将URI和device id发给服务端，因为用户手动登陆时总会上传device id给服务端，这样也能做好三者的对应
+c) 通过某个固定的现有接口将device id和userid上传</p>
+
+<p>3. <strong>Push</strong><strong>发送的格式</strong></p>
+
+<p>wp7的toast push只支持xml格式的数据，eg:
+&lt;wp:Notification xmlns:wp=&ldquo;WPNotification&rdquo;>
+&lt;wp:Toast>
+&lt;wp:Text1>push消息标题&lt;/wp:Text1>
+&lt;wp:Text2>push消息内容&lt;/wp:Text2>
+&lt;wp:Param>一些参数键值对&lt;/wp:Param>
+&lt;/wp:Toast>
+&lt;/wp:Notification>
+其中&lt;wp:Param>中的内容可以用来传参数，eg:
+&lt;wp:Param>?pushType=10&amp;poiId=20&amp;specialId=15&lt;/wp:Param>
+其中，<Param> tag中的内容不能超过256个字符
+服务端还要设置一些HTTP头和push参数等，可以参考：
+<a href="http://msdn.microsoft.com/en-us/library/hh202945(v=vs.92">http://msdn.microsoft.com/en-us/library/hh202945(v=vs.92).aspx</a>.aspx)
+<a href="http://www.daveamenta.com/2010-11/send-push-notifications-to-windows-phone-7-from-php/">http://www.daveamenta.com/2010-11/send-push-notifications-to-windows-phone-7-from-php/</a></p>
+
+<h2>wp7与Symbian push的不同</h2>
+
+<h2> </h2>
+
+<p>Symbian上的push不是真正意义上的push，是使用了后台长连接的方式来实现的伪push。
+这样做的缺点有：</p>
 
 <ol>
-<li><p> <strong>Slow down. The more you understand, the less you have to memorize.        <br/>
-</strong>多思，重在理解。</p></li>
-<li><p> <strong>Do the exercises. Write your own notes.        <br/>
-</strong>身边放一支笔和一张纸，做点题，在纸上涂涂画画。</p></li>
-<li><p> <strong>Read the “There are No Dumb Questions.”        <br/>
-</strong>书中的问题试着去解答。</p></li>
-<li><p> <strong>Make this the last thing you read before bed. Or at least the last challenging thing.        <br/>
-</strong>作者的意思是最好睡前读，因为学习了新的知识后大脑需要时间去消化记忆，如果这时间做了别的事情，学到的东西会遗忘。这条不太同意。</p></li>
-<li><p> <strong>Talk about it. Out loud.        <br/>
-</strong>直到能向别人清晰讲述一个知识点后，才算真正掌握了它。</p></li>
-<li><p> <strong>Drink water. Lots of it.        <br/>
-</strong>阅读时多喝水，脑子需要润滑剂。</p></li>
-<li><p> <strong>Listen to your brain.        <br/>
-</strong>一旦发现自己无法集中注意力，或很快忘记自己刚读的内容，立马休息片刻。</p></li>
-<li><p> <strong>Feel something.        <br/>
-</strong>最好阅读时能有情绪上的收获。要么拍着大腿说“这段写的太好了”，或者看完一章后抱怨说“这章简直在放屁”，或者觉得“这书写的太枯燥无聊了，我应该扔了出去玩一会”，这些都比翻完一本书一点反应也没有强。</p></li>
-<li><p> <strong>Write a lot of code!        <br/>
-</strong>不能同意得更多。</p></li>
+<li><p> 费电费流量。后台始终保持着socket连接，每隔几分钟发个心跳包。</p></li>
+<li><p> 从用户开机到用户打开程序这段时间内是接收不到push的，因为后台进程压根不会启动</p></li>
+<li><p> 有很小的几率能造成主程序刷不出数据。这种状况出现过两三次，以至于有次发版前只能把push先咔掉。原因可能和接入点有关。</p></li>
+<li><p> 实现复杂度高
+1） 系统原生不支持push，push提示的UI还得自己做。一个应用得有三个进程：主进程，后台进程，push提示进程
+2） 复杂的进程间通讯，主进程&mdash;&ndash;>后台进程，后台进程&lt;&mdash;&ndash;>push提示进程，不同的通讯机制（和带UI的程序通讯，以及和Console程序通讯）
+3） 额外的数据结构，用队列缓存push，进程间传递的字符串的解析等</p></li>
 </ol>
 
+
+<p>总而言之，在Symbian上做push的感觉就是——女屌丝非要穿上黑丝齐B小短裙把自己打扮得像女神，虽然能用，但体验不会好。</p>
+
+<h2>wp7 push的服务端</h2>
+
+<h2> </h2>
+
+<p>这里以发私信为例，为了能向某用户发私信push，需要保存有user id，wp7手机device id(唯一标示了一部手机)和URI三者的对应关系。通过user id找到该用户最近使用的device id，再通过device id找到与其一一对应的URI，向该URI发送一堆数据，然后由微软发给指定的客户端。</p>
+
+<p>那么，这一堆数据是怎样的？见官方文档。<a href="http://msdn.microsoft.com/en-us/library/hh202945">http://msdn.microsoft.com/en-us/library/hh202945</a>(v=vs.92).aspx
+有一些需要注意的地方：</p>
+
+<ol>
+<li></li>
+</ol>
+
+
+<p>Character
+XML encoding</p>
+
+<p>&lt;</p>
+
+<p>&lt;</p>
+
+<blockquote></blockquote>
+
+<p>&gt;</p>
+
+<p>&amp;</p>
+
+<p>&amp;</p>
+
+<p>‘</p>
+
+<p>&apos;</p>
+
+<p>“</p>
+
+<p>&quot;</p>
+
+<p>上面这些特殊字符需要转换</p>
+
+<ol>
+<li><p> &lt;wp:Param>中的内容不能超过256个字符</p></li>
+<li><p> 对中文需要转换：转成utf-8后再包一层，比如：“我”转成“&#x6211;”</p></li>
+<li><p> &lt;wp:Text1>和&lt;wp:Text2>，其中Text1和Text2不是用户可以随便修改的，Text1表示push Toast的标题，Text2表示内容。我原以为可以随便修改，把Text1命名为Title，Text2命名为Content，结果客户端怎么也收不到。Text1和Text2至少要存在一个，不然客户端收不到</p></li>
+<li><p> &lt;wp:Param>中有三种传参数方式：
+1）/page1.xaml    点击Toast后跳到客户端的page1.xmal页面
+2）/page1.xaml?value1=1234 &amp;value2=9876    点击Toast后跳到客户端的page1.xmal页面，并把value1和value2传给页面
+3）?value1=1234 &amp;value2=9876   点击Toast后跳到客户端的默认首页
+我网用的第三种，毕竟让服务端写死客户端的跳转页面不灵活且增加沟通成本，不如跳到默认首页，在其中进行统一跳转处理</p></li>
+</ol>
+
+
+<p>.net服务端比php会简单一些，至少中文处理要简单些。</p>
+
+<h2>wp7 push的客户端</h2>
+
+<h2> </h2>
+
+<h4> Step 1. 打开通道</h4>
+
+<p> 首先需要打开HttpNotificationChannel，得到URI，发送push。</p>
+
+<pre><code>        private void RegisterDevice()
+        {
+            App app = Application.Current as App;
+            app.httpChannel = HttpNotificationChannel.Find(App.channelName);
+
+            if (app.httpChannel != null)
+            {
+                SubscribeToChannelEvents();
+                SubscribeToService();
+                SET_COOKIE("channelUri", app.httpChannel.ChannelUri.ToString());
+            }
+            else
+            {
+                //Create new channel
+                app.httpChannel = new HttpNotificationChannel(App.channelName);
+                SubscribeToChannelEvents();
+                app.httpChannel.Open();
+                app.httpChannel.BindToShellToast();
+            }
+        }
+</code></pre>
+
+<p>先尝试寻找是否有已存在的通道。如果有，表示已经拥有了该设备的URI，可以直接向我网的服务器进行注册；如果没有，创建新的通道，设置事件处理函数，尝试打开通道，此时程序会向MPNS索取URI  </p>
+
+<h4>Step 2. 设置事件处理函数</h4>
+
+<pre><code>        private void SubscribeToChannelEvents()
+        {
+            App app = Application.Current as App;
+            //Register to UriUpdated event - occurs when channel successfully opens
+            app.httpChannel.ChannelUriUpdated += new EventHandler&lt;NotificationChannelUriEventArgs&gt;(httpChannel_ChannelUriUpdated);
+
+            //Subscribe to Toast Notifications
+            app.httpChannel.ShellToastNotificationReceived += new EventHandler&lt;NotificationEventArgs&gt;(httpChannel_ShellToastNotificationReceived);
+
+            //general error handling for push channel
+            app.httpChannel.ErrorOccurred += new EventHandler&lt;NotificationChannelErrorEventArgs&gt;(httpChannel_ExceptionOccurred);
+
+        }
+</code></pre>
+
+<p> 订阅Toast push这句目的是为了能让程序在前台收到Push时自定义处理，如果值需要后台接收Push，则不需要这句。</p>
+
+<pre><code>        void httpChannel_ChannelUriUpdated(object sender, NotificationChannelUriEventArgs e)
+        {
+            App app = Application.Current as App;
+            // Optionally save the URI locally here - e.ChannelUri.ToString();
+            string newChannelUri = e.ChannelUri.ToString();
+            string oldChannelUri = GET_COOKIE("channelUri") as string;
+            if (newChannelUri.CompareTo(oldChannelUri)!=0)
+            {
+                SET_COOKIE("channelUri", e.ChannelUri.ToString());
+                Dispatcher.BeginInvoke(() =&gt;
+                {
+                    SubscribeToService();
+                });
+            }
+        }
+
+        void httpChannel_ExceptionOccurred(object sender, NotificationChannelErrorEventArgs e)
+        {
+            // Handle notification exceptions here
+        }
+
+        void httpChannel_ShellToastNotificationReceived(object sender, NotificationEventArgs e)
+        {
+            // This runs when a toast notification is received while the app is running
+            if (e.Collection != null)
+            {
+                Dictionary&lt;string, string&gt; collection = (Dictionary&lt;string, string&gt;)e.Collection;
+                Dispatcher.BeginInvoke(() =&gt;
+                {
+                    //MessageBox.Show(collection["wp:Text2"], collection["wp:Text1"], MessageBoxButton.OK);
+                });
+            }
+        }
+</code></pre>
+
+<p>httpChannel_ShellToastNotificationReceived函数不在UI线程中，需要访问UI线程的MessageBox的话需要用Dispatcher.BeginInvoke。
+httpChannel_ChannelUriUpdated函数在MPNS返回最新URI时被调用，这里优先使用本地缓存的URI，防止重复注册URI（一般不会，只是做保护处理）。
+SubscribeToService中只是简单地调用了客户端现存的一个接口，将device id和URI上传到服务端，服务端此时已经能做好device id，userid, URI的对应了。这个接口由于加上了URI，所以会比较长，因此少调为妙。
+此时可以telnet db3.notify.live.net 80，post一些数据给微软，顺利的话应该能在客户端接收到push：</p>
+
+<p> <img src="/images/2012/04/1.png"></p>
+
+<h4>Step 3. 处理push跳转</h4>
+
+<p>不同的push类型需要跳到客户端的不同页面，在默认首页中增加跳转逻辑，需要和各页面负责人进行沟通，就不详述了。</p>
+
+<h2>用后台代理模仿心跳包</h2>
+
+<h2> </h2>
+
+<p> 以上的做法能够满足大部分的推送需求，但是对于一些基于地理位置的推送服务，服务端需要知道客户端的实时经纬度（尽可能做到实时），然后根据用户的当前经纬度判断是否触发推送。因此，客户端需要尽可能实时的将userid和经纬度传给服务端。这在symbian使用心跳包建立push的情况下很容易做到，在心跳包上加上相应字段即可，但是wp7对后台程序的限制很严格，之前也考虑过不走微软的mpns网络，用后台长连接的方式做push，这样服务端不需要做改动，但经过一些调研，发现不可行，原因如下：</p>
+
+<p>wp7的7.0版本不支持后台运行，只能用mpns做push。 
+7.1版本会支持Background Agents，但有很多限制（<a href="http://msdn.microsoft.com/en-us/library/hh202944(v=vs.92">http://msdn.microsoft.com/en-us/library/hh202944(v=vs.92).aspx</a>.aspx)）：
+1.  后台任务有很多API限制
+2.  省电模式下后台代理无法运行，也就无法push
+3.  一部手机能开的后台代理数有限制，最少可能只有6个，如果超过限制会引起异常
+4.  每30分钟运行一次，期间http长连接能否保持是问题
+总的来说，wp7为了省电省流量，对开发者自己的后台任务做了很多限制，体验和实现难度来讲也是用原生的push notification更好一些。</p>
+
+<p>push没法用后台代理来实现，但是一些对不需要严格实时（30分钟一次可以接受）的任务，如上报user id和经纬度，可以使用后台代理实现。可参考：<a href="http://msdn.microsoft.com/en-us/library/hh202961(v=vs.92">http://msdn.microsoft.com/en-us/library/hh202961(v=vs.92).aspx</a>.aspx)</p>
+
+<h4>Step 1. 主程序中开启后台代理</h4>
+
+<pre><code>protected void StartBackAgent()
+        {
+            // Obtain a reference to the period task, if one exists
+            periodicTask = ScheduledActionService.Find(periodicTaskName) as PeriodicTask;
+
+            // If the task already exists and background agents are enabled for the
+            // application, you must remove the task and then add it again to update
+            // the schedule
+            if (periodicTask != null)
+            {
+                RemoveAgent(periodicTaskName);
+            }
+
+            periodicTask = new PeriodicTask(periodicTaskName);
+
+            // The description is required for periodic agents. This is the string that the user
+            // will see in the background services Settings page on the device.
+            periodicTask.Description = "This is Our Background Agent";
+
+            // Place the call to Add in a try block in case the user has disabled agents
+            try
+            {
+                ScheduledActionService.Add(periodicTask);
+
+                // If debugging is enabled, use LaunchForTest to launch the agent in one minute.
+                ScheduledActionService.LaunchForTest(periodicTaskName, TimeSpan.FromSeconds(5));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (exception.Message.Contains("BNS Error: The action is disabled"))
+                {
+                    //MessageBox.Show("Background agents for this application have been disabled by the user.");
+                }
+                if (exception.Message.Contains("BNS Error: The maximum number of ScheduledActions of this type have already been added."))
+                {
+                    // No user action required. The system prompts the user when the hard limit of periodic tasks has been reached.
+                }
+            }
+            catch (SchedulerServiceException)
+            {
+                // No user action required.
+            }
+        }
+</code></pre>
+
+<p>参考了微软给的示例代码，当然也可以关闭代理：</p>
+
+<pre><code>        protected void EndBackAgent()
+        {
+            periodicTask = ScheduledActionService.Find(periodicTaskName) as PeriodicTask;
+            if (periodicTask != null)
+            {
+                RemoveAgent(periodicTaskName);
+            }
+        }
+</code></pre>
+
+<p>LaunchForTest是方便调试使用的，加上try catch是为了防止用户设置了关闭后台代理后引发异常。</p>
+
+<h4>Step 2. 在ScheduledTaskAgent中获取GPS</h4>
+
+<pre><code>       protected override void OnInvoke(ScheduledTask task)
+        {
+            //TODO: 添加用于在后台执行任务的代码
+         taskName = task.Name;
+            GetGPS();
+        }
+
+        private void GetGPS()
+        {
+            if (!SystemCore.Instance.position().IsNaN)
+            {
+                SendGPSByHttpWebRequest();
+            }
+            else
+            {
+                gps_timecount = 0;
+                gps_timer = new Timer(new TimerCallback(gps_timer_Tick),null,0,1000);
+            }
+        }
+
+        void gps_timer_Tick(object sender)
+        {
+            gps_timecount++;
+            gps_timer.Dispose();
+            gps_timer = null;
+            if (!SystemCore.Instance.position().IsNaN)
+            {
+                SendGPSByHttpWebRequest();
+            }
+            else if (gps_timecount &lt; 10)
+            {
+                gps_timer = new Timer(new TimerCallback(gps_timer_Tick), null, 0, 1000);
+            }
+        }
+</code></pre>
+
+<p>增加了限时处理，超过10秒未取到GPS则放弃此次上传。用Timer而未使用DispatcherTimer的原因是，使用后者必须用BeginInvoke的方式在Dispatcher线程中创建，不然会crash，而在Dispatcher线程中用HttpWebRequest发起http请求没有成功，可能是死锁等原因，暂时没走通这条路，就换了Timer，这样能在后台代理线程中发http。</p>
+
+<h4>Step 3. 使用独立存储+Mutex从主程序获取user id</h4>
+
+<p>wp7中是没有IPC的，或者说不允许用户创建的程序间进行通信，可以使用独立存储或者IsolatedStorageSettings或者LINQ 2 SQL在主程序和后台代理间进行通信，我只用了独立存储，连Mutex也没加，一是主程序写，代理读，二是程序逻辑不太可能造成冲突。官方不推荐使用IsolatedStorageSettings。</p>
+
+<h4>Step 4. 在ScheduledTaskAgent中使用HttpWebRequest</h4>
+
+<p>数据都准备好了(user id+经纬度)，接下来就是发http了。最开始是按照下面链接中的方法，没有发成功，不过还是有些收获。<a href="http://www.cnblogs.com/yanxiaodi/archive/2012/01/18/2325320.html">http://www.cnblogs.com/yanxiaodi/archive/2012/01/18/2325320.html</a>  然后在网上搜了一圈都试过，没有能成功的。最后找到了一个老外的分享，twitter客户端的push机制，用了里面的一个库，成功了。<a href="http://blogs.msdn.com/b/ptorr/archive/2011/07/12/background-agents-part-2-of-3.aspx">http://blogs.msdn.com/b/ptorr/archive/2011/07/12/background-agents-part-2-of-3.aspx</a> 
+在http成功发送后得调用NotifyComplete通知操作系统这次任务圆满完成，期待下次继续，不调用的话下次时间片到了不会启动后台代理。在网络请求很长时间不返回的情况下，如果这时间超过了系统能允许后台代理一次运行的时间（25秒），那么就不会调用到NotifyComplete，导致下次无法启动，因此这里有必要加上限时处理。</p>
+
+<h2>push的统计</h2>
+
+<h2> </h2>
+
+<p>在Symbian上曾做过push统计的事情，push功能推出去需要知道用户的反馈：收到过多少push，分别是什么类型的，用户打开过多少次push，每次分别是什么类型的等等。最方便的做法就是讲统计数据加到心跳包末尾：
+在心跳包URL末尾加a=<strong>来统计push。
+a=0            默认情况
+a=1            客户端在前台时候收到push
+a=2            客户端在后台时候收到push
+a=3            用户确定
+a=4            用户取消
+当a=1,2,3,4时，为了统计push类型，在数字后直接跟push类型（0,1,2,…15,16等），不足两位补足两位。如a=101, a=313,a=416等
+ps：
+Symbian V5用a=</strong>
+Symbian V3用b=<strong>
+iOS用c=</strong>
+安卓目前没有需求，若有就用d=**
+iOS由于使用了长连接+APNS结合的两种push方式，所以也能够用这种方法统计一部分数据。
+wp7目前没有统计需求，有的话再调研下。</p>
+
+<p> </p>
+
+<p>最后感谢msdn，google和Stackoverflow。
+还不小心发现一枚山寨版Stackoverflow(栈溢出)，叫Segmentfault(段错误) 。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[图像滤镜之程序实现]]></title>
+    <link href="http://xiaojiayi.com/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0/"/>
+    <updated>2011-11-13T23:43:28+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0</id>
+    <content type="html"><![CDATA[<p>前段时间做了一段时间塞班平台的图像处理研究，想要做出类似于instagram、Q拍那样的滤镜特效，在手机拍完照后可以用我们提供的滤镜对照片进行美化处理（有空再做个ios版的）。看了一些instagram、Q拍、美图秀秀、可牛快拍等软件做出来的效果，对于图像处理零基础的我表示鸭梨很大。从RGB通道、alpha通道、位图结构、灰度图、图层、颜色表等概念看起，然后了解基本的图像处理方法如锐化、柔化、扩散、雕刻、黑白、反色等基本特效的原理，到高斯模糊、图像混合、柏林噪声等进阶的玩法，到最后总结出了一套做图像特效的方法，给我一个.psd的photoshop源文件，我便可以根据里面的拆分步骤用程序去实现该效果。其中参考了不少国外站点的东西，尤其是StackOverflow上找到了很多有用的东东，东拼西凑组成了我图像处理这块的一些心得。先上图吧。</p>
+
+<p>原图如下：</p>
+
+<p><img src="/images/2011/11/Nostalgia1.bmp"></p>
+
+<ol type="a">
+<li>基础效果</li>
+</ol>
+
+
+<p>这里说基础是因为这些效果不涉及图像混合等更加复杂的东东，只是对每个像素的RGB通道做一些处理。 有的算法一行代码就能解决了，有的稍微复杂些，不过基本国内的网上都能找得到。</p>
+
+<ol>
+<li> 黑白</li>
+</ol>
+
+
+<p><img src="/images/2011/11/blackwhite.png"></p>
+
+<ol>
+<li> 浮雕</li>
+</ol>
+
+
+<p><img src="/images/2011/11/emboss.png"></p>
+
+<ol>
+<li> 素描</li>
+</ol>
+
+
+<p><img src="/images/2011/11/sumiao.png"></p>
+
+<ol>
+<li> lomo</li>
+</ol>
+
+
+<p><img src="/images/2011/11/lomo.png"></p>
+
+<ol>
+<li> 马赛克</li>
+</ol>
+
+
+<p><img src="/images/2011/11/mosaic.png"></p>
+
+<ol>
+<li> 扫描线</li>
+</ol>
+
+
+<p><img src="/images/2011/11/scanline.png"></p>
+
+<ol>
+<li> 波普</li>
+</ol>
+
+
+<p><img src="/images/2011/11/bopo.png"></p>
+
+<ol>
+<li> 鱼眼</li>
+</ol>
+
+
+<p><img src="/images/2011/11/fisheye.png"></p>
+
+<ol type="a">
+<li>进阶效果</li>
+</ol>
+
+
+<p>这里仅作了图像混合，并没有用函数去处理每个RGB分量，毕竟不是专门搞ps的，不知道怎么弄算好看.. 不过貌似可牛快拍里有些效果就是做了图像混合，然后稍做了些处理。这种做法比较没技术含量.. 不适合单独作为产品级的效果，可以作为复杂特效的某些步骤。</p>
+
+<ol>
+<li> 早晨</li>
+</ol>
+
+
+<p><img src="/images/2011/11/morning.png"></p>
+
+<ol>
+<li> 星光</li>
+</ol>
+
+
+<p><img src="/images/2011/11/star.png"></p>
+
+<p>这里就放出两张图了，因为做法其实都一样，最多传的参数不同罢了。当然图像混合也是有学问的，可以参考国外一哥们的系列文章：<a href="http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/">http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/</a></p>
+
+<p>c.高级特效</p>
+
+<p>下面两个效果挺花时间的，主要要知道怎么做比较费时间，做的过程的话第二个效果也比较复杂，是根据.psd文件的拆分步骤一步步做出来的，所以在移动平台上跑有些慢&hellip;</p>
+
+<ol>
+<li> 老照片</li>
+</ol>
+
+
+<p><img src="/images/2011/11/old-photo.png"></p>
+
+<ol>
+<li> Nostalgia</li>
+</ol>
+
+
+<p><img src="/images/2011/11/nostalgia.png"></p>
+
+<p>做的方法受这个老外的影响很大：<a href="http://taptaptap.com/blog/creating-a-camera-plus-fx/">http://taptaptap.com/blog/creating-a-camera-plus-fx/</a></p>
+
+<p>这是个开发ios上滤镜app的老外设计师写的，而且是夫妻档，貌似老婆是设计师，她将做好的photoshop效果图给源文件给老公，然后老公根据.psd文件做成ios应用放到app store里去卖。我的Nostalgia特效就是模仿的他们的效果。不过老外没有把源代码放上来，就截了段核心函数，然后我自己摸索了好多天，不断的尝试，最后才搞成的效果。里面还涉及到了用Matlab模拟出曲线的函数，竟然用到了四次函数。。不过整个过程还是很享受的，很有乐趣。如果组内有需求，可以帮着搞一下。</p>
 ]]></content>
   </entry>
   
