@@ -9,7 +9,8 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="原文网址：http://www.developer.com/mgmt/article.php/11085_3848981_1/The-7-Rules-for-Writing-World-Class-Technical-Documentation.htm &hellip;">
+  <meta name="description" content="这是用live writer写的第一篇日志。 在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下： 用live writer连空间的时候会有XML RPC错误，是因为wp里没开启，解决方法是在控制面板Setting-Writing中某选项勾下。
+解决wp日志编辑器以及live &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +67,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/">(旧文迁移) 搭完，标记下</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T19:02:19+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这是用live writer写的第一篇日志。   <br/>
+在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：</p>
+
+<ul>
+<li><p>用live writer连空间的时候会有XML RPC错误，是因为wp里没开启，解决方法是在控制面板Setting-Writing中某选项勾下。</p></li>
+<li><p>解决wp日志编辑器以及live writer中按回车会多一个空行的问题：按shift+enter。</p></li>
+<li><p>解决在live writer中全角空格不缩进问题：在live writer中 日志-编辑日志设置-高级，将XHTML改为HTML。</p></li>
+<li><p>live writer中本地日志的保存地址在\My Documents\My Weblog Posts\Recent Posts</p></li>
+</ul>
+
+
+<p>在这之前，通过了本科的答辩。   <br/>
+在这之前，用５０块买了个godaddy域名，用40块买了个美国主机，256M/5G。对其数据没什么概念，能用就行。    <br/>
+在这之前，算了一下一年费用１００，用到９０岁也不过７０００块左右。用一个月工资做一件一辈子不会后悔的事情，有什么可犹豫的。    <br/>
+在这之前，在琢磨着咱也整个独博玩玩？</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1093,197 +1144,6 @@ Trafalgabors是Weebietatas框架的基本组件。本文将介绍Trafalgabors是
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/e5889de5b09de8b68ae78bb1e5ba94e794a8e5bc80e58f91efbc9ae794a8theose58699e4b8aahello-world/">初尝越狱应用开发：用Theos写个Hello World</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T23:55:04+08:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参考文章如下：</p>
-
-<p><a href="http://brandontreb.com/">http://brandontreb.com/</a> 的 Beginning Jailbroken iOS Development系列</p>
-
-<p><a href="http://iphonesdkdev.blogspot.com/2012/06/how-to-install-thoes-under-xcode-44.html">http://iphonesdkdev.blogspot.com/2012/06/how-to-install-thoes-under-xcode-44.html</a></p>
-
-<p>=============</p>
-
-<p>环境是Xcode4.6，SDK iOS5.1和6.1。要写个程序让系统在刚启动时弹出hello world对话框，like this:</p>
-
-<p><img src="/images/2013/04/11111.jpg"></p>
-
-<p>首先是安装开发工具：</p>
-
-<pre><code># clone theos.git
-cd ~
-git clone git://github.com/DHowett/theos.git
-
-# clone iphoneheaders.git
-cd ~/theos/
-mv include include.bak
-git clone git://github.com/rpetrich/iphoneheaders.git include
-for FILE in include.bak/*.h; do mv $FILE include/; done
-rmdir include.bak/
-
-# get IOSurfaceAPI.h
-cd ~/theos/include/IOSurface/
-curl -O -k https://raw.github.com/javacom/toolchain4/master/Projects/IOSurfaceAPI.h
-
-# clone theos-nic-templates.git
-cd ~/theos/templates/
-git clone git://github.com/orikad/theos-nic-templates.git
-
-# get dpkg-deb for Mac OS X
-cd ~/theos
-curl -O http://test.saurik.com/francis/dpkg-deb-fat
-chmod a+x dpkg-deb-fat
-sudo mkdir -p /usr/local/bin
-sudo mv dpkg-deb-fat /usr/local/bin/dpkg-deb
-
-# get ldid for Mac OS X
-cd ~/theos/bin
-curl -O http://dl.dropbox.com/u/3157793/ldid
-chmod a+x ldid
-
-# get libsubstrate.dylib substrate.h
-cd ~/theos
-curl -OL http://apt.saurik.com/debs/mobilesubstrate_0.9.3366-1_iphoneos-arm.deb
-dpkg-deb -x mobilesubstrate_0.9.3366-1_iphoneos-arm.deb mobilesubstrate
-cp mobilesubstrate/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate  ~/theos/lib/libsubstrate.dylib
-cp mobilesubstrate/Library/Frameworks/CydiaSubstrate.framework/Headers/CydiaSubstrate.h include/substrate.h
-</code></pre>
-
-<p>一开始由于疏忽或者操作错误漏装了ldid，导致后续编译通不过，如果ldid有问题的话，还可以尝试以下：</p>
-
-<pre><code>curl -s http://dl.dropbox.com/u/3157793/ldid &gt; ~/Desktop/ldid
-chmod +x ~/Desktop/ldid
-mv ~/Desktop/ldid $THEOS/bin/ldid
-</code></pre>
-
-<p>接着要用Macports安装dpkg用于打debian包，装完Macports得重启terminal生效，装dpkg:</p>
-
-<pre><code>sudo port install dpkg
-</code></pre>
-
-<p>接着配置环境变量:</p>
-
-<pre><code>export THEOS=/opt/theos/
-export SDKVERSION=6.1
-export THEOS_DEVICE_IP=192.168.1.122
-</code></pre>
-
-<p>device_ip可以通过SBSettings(不过在我的i5里不管用)查看，或者通过设置里面直接可以查看。</p>
-
-<p>接着用命令创建工程：</p>
-
-<pre><code>$THEOS/bin/nic.pl
-</code></pre>
-
-<p>在10个模版中选择一个：</p>
-
-<pre><code> [1.] iphone/application
-  [2.] iphone/cydget
-  [3.] iphone/dashboardx_widget
-  [4.] iphone/framework
-  [5.] iphone/library
-  [6.] iphone/notification_center_widget
-  [7.] iphone/preference_bundle
-  [8.] iphone/sbsettingstoggle
-  [9.] iphone/tool
-  [10.] iphone/tweak
-</code></pre>
-
-<p>这里选择10，可以覆盖系统的一些实现。接着修改Makefile文件，将第一行的include语句改为：</p>
-
-<pre><code>export ARCHS = armv7
-export TARGET=iphone:latest:5.1
-include $(THEOS)/makefiles/common.mk
-</code></pre>
-
-<p>关于这里我浪费了很多时间，由于之前看的教程用的是Xcode4.5和iOS6.0，而我是4.6和6.1，会出现编译错误：</p>
-
-<pre><code>collect2: ld terminated with signal 6 [Abort trap: 6]
-    ld(8724,0x7fff78fd2960) malloc: *** error for object 0x7f89b35003f0: pointer being freed was not allocated
-    *** set a breakpoint in mallocerror_break to debug
-</code></pre>
-
-<p>这边target写6.1不行，得装低版本的SDK才行。接着改写Tweak.xm文件，在下面加上（其实上面都是注释）：</p>
-
-<pre><code>#import &lt;SpringBoard/SpringBoard.h&gt;
-
-%hook SpringBoard
-
--(void)applicationDidFinishLaunching:(id)application {
-    %orig;
-
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome" 
-        message:@"Hello world，你好世界" 
-        delegate:nil 
-        cancelButtonTitle:@"确定" 
-        otherButtonTitles:nil];
-    [alert show];
-    [alert release];
-}
-
-%end
-</code></pre>
-
-<p>这里hook了SpringBoard类里的applicationDidFinishlaunching函数，第一行的%orig是调用了原实现，如果不调用SpringBoard就起不起来，你的手机就没发正常开机显示桌面了，得用ssh去删程序（这个没试过，不敢试&hellip;）。就这样是通不过编译的，因为用到了UIKit库中的UIAlertView，得在MakeFile里加上引入框架：</p>
-
-<pre><code>HelloWorldTweak_FRAMEWORKS = UIKit
-</code></pre>
-
-<p> 接着可以编译打包装到手机了，在这步之前，手机得做些准备工作。插一句题外话，iOS的root默认密码是alpine，要修改的话去cydia里下了MobileTerminal，用手机上的命令行改：</p>
-
-<pre><code>iPhone:~ mobile$ su root
-Password:
-iPhone:/var/mobile root# cd
-iPhone:~ root#
-iPhone:~ root# passwd
-Changing password for root.
-New password:
-Retype new password:
-iPhone:~ root#
-</code></pre>
-
-<p>手机要安装iSSH，或者通过其他手段允许ssh接入。最后开始最重要的工作，就一句话，包括编译打包和装机：</p>
-
-<pre><code>make package install
-</code></pre>
-
-<p>期间会要求输几次密码，不出意外的话程序安装成功。手机会resping，好了以后就出现hello world了~</p>
-
-<p>==================</p>
-
-<p>感觉这样做越狱会比较麻烦，肯定有更简单的方法，搜了下，有个叫iOSOpenDev的，下次尝试下。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1313,6 +1173,10 @@ iPhone:~ root#
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer/">Basic Designer Skills</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/">Writing Octopress Blog on a Second Machine</a>
       </li>
     
@@ -1326,10 +1190,6 @@ iPhone:~ root#
     
       <li class="post">
         <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/">iPad UIModalpresentationPageSheet视图的resize和dismiss</a>
       </li>
     
   </ul>

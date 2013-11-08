@@ -4,7 +4,7 @@
   <title><![CDATA[不可卷也]]></title>
   <link href="http://xiaojiayi.com/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-09-28T11:23:22+08:00</updated>
+  <updated>2013-11-08T15:55:10+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -12,6 +12,103 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Basic Designer Skills]]></title>
+    <link href="http://xiaojiayi.com/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer/"/>
+    <updated>2013-11-08T13:45:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer</id>
+    <content type="html"><![CDATA[<p>As an iOS developer, to learn some basic skills of a designer is good for us, which, for the most part, refer to the basic usage of Photoshop. In this case, when we receive a psd file from the designer, we can start to work without the help of designers to cut images and mark all the information in the comps. In this article, we&rsquo;ll cover topics about image seperation, image cropping, reading necessary infomation from the psd file etc. BTW I&rsquo;m using Photoshop CS6.</p>
+
+<h3>Image Seperation</h3>
+
+<p>Suppose we want to cut the twitter icon from the following image:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/twitter-button.png"></p>
+
+<p>first we want to select the twitter icon, so click on this icon on the left side bar of PS:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-select-icon.png"></p>
+
+<p>Next maybe a new feature of CS6, we check the <code>Auto-Select</code> box and choose <code>Layer</code>:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-auto-select.png"></p>
+
+<p>So that when we click on some components on the image, the right side bar (the layers tree) will highlight the exact layer of the component you click on, and when that happens, it means you have selected the component, in our case, the twitter icon:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-twitter-select.png"></p>
+
+<p>Then we right click the selected layer on right side bar, choose <code>Duplicate layer</code> on the popup menu:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-twitter-select-right-click-menu.png"></p>
+
+<p>Then in the dialog, we select <code>New</code> and click <code>OK</code>:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-duplicate-layer.png"></p>
+
+<p>Then a new tab will show like this:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-twitter-new-tab.png"></p>
+
+<p>Then we select this icon from the left side bar:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-slice-icon.png"></p>
+
+<p>Use <code>'command'+'+'</code> to zoom in, and slice around the twitter icon with any size you like:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-twitter-slice.png"></p>
+
+<p>I choose the size 70 * 58. You&rsquo;d better make your slice width and height all even numbers. On the top menu, select <code>File-&gt;Save For Web</code>, in the popup dialog, click <code>Save</code>, in the next popup dialog, choose your file name and click <code>Save</code>:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-save.png"></p>
+
+<p>The resulting icon will be in ~/Desktop/Images folder.</p>
+
+<h3>Image Cropping</h3>
+
+<p>When we show a button, say, 200 pixels width, we don&rsquo;t actually need to cut a background image with 200 pixels width, a small one will do. Suppose we want a background icon for this button:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/button-bg.png"></p>
+
+<p>we select the layer as described above, duplicated layers, and open it in the new tab:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/button-bg-new-tab.png"></p>
+
+<p>Then we select this icon from the left side bar:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/direct-selection-tool.png"></p>
+
+<p>Click on the edge of the image, it&rsquo;ll show some little squares around the corner:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/button-bg-square.png"></p>
+
+<p>In the blank area we click and drag the cursor to select all four squares on the right side(or left side), and press <code>shift</code> + KEY left to narrow the background image to some suitable size:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/button-bg-narrow.png"></p>
+
+<p>The left steps are the same as described above.</p>
+
+<h3>Read Text Infomation</h3>
+
+<p>To read text font, select this icon from left side bar:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-text.png"></p>
+
+<p>Click on some label, and it&rsquo;ll show information on the top menu bar:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-text-font.png"></p>
+
+<p>To read color infomation, select <code>Window-&gt;Info</code> on the top menu, info panel will show:</p>
+
+<p><img src="http://xiaojiayi.com/images/2013/11/ps-info-panel.png"></p>
+
+<p>When we move the cursor to the zoomed in label, we can read RGB values for text and its shadow.</p>
+
+<h3>Read Position Infomation</h3>
+
+<p>Almost the same as reading text infomation, all position information can be read from the infomation panel.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Writing Octopress blog on a second machine]]></title>
@@ -1397,29 +1494,6 @@ Cope教授主张Emily Howell的音乐仍然主要是由人来创作的。“计�
     <updated>2013-05-02T19:03:12+08:00</updated>
     <id>http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
     <content type="html"><![CDATA[<p>RT</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[(旧文迁移) 搭完，标记下]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2/"/>
-    <updated>2013-05-02T19:02:19+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/02/e690ade5ae8cefbc8ce6a087e8aeb0e4b88b-2</id>
-    <content type="html"><![CDATA[<p>这是用live writer写的第一篇日志。   <br/>
-在这之前，就如何成功按我要的格式发表它折腾了一会，记录如下：</p>
-
-<ul>
-<li><p>用live writer连空间的时候会有XML RPC错误，是因为wp里没开启，解决方法是在控制面板Setting-Writing中某选项勾下。</p></li>
-<li><p>解决wp日志编辑器以及live writer中按回车会多一个空行的问题：按shift+enter。</p></li>
-<li><p>解决在live writer中全角空格不缩进问题：在live writer中 日志-编辑日志设置-高级，将XHTML改为HTML。</p></li>
-<li><p>live writer中本地日志的保存地址在\My Documents\My Weblog Posts\Recent Posts</p></li>
-</ul>
-
-
-<p>在这之前，通过了本科的答辩。   <br/>
-在这之前，用５０块买了个godaddy域名，用40块买了个美国主机，256M/5G。对其数据没什么概念，能用就行。    <br/>
-在这之前，算了一下一年费用１００，用到９０岁也不过７０００块左右。用一个月工资做一件一辈子不会后悔的事情，有什么可犹豫的。    <br/>
-在这之前，在琢磨着咱也整个独博玩玩？</p>
 ]]></content>
   </entry>
   
