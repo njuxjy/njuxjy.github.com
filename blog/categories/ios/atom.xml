@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | 不可卷也]]></title>
   <link href="http://xiaojiayi.com/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-11-08T15:55:10+08:00</updated>
+  <updated>2013-11-08T16:01:48+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -12,6 +12,103 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Basic Designer Skills]]></title>
+    <link href="http://xiaojiayi.com/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer/"/>
+    <updated>2013-11-08T13:45:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer</id>
+    <content type="html"><![CDATA[<p>As an iOS developer, to learn some basic skills of a designer is good for us, which, for the most part, refer to the basic usage of Photoshop. In this case, when we receive a psd file from the designer, we can start to work without the help of designers to cut images and mark all the information in the comps. In this article, we&rsquo;ll cover topics about image seperation, image cropping, reading necessary infomation from the psd file etc. BTW I&rsquo;m using Photoshop CS6.</p>
+
+<h3>Image Seperation</h3>
+
+<p>Suppose we want to cut the twitter icon from the following image:</p>
+
+<p><img src="/images/2013/11/twitter-button.png"></p>
+
+<p>first we want to select the twitter icon, so click on this icon on the left side bar of PS:</p>
+
+<p><img src="/images/2013/11/ps-select-icon.png"></p>
+
+<p>Next maybe a new feature of CS6, we check the <code>Auto-Select</code> box and choose <code>Layer</code>:</p>
+
+<p><img src="/images/2013/11/ps-auto-select.png"></p>
+
+<p>So that when we click on some components on the image, the right side bar (the layers tree) will highlight the exact layer of the component you click on, and when that happens, it means you have selected the component, in our case, the twitter icon:</p>
+
+<p><img src="/images/2013/11/ps-twitter-select.png"></p>
+
+<p>Then we right click the selected layer on right side bar, choose <code>Duplicate layer</code> on the popup menu:</p>
+
+<p><img src="/images/2013/11/ps-twitter-select-right-click-menu.png"></p>
+
+<p>Then in the dialog, we select <code>New</code> and click <code>OK</code>:</p>
+
+<p><img src="/images/2013/11/ps-duplicate-layer.png"></p>
+
+<p>Then a new tab will show like this:</p>
+
+<p><img src="/images/2013/11/ps-twitter-new-tab.png"></p>
+
+<p>Then we select this icon from the left side bar:</p>
+
+<p><img src="/images/2013/11/ps-slice-icon.png"></p>
+
+<p>Use <code>'command'+'+'</code> to zoom in, and slice around the twitter icon with any size you like:</p>
+
+<p><img src="/images/2013/11/ps-twitter-slice.png"></p>
+
+<p>I choose the size 70 * 58. You&rsquo;d better make your slice width and height all even numbers. On the top menu, select <code>File-&gt;Save For Web</code>, in the popup dialog, click <code>Save</code>, in the next popup dialog, choose your file name and click <code>Save</code>:</p>
+
+<p><img src="/images/2013/11/ps-save.png"></p>
+
+<p>The resulting icon will be in ~/Desktop/Images folder.</p>
+
+<h3>Image Cropping</h3>
+
+<p>When we show a button, say, 200 pixels width, we don&rsquo;t actually need to cut a background image with 200 pixels width, a small one will do. Suppose we want a background icon for this button:</p>
+
+<p><img src="/images/2013/11/button-bg.png"></p>
+
+<p>we select the layer as described above, duplicated layers, and open it in the new tab:</p>
+
+<p><img src="/images/2013/11/button-bg-new-tab.png"></p>
+
+<p>Then we select this icon from the left side bar:</p>
+
+<p><img src="/images/2013/11/direct-selection-tool.png"></p>
+
+<p>Click on the edge of the image, it&rsquo;ll show some little squares around the corner:</p>
+
+<p><img src="/images/2013/11/button-bg-square.png"></p>
+
+<p>In the blank area we click and drag the cursor to select all four squares on the right side(or left side), and press <code>shift</code> + KEY left to narrow the background image to some suitable size:</p>
+
+<p><img src="/images/2013/11/button-bg-narrow.png"></p>
+
+<p>The left steps are the same as described above.</p>
+
+<h3>Read Text Infomation</h3>
+
+<p>To read text font, select this icon from left side bar:</p>
+
+<p><img src="/images/2013/11/ps-text.png"></p>
+
+<p>Click on some label, and it&rsquo;ll show information on the top menu bar:</p>
+
+<p><img src="/images/2013/11/ps-text-font.png"></p>
+
+<p>To read color infomation, select <code>Window-&gt;Info</code> on the top menu, info panel will show:</p>
+
+<p><img src="/images/2013/11/ps-info-panel.png"></p>
+
+<p>When we move the cursor to the zoomed in label, we can read RGB values for text and its shadow.</p>
+
+<h3>Read Position Infomation</h3>
+
+<p>Almost the same as reading text infomation, all position information can be read from the infomation panel.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS 开发者必知的 75 个工具（译文）]]></title>
@@ -406,7 +503,7 @@ for (NSUInteger i = 0; i &lt; threadCount; i++) {
 
 <p>GCD有五个不同的队列：在主线程上运行的主队列，三个拥有不同优先级的后台队列，一个有着更低优先级的I/O受限的后台队列。另外，你也可以创建自定义队列，可以是串行或者并行队列。自定义队列的抽象层次很高，所有你调度在它上面运行的代码块最终都会分配到系统全局队列之一和它的线程池里。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#109;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#103;&#x63;&#100;&#45;&#x71;&#117;&#101;&#117;&#101;&#115;&#64;&#50;&#x78;&#x2e;&#112;&#x6e;&#103;">&#x67;&#99;&#x64;&#45;&#x71;&#117;&#x65;&#117;&#101;&#115;&#64;&#50;&#120;&#x2e;&#112;&#x6e;&#x67;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#109;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#103;&#99;&#x64;&#x2d;&#x71;&#x75;&#x65;&#x75;&#x65;&#115;&#64;&#50;&#120;&#x2e;&#112;&#110;&#x67;">&#x67;&#99;&#x64;&#x2d;&#x71;&#117;&#x65;&#x75;&#x65;&#115;&#64;&#x32;&#120;&#46;&#x70;&#x6e;&#x67;</a>"></p>
 
 <p>使用不同优先级的几个队列一开始听起来还不错，然而我们强烈推荐你在几乎任何情况下都使用默认优先级的队列。如果几个任务访问了共享资源，那么在不同优先级的队列上调度任务会导致无法预期的行为。最坏可以导致你的程序慢慢停下来，因为低优先级的任务阻止了高优先级的任务执行。你可以了解一下这种现象，称为优先级反转。</p>
 
@@ -517,7 +614,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>想象两个线程都试着同时去这么做的危险。举个例子，线程A和B都从内存中读取到了计数器的值，假设是17。然后线程A给计数器+1并将结果18写回内存。同时，线程B紧随其后也给计数器加1，将结果18写回到内存。在这一刻数据就错误了，因为计数器的值17在加了两次1以后变成了18。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#109;&#97;&#105;&#108;&#x74;&#111;&#58;&#x72;&#97;&#99;&#101;&#45;&#x63;&#111;&#x6e;&#x64;&#105;&#x74;&#x69;&#111;&#x6e;&#x40;&#50;&#x78;&#x2e;&#112;&#x6e;&#103;">&#114;&#x61;&#x63;&#101;&#x2d;&#x63;&#x6f;&#110;&#100;&#x69;&#116;&#105;&#x6f;&#110;&#x40;&#50;&#x78;&#46;&#112;&#x6e;&#103;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#109;&#97;&#105;&#108;&#x74;&#111;&#58;&#x72;&#97;&#99;&#101;&#45;&#x63;&#x6f;&#x6e;&#x64;&#x69;&#x74;&#105;&#x6f;&#110;&#64;&#50;&#120;&#46;&#x70;&#x6e;&#x67;">&#114;&#97;&#99;&#x65;&#45;&#x63;&#x6f;&#x6e;&#x64;&#x69;&#116;&#x69;&#x6f;&#110;&#64;&#50;&#120;&#x2e;&#112;&#x6e;&#103;</a>"></p>
 
 <p>这个问题叫做“竞态”，如果多个线程访问某个共享资源情况下，一个线程还没访问结束，另一个就开始访问它，就会发生这个问题。如果你不光是写入一个简单的整型到内存，而是一个更复杂的结构，另一个线程在你写到一半的时候去读取内存的话，甚至可能会读到一半新数据一半老数据，或者未初始化数据。 为了防止这种情况，多线程必须以互斥的方式去访问共享资源。</p>
 
@@ -527,7 +624,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>互斥访问的意思是一次只有一个线程可以访问某个资源。为了保证互斥，每个需要访问资源的线程需要事先获取该资源的一把互斥锁。当这个线程结束了它的操作，它会释放这把锁，这样其他线程就有机会来访问这个资源了。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#108;&#x6f;&#x63;&#107;&#105;&#110;&#x67;&#64;&#50;&#120;&#46;&#112;&#x6e;&#103;">&#108;&#x6f;&#x63;&#x6b;&#x69;&#110;&#103;&#x40;&#x32;&#120;&#46;&#112;&#x6e;&#103;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#108;&#111;&#99;&#107;&#105;&#110;&#x67;&#64;&#x32;&#120;&#x2e;&#112;&#x6e;&#x67;">&#108;&#x6f;&#99;&#107;&#x69;&#110;&#x67;&#x40;&#x32;&#120;&#46;&#x70;&#x6e;&#103;</a>"></p>
 
 <p>为了确保互斥访问，锁还必须处理乱序执行带来的问题。如果CPU访问内存的顺序不是严格按照你的程序指令顺序，光确保互斥访问是不够的。为了解决CPU优化策略所带来的这个副作用，得使用内存屏障技术。设置了内存屏障以后可以确保乱序执行问题只发生在屏障的一边。</p>
 
@@ -547,7 +644,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>互斥锁解决了竞态的问题，但不幸的是它们同时也带来了一个新问题：死锁。死锁在多个线程都在互相等待对方运行结束的时候发生。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#x64;&#x65;&#x61;&#x64;&#x2d;&#x6c;&#x6f;&#x63;&#107;&#64;&#x32;&#x78;&#x2e;&#x70;&#x6e;&#x67;">&#x64;&#101;&#97;&#x64;&#x2d;&#108;&#111;&#x63;&#x6b;&#x40;&#x32;&#x78;&#x2e;&#x70;&#x6e;&#103;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x64;&#101;&#x61;&#100;&#x2d;&#108;&#x6f;&#99;&#x6b;&#x40;&#50;&#120;&#x2e;&#112;&#110;&#x67;">&#x64;&#x65;&#97;&#x64;&#x2d;&#x6c;&#111;&#99;&#107;&#x40;&#x32;&#120;&#46;&#x70;&#110;&#x67;</a>"></p>
 
 <p>考虑下面的示例代码，交换两个变量的值：</p>
 
@@ -588,7 +685,7 @@ swap(Y, X); // thread 2
 
 <p>这个问题在高低优先级任务共享资源的情况下可能会发生。当低优先级任务拥有了公共资源上的一把锁，它理应迅速完成任务以便释放锁让高优先级任务执行不至于等待太久。由于低优先级任务有锁，高优先级任务得不到运行，期间有可能被中优先级的任务钻了空子，抢占了低优先级特任务的运行时间，是因为中优先级任务拥有当前所有可运行任务中最高的优先级。这样，中优先级任务阻止了低优先级任务释放锁，因此成功地从还在等待运行的高优先级任务那抢到了优先运行的机会。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x70;&#x72;&#105;&#x6f;&#114;&#x69;&#116;&#x79;&#45;&#105;&#x6e;&#x76;&#x65;&#x72;&#x73;&#x69;&#111;&#110;&#64;&#x32;&#x78;&#x2e;&#112;&#110;&#103;">&#112;&#x72;&#x69;&#x6f;&#114;&#105;&#x74;&#x79;&#45;&#105;&#x6e;&#x76;&#101;&#114;&#x73;&#105;&#x6f;&#110;&#64;&#50;&#x78;&#x2e;&#x70;&#x6e;&#x67;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#x6d;&#x61;&#x69;&#108;&#x74;&#x6f;&#58;&#x70;&#114;&#105;&#x6f;&#x72;&#105;&#x74;&#121;&#45;&#x69;&#110;&#x76;&#101;&#x72;&#115;&#105;&#x6f;&#x6e;&#64;&#x32;&#x78;&#x2e;&#x70;&#110;&#103;">&#x70;&#114;&#105;&#111;&#x72;&#x69;&#x74;&#x79;&#x2d;&#x69;&#110;&#118;&#101;&#114;&#115;&#x69;&#111;&#x6e;&#64;&#x32;&#x78;&#46;&#112;&#110;&#103;</a>"></p>
 
 <p>在你的代码中，可能不会像火星探测器那样发生那么戏剧性的事情，因为优先级反转带来的后果往往不会那么严重。</p>
 
@@ -795,49 +892,6 @@ UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
     }
 }
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用Xcode的断点打日志（译文）]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89/"/>
-    <updated>2013-05-22T14:29:14+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/22/e794a8xcodee79a84e696ade782b9e68993e697a5e5bf97efbc88e8af91e69687efbc89</id>
-    <content type="html"><![CDATA[<p>原文地址：<a href="http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/">http://furbo.org/2013/04/11/logging-with-xcode-breakpoints/</a></p>
-
-<p>=========================================</p>
-
-<p>你知道不，为Xcode里的断点设置一些动作就可以很好地反复监控你的代码，而不需要在代码中加上一堆的NSLog()。</p>
-
-<p>在设置了断点后，右键点击选择"编辑断点"，然后在Action处选择“Debugger Command”。你可以在这里输入任何正确的调试命令。当你勾上"Automatically continue after evaluating"后，调试器会执行你的命令，而你的代码不会停下来。赞啊。</p>
-
-<p>当你想用命令 po myVar 来显示某个变量的值的时候，就可以用这个很棒的方法。但是有个问题：我通常想要知道某个变量是在哪里被打了日志，所以最后我又创建了一个断点，里面写上脚本命令：print &ldquo;myMethod in myClass&rdquo;(lldb里)，或者 echo myMethod in MyClass\n(gdb里)。</p>
-
-<p>完了，现在你需要管理两个断点而不是一个了。更糟的是，当你有如下代码的时候：</p>
-
-<pre><code>for (MyClass *class in aCraploadOfClasses) {
-    if (class.propertyThatIsRarelySet) {
-        [self doSomethingWith:class];
-    }
-}
-</code></pre>
-
-<p>当你想要在class收到-doSomeThingWith:消息之前跟踪class的话，你就没法用双断点技巧了。</p>
-
-<p>我费了好多劲才想到现在的解决方案：<strong>让调试器命令来调用NSLog!</strong></p>
-
-<p>举例来说：</p>
-
-<p><img src="/images/2013/05/NSLog.png"></p>
-
-<p>我们来分析下这个命令：</p>
-
-<pre><code>p (void)NSLog(@"%s: %@", _cmd, syncItemId)
-</code></pre>
-
-<p><em>cmd是一个存有当前方法名的C字符串（它通过objc_msgSend被传给每个Objective-C方法）。在运行时，</em>cmd很好的取代了<strong>PRETTY_FUNCTION</strong>_的作用。syncItemId是我在我的类里几个不同的方法中需要跟踪的变量。p命令还需要带有void返回值。</p>
-
-<p>这个小发现将会绳叼我很多时间：不再需要陷到Xcode里面去加上一些跟踪完问题就会立马删掉的代码。希望对你也有帮助！</p>
 ]]></content>
   </entry>
   
