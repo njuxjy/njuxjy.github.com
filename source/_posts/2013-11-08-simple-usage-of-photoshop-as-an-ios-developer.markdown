@@ -3,10 +3,8 @@ layout: post
 title: "Basic Designer Skills"
 date: 2013-11-08 13:45
 comments: true
-categories: 
+categories: [iOS]
 ---
-
-{% img /images/2013/08/priority-inversion@2x.png %}
 
 As an iOS developer, to learn some basic skills of a designer is good for us, which, for the most part, refer to the basic usage of Photoshop. In this case, when we receive a psd file from the designer, we can start to work without the help of designers to cut images and mark all the information in the comps. In this article, we'll cover topics about image seperation, image cropping, reading necessary infomation from the psd file etc. BTW I'm using Photoshop CS6.
 ###Image Seperation
