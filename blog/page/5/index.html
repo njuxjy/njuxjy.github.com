@@ -9,7 +9,7 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="viewDidLoad中， self.tableView.backgroundView = nil; //去除table背景 [self.tableView setSeparatorColor:[UIColor clearColor]]; //去除边框 cell创建过程中， [cell &hellip;">
+  <meta name="description" content="之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。 界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,145 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/27/e7b1bbe5beaee4bfa1e59091e4b88ae6bb91e58aa8e58f96e6b688e58f91e98081e99fb3e9a291e79a84e5ae9ee78eb0/">类微信向上滑动取消发送音频的实现</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-27T14:38:54+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。</p>
+
+<p><img src="/images/2013/02/1.png"></p>
+
+<p>界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时，向上滑动时画面中央出现“松开手指取消发送”的提示，向下滑动时出现其他提示，同时一直在录着音。手势的滑动可以发生在该界面的任何部分，在上面的tableview伤滑动也有效。</p>
+
+<p>在ChatVoiceView中首先给按钮加上一些事件关联：</p>
+
+<pre><code>    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpInside:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonTouchUpOutside:withEvent:) forControlEvents:UIControlEventTouchUpOutside];
+    [self.longPressBtn addTarget:self action:@selector(voiceHoldButtonDragOutside:withEvent:) forControlEvents:UIControlEventTouchDragOutside];
+</code></pre>
+
+<p>在响应函数中，除了录音相关的操作外，将事件传递给按钮的nextResponder，也就是让ChatVoiceView根据按钮被按下去的状态做不同的处理：</p>
+
+<pre><code>- (void)voiceHoldButtonDragOutside:(id)sender withEvent:(UIEvent *)event
+{
+    self.longPressBtn.highlighted = YES;
+    shouldResponseToSwipe = YES;
+    [[sender nextResponder] touchesMoved:[event allTouches] withEvent:event];
+}
+
+- (void)voiceHoldButtonTouchUpInside:(id)sender withEvent:(UIEvent *)event
+{
+    shouldResponseToSwipe = YES;
+    //do sth here
+    [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+}
+
+- (void)voiceHoldButtonTouchUpOutside:(id)sender withEvent:(UIEvent *)event
+{
+    shouldResponseToSwipe = YES;
+    //do sth here
+    [[sender nextResponder] touchesEnded:[event allTouches] withEvent:event];
+}
+</code></pre>
+
+<p>在ChatVoiceView中加上触摸事件捕获函数：</p>
+
+<pre><code>- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if(shouldResponseToSwipe == NO)
+    {
+        return;
+    }
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInView:self.superview];
+    CGPoint prevLocation = [touch previousLocationInView:self.superview];
+    if (location.y - prevLocation.y &gt; 0 &amp;&amp; direction == 1)//向下
+    {
+        //do sth
+    }
+    else if(location.y - prevLocation.y &lt; 0 &amp;&amp; direction == 2)//向上
+    {
+        //do sth
+    }
+}
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if(shouldResponseToSwipe == NO)
+    {
+        return;
+    }
+    shouldResponseToSwipe = NO;
+}
+</code></pre>
+
+<p>done.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/12/iose5ad97e4bd93/">iOS字体</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-12T14:57:44+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>可以参考：<a href="http://iosfonts.com">http://iosfonts.com</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -4171,306 +4310,6 @@ wp7目前没有统计需求，有的话再调研下。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/13/e59bbee5838fe6bba4e9959ce4b98be7a88be5ba8fe5ae9ee78eb0/">图像滤镜之程序实现</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-13T23:43:28+08:00" pubdate data-updated="true">Nov 13<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前段时间做了一段时间塞班平台的图像处理研究，想要做出类似于instagram、Q拍那样的滤镜特效，在手机拍完照后可以用我们提供的滤镜对照片进行美化处理（有空再做个ios版的）。看了一些instagram、Q拍、美图秀秀、可牛快拍等软件做出来的效果，对于图像处理零基础的我表示鸭梨很大。从RGB通道、alpha通道、位图结构、灰度图、图层、颜色表等概念看起，然后了解基本的图像处理方法如锐化、柔化、扩散、雕刻、黑白、反色等基本特效的原理，到高斯模糊、图像混合、柏林噪声等进阶的玩法，到最后总结出了一套做图像特效的方法，给我一个.psd的photoshop源文件，我便可以根据里面的拆分步骤用程序去实现该效果。其中参考了不少国外站点的东西，尤其是StackOverflow上找到了很多有用的东东，东拼西凑组成了我图像处理这块的一些心得。先上图吧。</p>
-
-<p>原图如下：</p>
-
-<p><img src="/images/2011/11/Nostalgia1.bmp"></p>
-
-<ol type="a">
-<li>基础效果</li>
-</ol>
-
-
-<p>这里说基础是因为这些效果不涉及图像混合等更加复杂的东东，只是对每个像素的RGB通道做一些处理。 有的算法一行代码就能解决了，有的稍微复杂些，不过基本国内的网上都能找得到。</p>
-
-<ol>
-<li> 黑白</li>
-</ol>
-
-
-<p><img src="/images/2011/11/blackwhite.png"></p>
-
-<ol>
-<li> 浮雕</li>
-</ol>
-
-
-<p><img src="/images/2011/11/emboss.png"></p>
-
-<ol>
-<li> 素描</li>
-</ol>
-
-
-<p><img src="/images/2011/11/sumiao.png"></p>
-
-<ol>
-<li> lomo</li>
-</ol>
-
-
-<p><img src="/images/2011/11/lomo.png"></p>
-
-<ol>
-<li> 马赛克</li>
-</ol>
-
-
-<p><img src="/images/2011/11/mosaic.png"></p>
-
-<ol>
-<li> 扫描线</li>
-</ol>
-
-
-<p><img src="/images/2011/11/scanline.png"></p>
-
-<ol>
-<li> 波普</li>
-</ol>
-
-
-<p><img src="/images/2011/11/bopo.png"></p>
-
-<ol>
-<li> 鱼眼</li>
-</ol>
-
-
-<p><img src="/images/2011/11/fisheye.png"></p>
-
-<ol type="a">
-<li>进阶效果</li>
-</ol>
-
-
-<p>这里仅作了图像混合，并没有用函数去处理每个RGB分量，毕竟不是专门搞ps的，不知道怎么弄算好看.. 不过貌似可牛快拍里有些效果就是做了图像混合，然后稍做了些处理。这种做法比较没技术含量.. 不适合单独作为产品级的效果，可以作为复杂特效的某些步骤。</p>
-
-<ol>
-<li> 早晨</li>
-</ol>
-
-
-<p><img src="/images/2011/11/morning.png"></p>
-
-<ol>
-<li> 星光</li>
-</ol>
-
-
-<p><img src="/images/2011/11/star.png"></p>
-
-<p>这里就放出两张图了，因为做法其实都一样，最多传的参数不同罢了。当然图像混合也是有学问的，可以参考国外一哥们的系列文章：<a href="http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/">http://jswidget.com/blog/2011/03/11/image-blending-algorithmpart-i/</a></p>
-
-<p>c.高级特效</p>
-
-<p>下面两个效果挺花时间的，主要要知道怎么做比较费时间，做的过程的话第二个效果也比较复杂，是根据.psd文件的拆分步骤一步步做出来的，所以在移动平台上跑有些慢&hellip;</p>
-
-<ol>
-<li> 老照片</li>
-</ol>
-
-
-<p><img src="/images/2011/11/old-photo.png"></p>
-
-<ol>
-<li> Nostalgia</li>
-</ol>
-
-
-<p><img src="/images/2011/11/nostalgia.png"></p>
-
-<p>做的方法受这个老外的影响很大：<a href="http://taptaptap.com/blog/creating-a-camera-plus-fx/">http://taptaptap.com/blog/creating-a-camera-plus-fx/</a></p>
-
-<p>这是个开发ios上滤镜app的老外设计师写的，而且是夫妻档，貌似老婆是设计师，她将做好的photoshop效果图给源文件给老公，然后老公根据.psd文件做成ios应用放到app store里去卖。我的Nostalgia特效就是模仿的他们的效果。不过老外没有把源代码放上来，就截了段核心函数，然后我自己摸索了好多天，不断的尝试，最后才搞成的效果。里面还涉及到了用Matlab模拟出曲线的函数，竟然用到了四次函数。。不过整个过程还是很享受的，很有乐趣。如果组内有需求，可以帮着搞一下。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/17/e7a7bbe6a48dzlibe588b0symbiane5ae9ee78eb0gzipe58685e5ad98e6b581e8a7a3e58e8b/">移植zlib到Symbian实现gzip内存流解压</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-17T22:11:00+08:00" pubdate data-updated="true">Aug 17<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>客户端（v3版本）原先在处理服务器端传回gzip数据时采用的策略是先将gzip流保存成.gz文件，再用解压文件的方式将数据解压出来。这种方式显然不如直接从内存中实现gzip解压来得高效，但由于Symbian SDK中zlib的版本过低（1.1.3）等原因，网上介绍的很多内存流解压方法并不适用于此：</p>
-
-<ul>
-<li><p><a href="http://apps.hi.baidu.com/share/detail/8355062">http://apps.hi.baidu.com/share/detail/8355062</a></p></li>
-<li><p><a href="http://blog.sina.com.cn/s/blog_4d6f62190100md6k.html">http://blog.sina.com.cn/s/blog_4d6f62190100md6k.html</a></p></li>
-<li><p><a href="http://blog.sina.com.cn/s/blog_65db99840100kwh9.html">http://blog.sina.com.cn/s/blog_65db99840100kwh9.html</a></p></li>
-<li><p><a href="http://www.devdiv.com/thread-8625-1-1.html">http://www.devdiv.com/thread-8625-1-1.html</a></p></li>
-<li><p><a href="http://www.developer.nokia.com/Community/Discussion/showthread.php?155614-GZip-and-RReadStream-problem">http://www.developer.nokia.com/Community/Discussion/showthread.php?155614-GZip-and-RReadStream-problem</a></p></li>
-</ul>
-
-
-<p>在解决过程中遇到了一些困难，开始使用<a href="http://apps.hi.baidu.com/share/detail/8355062">http://apps.hi.baidu.com/share/detail/8355062</a> 中的方法，并且将服务器返回的gzip数据去掉开头的10个gzip header，但程序始终卡在第13行：</p>
-
-<ol>
-<li><p> CBufFlat* CETNetOperator::DeCompressMemL(const TDesC8&amp; aData)   </p></li>
-<li><p>      {   </p></li>
-<li><p>      TInt nBufferSize = 128;   </p></li>
-<li><p>      HBufC8* nSrc = NULL;   </p></li>
-<li><p>      HBufC8* nTemp = aData.Mid(10).Alloc();   //去掉开头10个字节   </p></li>
-<li><p>      nSrc = nTemp;   </p></li>
-<li><p>      CleanupStack::PushL(nSrc);   </p></li>
-<li><p>      CBufFlat* nBufFlat = CBufFlat::NewL(nBufferSize);   </p></li>
-<li><p>      CleanupStack::PushL(nBufFlat);   </p></li>
-<li><p>.      CBufferManager<em> nBufferManager = CBufferManager::NewLC(</em>nSrc, *nBufFlat,   </p></li>
-<li><p>.                  nBufferSize);   </p></li>
-<li><p>.      CEZDecompressor<em> decompressor = CEZDecompressor::NewLC(</em>nBufferManager);   </p></li>
-<li><p>.      while (decompressor->InflateL())   </p></li>
-<li><p>.            {// loop here until the file is compressed   </p></li>
-<li><p>.            }   </p></li>
-<li><p>.      //    nBufFlat->Ptr(0);   </p></li>
-<li><p>.      CleanupStack::PopAndDestroy(3);   </p></li>
-<li><p>.      return nBufFlat;   </p></li>
-<li><p>.      }   </p></li>
-</ol>
-
-
-<p>然后尝试使用Symbian SDK自带的zlib库，include &lt;ezlib.h>，代码如下：</p>
-
-<ol>
-<li><p> int ungzip(char<em> source, int len, char</em> des)   </p></li>
-<li><p>     {   </p></li>
-<li><p>     int ret, have;   </p></li>
-<li><p>     int offset = 0;   </p></li>
-<li><p>     z_stream d_stream;   </p></li>
-<li><p>     Byte compr[KETNET_BUFFER_SIZE] ={0}, uncompr[KETNET_BUFFER_SIZE * 4] ={0};   </p></li>
-<li><p>     memcpy(compr, (Byte*) source, len);   </p></li>
-<li><p>     uLong comprLen, uncomprLen;   </p></li>
-<li><p>     comprLen = len;   </p></li>
-<li><p>.     uncomprLen = KETNET_BUFFER_SIZE * 4;   </p></li>
-<li><p>.     strcpy((char*) uncompr, &#8221;garbage&#8221;);   </p></li>
-<li><p>.     d_stream.zalloc = Z_NULL;   </p></li>
-<li><p>.     d_stream.zfree = Z_NULL;   </p></li>
-<li><p>.     d_stream.opaque = Z_NULL;   </p></li>
-<li><p>.     d_stream.next_in = compr;   </p></li>
-<li><p>.     d_stream.avail_in = comprLen;   </p></li>
-<li><p>.     ret = inflateInit2(&amp;d_stream,47);   </p></li>
-<li><p>.     if (ret != Z_OK)   </p></li>
-<li><p>.         {   </p></li>
-<li><p>.         return ret;   </p></li>
-<li><p>.         }   </p></li>
-<li><p>.     do  </p></li>
-<li><p>.         {   </p></li>
-<li><p>.         d_stream.next_out = uncompr;   </p></li>
-<li><p>.         d_stream.avail_out = uncomprLen;   </p></li>
-<li><p>.         ret = inflate(&amp;d_stream, Z_NO_FLUSH);   </p></li>
-<li><p>.         switch (ret)   </p></li>
-<li><p>.             {   </p></li>
-<li><p>.             case Z_NEED_DICT:   </p></li>
-<li><p>.                 ret = Z_DATA_ERROR;   </p></li>
-<li><p>.             case Z_DATA_ERROR:   </p></li>
-<li><p>.             case Z_MEM_ERROR:   </p></li>
-<li><p>.                 (void) inflateEnd(&amp;d_stream);   </p></li>
-<li><p>.                 return ret;   </p></li>
-<li><p>.             }   </p></li>
-<li><p>.         have = uncomprLen - d_stream.avail_out;   </p></li>
-<li><p>.         memcpy(des + offset, uncompr, have);   </p></li>
-<li><p>.         offset += have;   </p></li>
-<li><p>.         }   </p></li>
-<li><p>.     while (d_stream.avail_out == 0);   </p></li>
-<li><p>.     inflateEnd(&amp;d_stream);   </p></li>
-<li><p>.     memcpy(des + offset, &#8221;\0&#8221;, 1);   </p></li>
-<li><p>.     return ret;   </p></li>
-<li><p>.     }  </p></li>
-</ol>
-
-
-<p>发现程序始终在第17行返回-2，即流初始化Z_STREAM_ERROR错误，zlib1.1.3的zlib.h中说原因是参数设置不正确，stream为空或者windowBits为负。而inflateInit2（）要求windowBits在8~15之间，在其他范围内的值会造成初始化错误。随后改成了15，但是在第26行inflate进行解压时返回值为-3，即Z_DATA_ERROR错误，原因是&#8221;the input data is corrupted (input stream not conforming to the zlib format or incorrect adler32 checksum)&ldquo;。</p>
-
-<p>于是怀疑是Symbian自带的zlib的版本问题，刚哥说得自己移植zlib库进去。由于没移植过程序，一开始犯了个错误，原地绕了个圈子：我从网上下了个人家已经编译好的1.2.3版本的zlib.lib文件和几个头文件放到项目工程中去，以为光更换了zlib版本就行了，结果还是那两个错误。最后才走移植的路子，并编译运行成功，现将步骤记录如下：</p>
-
-<p>从网上下载1.2.3的源代码，将下面这些.h .c文件放入工程下面（全部放进去会使工程太大，由于只需要用zlib的解压功能，所以删除了部分没用的文件和函数，还可以继续减减肥，这个以后再做吧）：</p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/2.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/2.jpg" alt="" /></a></p>
-
-<p>使用zlib提供的uncompress函数进行解压缩：</p>
-
-<ol>
-<li> ZEXTERN int ZEXPORT uncompress OF((Bytef <em>dest, uLongf </em>destLen, const Bytef *source, uLong sourceLen));  </li>
-</ol>
-
-
-<p>这个函数的实现其实就是上面的ungzip函数。在inflateInit2（）的时候使用了47，在1.2.3版本的zlib.h中有这么一段话，是1.1.3版本中没有的：</p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2011/08/21.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2011/08/21.jpg" alt="" /></a></p>
-
-<p>难怪1.1.3版本的不行，因为在1.1.3版本中的inflateInit2()中对gzip只字未提，只有gzopen()等函数能对.gz的文件进行解压。因此1.1.3版本不支持内存流的gzip解压。</p>
-
-<p>这样以后，一般的项目就算是可以大功告成了。下面的步骤仅针对于自己参与的这个项目，没兴趣的可以跳过：） 由于它在其他地方用到了Symbian SDK自带的系统文件ezlib.h，而这一部分代码没法更改为使用新移植进去的zlib库，所以只能在系统中保持两个库的并存，这样就会造成很多函数名和类、结构体声明重复，无法通过编译。唯一想到的办法就是将新加入的zlib源文件中与老版本的zlib冲突的部分全部重命名，但这是一个巨大的工作量，因为宏定义特别多。那就先给zlib减减肥吧，仅保留需要的解压缩的那部分。过程就不详说了，总之多尝试吧，也不是个容易的活。</p>
-
-<p>在这过程中产生了些副产品：</p>
-
-<ol>
-<li><p> Carbide的断点调试，比打日志好多了，f6单步, f8执行</p></li>
-<li><p> 明白了移植是怎么回事</p></li>
-<li><p> 最好服务端过来的数据头部有gzip数据包的大小信息，可以减少客户端动态分配的内存</p></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -4492,12 +4331,16 @@ wp7目前没有统计需求，有的话再调研下。</p>
 <li class='category'><a href='/blog/categories/ji-zhu/'>技术 (6)</a></li>
 <li class='category'><a href='/blog/categories/sheng-huo/'>生活 (17)</a></li>
 <li class='category'><a href='/blog/categories/fan-yi/'>翻译 (19)</a></li>
-<li class='category'><a href='/blog/categories/zhuan-zai/'>转载 (1)</a></li>
+<li class='category'><a href='/blog/categories/zhuan-zai/'>转载 (2)</a></li>
 
   </ul>
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/02/26/patch-to-third-party-lib/">给第三方库打patch</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer/">Basic Designer Skills</a>
@@ -4513,10 +4356,6 @@ wp7目前没有统计需求，有的话再调研下。</p>
     
       <li class="post">
         <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/">《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据</a>
       </li>
     
   </ul>
@@ -4548,7 +4387,7 @@ ds.charset = 'UTF-8';
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - njuxjy -
+  Copyright &copy; 2014 - njuxjy -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

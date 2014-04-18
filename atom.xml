@@ -4,7 +4,7 @@
   <title><![CDATA[不可卷也]]></title>
   <link href="http://xiaojiayi.com/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-11-08T16:01:48+08:00</updated>
+  <updated>2014-04-18T15:20:34+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[给第三方库打patch]]></title>
+    <link href="http://xiaojiayi.com/blog/2014/02/26/patch-to-third-party-lib/"/>
+    <updated>2014-02-26T08:34:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2014/02/26/patch-to-third-party-lib</id>
+    <content type="html"><![CDATA[<p>test test</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Basic Designer Skills]]></title>
@@ -115,7 +124,7 @@
     <link href="http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/"/>
     <updated>2013-09-28T08:21:00+08:00</updated>
     <id>http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine</id>
-    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.</p>
+    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users..</p>
 
 <h3>Clone existing repository into the new machine</h3>
 
@@ -1169,6 +1178,75 @@ fi
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[(旧文迁移) 小房子]]></title>
+    <link href="http://xiaojiayi.com/blog/2013/05/02/e5b08fe688bfe5ad90/"/>
+    <updated>2013-05-02T19:11:50+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2013/05/02/e5b08fe688bfe5ad90</id>
+    <content type="html"><![CDATA[<p>转载自：<a href="http://www.toodaylab.com/11819">http://www.toodaylab.com/11819</a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/1.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/1_thumb.jpg" alt="1" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/2.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/2_thumb.jpg" alt="2" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/3.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/3_thumb.jpg" alt="3" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/4.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/4_thumb.jpg" alt="4" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/5.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/5_thumb.jpg" alt="5" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/6.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/6_thumb.jpg" alt="6" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/7.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/7_thumb.jpg" alt="7" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/8.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/8_thumb.jpg" alt="8" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/9.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/9_thumb.jpg" alt="9" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/10.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/10_thumb.jpg" alt="10" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/11.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/11_thumb.jpg" alt="11" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/121.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/12_thumb1.jpg" alt="12" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/13.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/13_thumb.jpg" alt="13" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/14.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/14_thumb.jpg" alt="14" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/15.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/15_thumb.jpg" alt="15" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/16.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/16_thumb.jpg" alt="16" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/17.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/17_thumb.jpg" alt="17" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/18.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/18_thumb.jpg" alt="18" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/19.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/19_thumb.jpg" alt="19" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/20.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/20_thumb.jpg" alt="20" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/21.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/21_thumb.jpg" alt="21" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/22.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/22_thumb.jpg" alt="22" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/23.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/23_thumb.jpg" alt="23" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/24.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/24_thumb.jpg" alt="24" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/25.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/25_thumb.jpg" alt="25" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/26.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/26_thumb.jpg" alt="26" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/27.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/27_thumb.jpg" alt="27" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/28.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/28_thumb.jpg" alt="28" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/29.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/29_thumb.jpg" alt="29" /></a></p>
+
+<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/30.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/30_thumb.jpg" alt="30" /></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[(旧文迁移) 开发者最迫不及待的10个Android2.2特性（译文）]]></title>
     <link href="http://xiaojiayi.com/blog/2013/05/02/e5bc80e58f91e88085e69c80e8bfabe4b88de58f8ae5be85e79a8410e4b8aaandroid2-2e789b9e680a7efbc88e8af91e69687efbc89/"/>
     <updated>2013-05-02T19:09:13+08:00</updated>
@@ -1466,34 +1544,6 @@ Twitter的实时搜索功能给人一种在线谈话的感受</p>
 <p>TechCrunch的行业分析师Michael Arrington表示现在还不清楚这些实时的更新是怎样“融合”到搜索结果中区的，但他设想那些不出名的在Web社区里广为议论的博客文章或网站可能会 在相关搜索的结果列表里排名上升一些。同样地，当这些来源淡出了网络的讨论，它们将会在结果排名上跌回来，其他热门的观点和意见便泡沫一样浮出表面。</p>
 
 <p>本周的会议上清楚的一点是，Twitter喜欢在技术社区里不断增长实力和影响力。它的这种在网上发布和分享信息的新鲜的方法已经迫使其他的像谷歌这样的技术中坚放弃游戏转而继续围绕搜索平台进行创新。那样，最终受益的是我们所有人。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[(旧文迁移) Emily Howell: 一个会创作古典音乐的计算机程序（译文）]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89/"/>
-    <updated>2013-05-02T19:03:44+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/02/emily-howell-e4b880e4b8aae4bc9ae5889be4bd9ce58fa4e585b8e99fb3e4b990e79a84e8aea1e7ae97e69cbae7a88be5ba8fefbc88e8af91e69687efbc89</id>
-    <content type="html"><![CDATA[<p>原文网址：<a href="http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html">http://www.telegraph.co.uk/culture/music/music-news/6404737/Emily-Howell-the-computer-program-that-composes-classical-music.html</a></p>
-
-<p>Emily Howell，这个会创作原版古典音乐的计算机程序已经签订了唱片协议，并将于明年发行她的第一张原创唱片。    <br/>
-这个程序由来自加州大学圣克鲁斯分校的音乐教授David Cope在工作将近四十载后设计和完成。    <br/>
-她的第一张唱片《黑暗中的光明》将于春季发行。是由人们在两架钢琴上通过六个动作演奏出来的。    <br/>
-Cope教授告诉《时代》杂志他原打算写一个程序，它能够复制类似于莫扎特和贝多芬这样的成百上千个古典作家的风格。    <br/>
-但是他说他决定还是要创造出一个不仅能模仿其他人，同时也能以自己的风格原创音乐的东西。    <br/>
-“我致力于创造出一个独一无二的作曲者，它能创作出有趣而引人注目的当代的古典音乐，但是风格却是独树一帜的。”他说。    <br/>
-但他的工作一直是有争议的，一些作曲家和管弦乐队拒绝演奏他的作品。Cope教授说许多大牌的古典演奏家的经纪人援引业界对他作品的争议而拒绝让他们的客户演奏该程序创作的音乐。    <br/>
-许多专家对这个项目持怀疑态度。“对我而言，音乐主要是关于人的情况，”古典音乐评论家Hilary Finch说，“而机器与人不同，我不确定这能否使人满意。”    <br/>
-Cope教授主张Emily Howell的音乐仍然主要是由人来创作的。“计算机并不是单独的一样东西，”他说，“计算机是人造的。程序本身也是人造的。数据库里的音乐也是人为的。那么多相关的东西都是人造的。现在相比往常有更多的人已经参与到这个项目中来了。”</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[(旧文迁移) 商业大厦停车场上坡处的栏杆机被第一天开车的我一个溜坡撞烂了]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891/"/>
-    <updated>2013-05-02T19:03:12+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/02/e59586e4b89ae5a4a7e58ea6e5819ce8bda6e59cbae4b88ae59da1e5a484e79a84e6a08fe69d86e69cbae8a2abe7acace4b880e5a4a9e5bc80e8bda6e79a84e68891</id>
-    <content type="html"><![CDATA[<p>RT</p>
 ]]></content>
   </entry>
   

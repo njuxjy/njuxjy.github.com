@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>记一次tableview滚动性能调优 - 不可卷也</title>
+  <title>给第三方库打patch - 不可卷也</title>
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="项目中的会话界面逻辑很复杂，滚动起来有些卡。从发现问题到一步步解决，过程如下： 锁定问题就和tableview的几个代理函数有关。于是基于二分法的思想，注释掉部分代码，检查只运行其余代码会不会卡。
-这样找下来发现性能瓶颈在设置用户头像的函数。 &hellip;">
+  <meta name="description" content="test test
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xiaojiayi.com/blog/2013/03/01/e8aeb0e4b880e6aca1tableviewe6bb9ae58aa8e680a7e883bde8b083e4bc98">
+  <link rel="canonical" href="http://xiaojiayi.com/blog/2014/02/26/patch-to-third-party-lib">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="不可卷也" type="application/atom+xml">
@@ -70,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">记一次tableview滚动性能调优</h1>
+      <h1 class="entry-title">给第三方库打patch</h1>
     
     
       <p class="meta">
@@ -86,34 +86,14 @@
   
 
 
-<time datetime="2013-03-01T22:33:47+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2013</time>
+<time datetime="2014-02-26T08:34:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>项目中的会话界面逻辑很复杂，滚动起来有些卡。从发现问题到一步步解决，过程如下：</p>
-
-<ol>
-<li><p>锁定问题就和tableview的几个代理函数有关。于是基于二分法的思想，注释掉部分代码，检查只运行其余代码会不会卡。</p></li>
-<li><p>这样找下来发现性能瓶颈在设置用户头像的函数。 是之前项目里已有的一个UIButton的网络图片下载分类，里面会对图片路径进行MD5的加密，并且没用内存缓存，每次都从磁盘将头像读入UIImage，而头像照片的尺寸有的很大，于是把头像下载控件换成开源的SDWebImage，原以为就能圆满解决，结果发现还是有问题。</p></li>
-<li><p>只能靠工具了。用了Profile工具查CPU发现是每个cell在计算是否需要加上消息显示日期的时候，日期部分的计算占了大量cpu。每个cell的绘制都频繁创建和销毁NSCalendar和NSDateTimeFormatterz对象，而这两个对象的创建是比较昂贵的，难怪会卡。于是将NSCalendar和NSDateTimeFormatter改为全局cache，不需要每次都创建，粗略测了下发现不卡了。</p></li>
-<li><p>过了阵子又去测测发现又开始卡了（肯定遇到了未覆盖到的测试用例）。 肯定还有其他地方性能不够好。。 再接再厉，再次运行profile工具，多滚动列表一会，然后观察时间最长的部分在哪里。发现NSDateFormatter的dateFromString函数和获取登录用户头像路径的函数都比较耗时，于是采取逐个击破的方式，先注释掉其中一个的代码，调试另一个。首先将耗时的计算结果尽可能的缓存，比如这里的获取登录用户头像路径。改好后还是卡，说明dateFromString函数的计算时间需要减少，但这是系统函数（我还一度以为是该函数的性能有问题，去SO上搜索半天没人反映它有什么问题）。于是就假设是该函数调用次数太多了。</p></li>
-</ol>
-
-
-<p>5. 经检查发现在计算cell高度和绘制cell时，为了确定是否要显示时间条，需要计算两个时间之差是否在五分钟内，计算的函数都要调用dateFromString。必须把计算移到外面去，把结果保存好。改完后好了一阵，多测测又不行了。。还是有丢帧的感觉。。后来怀疑是debug模式下log没关，因为据说每一句NSLog底层都会调用[NSCalendar currentCalendar]，但关了以后发现还是不行。有些束手无策。</p>
-
-<p>6.  然后发现整个会话中没有时间条的时候都很顺畅，有了几个时间条以后滚动就会有点卡，于是目光聚焦在绘制时间条的地方。由于之前对时间条UILabel的layer使用了圆角设置了borderColor，这个肯定很耗时，去掉，用默认的UILabel格式，然后在draw的时候根据是否需要展示时间条来设置其hidden属性。发现还是卡。然后发现把UILabel的颜色改成clearColor（跟tableView的backgroundColor一样）就不卡了。之前网上看到说clearColor会影响性能，但这里竟然好像改善了性能。原因可能是在tableView背景色透明时，在上面画不同色的view比较耗时。 然后在label后面加了个背景图，就解决了原先需要用layer的问题了。最终问题解决。当然肯定还有优化空间，但至少比较流畅了，就不做“过早优化”了。</p>
-
-<p>总结下：</p>
-
-<ol>
-<li><p>Time Profile很重要，光凭感觉去猜是不靠谱的。这一点WWDC里也提到了。</p></li>
-<li><p>性能问题有可能由单个大问题引起，也可能由很多小问题叠加引起。对于后者，用“控制变量法”逐个击破。</p></li>
-</ol>
-
+<div class="entry-content"><p>test test</p>
 </div>
 
 
@@ -136,14 +116,8 @@
   
 
 
-<time datetime="2013-03-01T22:33:47+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2013</time>
+<time datetime="2014-02-26T08:34:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/ios/'>iOS</a>
-  
-</span>
 
 
     </p>
@@ -157,10 +131,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/02/27/e7b1bbe5beaee4bfa1e59091e4b88ae6bb91e58aa8e58f96e6b688e58f91e98081e99fb3e9a291e79a84e5ae9ee78eb0/" title="Previous Post: 类微信向上滑动取消发送音频的实现">&laquo; 类微信向上滑动取消发送音频的实现</a>
+        <a class="basic-alignment left" href="/blog/2013/11/08/simple-usage-of-photoshop-as-an-ios-developer/" title="Previous Post: Basic Designer Skills">&laquo; Basic Designer Skills</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/06/iose680a7e883bde4bc98e58c96efbc88wwdce7ac94e8aeb0efbc89/" title="Next Post: iOS性能优化（WWDC笔记）">iOS性能优化（WWDC笔记） &raquo;</a>
       
     </p>
   </footer>

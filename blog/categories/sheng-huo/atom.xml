@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 生活 | 不可卷也]]></title>
   <link href="http://xiaojiayi.com/blog/categories/sheng-huo/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2013-11-08T16:01:48+08:00</updated>
+  <updated>2014-04-18T15:20:34+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -18,7 +18,7 @@
     <link href="http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/"/>
     <updated>2013-09-28T08:21:00+08:00</updated>
     <id>http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine</id>
-    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.</p>
+    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users..</p>
 
 <h3>Clone existing repository into the new machine</h3>
 
