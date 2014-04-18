@@ -6,7 +6,7 @@ comments: true
 categories: [生活]
 ---
 
-A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users..
+A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.
 
 ###Clone existing repository into the new machine
 
@@ -27,7 +27,7 @@ $ git clone git@github.com:username/username.github.com.git _deploy
 That means in order to run octopress, precondition is to let your terminal not complain about the following commands: `ruby`, `gem`, `rbenv`, `rake`. So that you can run the rake command to configure your octopress.
 
 ```
-$ cd octopress
+$ cd octopress	
 $ gem install bundler
 $ rbenv rehash    # If you use rbenv, rehash to be able to run the bundle command
 $ bundle install
