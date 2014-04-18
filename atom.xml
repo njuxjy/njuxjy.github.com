@@ -4,7 +4,7 @@
   <title><![CDATA[不可卷也]]></title>
   <link href="http://xiaojiayi.com/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2014-04-18T15:20:34+08:00</updated>
+  <updated>2014-04-18T16:18:00+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -15,10 +15,58 @@
   
   <entry>
     <title type="html"><![CDATA[给第三方库打patch]]></title>
-    <link href="http://xiaojiayi.com/blog/2014/02/26/patch-to-third-party-lib/"/>
-    <updated>2014-02-26T08:34:00+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2014/02/26/patch-to-third-party-lib</id>
-    <content type="html"><![CDATA[<p>test test</p>
+    <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime/"/>
+    <updated>2014-04-18T15:36:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime</id>
+    <content type="html"><![CDATA[<p>标题有个前提，就是在不修改第三方库代码的基础上。</p>
+
+<p>项目中用到的第三方库，有时候不能满足项目的特定需求，比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
+
+<h3>1. TTTAttributedLabel</h3>
+
+<p>TTTAttributedLabel是增强版的UILabel，它有一个属性links如下定义：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@property (readonly, nonatomic, strong) NSArray *links;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>并且提供了接口往这个属性里增加元素：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)addLinkToURL:(NSURL *)url
+</span><span class='line'>           withRange:(NSRange)range</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是没有清空里面元素的接口，没有的话就自己创造一个。首先创建TTTAttributedLabel的一个分类TTTAttributedLabel+RemoveLinks，增加方法brk_removeAllLinks:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)brk_removeAllLinks
+</span><span class='line'>{
+</span><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+</span><span class='line'>    SEL setLinksSelector = NSSelectorFromString(@"setLinks:");
+</span><span class='line'>    if([self respondsToSelector:setLinksSelector])
+</span><span class='line'>    {
+</span><span class='line'>        [self performSelector:setLinksSelector withObject:[NSArray array]];
+</span><span class='line'>    }
+</span><span class='line'>#pragma clang diagnostic pop
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>让TTTAttributedLabel自己重新初始化了自己的links属性。</p>
+
+<h3>2. OLImageView</h3>
 ]]></content>
   </entry>
   
@@ -124,7 +172,7 @@
     <link href="http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine/"/>
     <updated>2013-09-28T08:21:00+08:00</updated>
     <id>http://xiaojiayi.com/blog/2013/09/28/writing-octopress-blog-on-a-second-machine</id>
-    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users..</p>
+    <content type="html"><![CDATA[<p>A couple of days ago, I installed octopress on my own air, yesterday I wanted to test if I could write blogs from the machine in my company. With some effort, I did it. As a backup, I record it down here. This is specially for mac users.</p>
 
 <h3>Clone existing repository into the new machine</h3>
 
@@ -149,7 +197,7 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd octopress
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd octopress   
 </span><span class='line'>$ gem install bundler
 </span><span class='line'>$ rbenv rehash    # If you use rbenv, rehash to be able to run the bundle command
 </span><span class='line'>$ bundle install
