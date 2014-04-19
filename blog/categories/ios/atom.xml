@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | 不可卷也]]></title>
   <link href="http://xiaojiayi.com/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2014-04-18T16:18:00+08:00</updated>
+  <updated>2014-04-19T15:03:18+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -12,6 +12,430 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[给第三方库打patch]]></title>
+    <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime%E5%89%AF%E6%9C%AC/"/>
+    <updated>2014-04-18T15:36:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime副本</id>
+    <content type="html"><![CDATA[<p>标题有个前提，就是在不修改第三方库代码的基础上。</p>
+
+<p>项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
+
+<h3>1. TTTAttributedLabel</h3>
+
+<p>TTTAttributedLabel是增强版的UILabel，它有一个属性links如下定义：</p>
+
+<p><code>
+@property (readonly, nonatomic, strong) NSArray *links;
+</code></p>
+
+<p>并且提供了接口往这个属性里增加元素：</p>
+
+<p>```
+&ndash; (void)addLinkToURL:(NSURL *)url</p>
+
+<pre><code>       withRange:(NSRange)range
+</code></pre>
+
+<p>```</p>
+
+<p>但是没有清空里面元素的接口，没有的话就自己创造一个。首先创建TTTAttributedLabel的一个分类TTTAttributedLabel+RemoveLinks，增加方法brk_removeAllLinks:</p>
+
+<p>```
+&ndash; (void)brk_removeAllLinks
+{</p>
+
+<h1>pragma clang diagnostic push</h1>
+
+<h1>pragma clang diagnostic ignored &ldquo;-Warc-performSelector-leaks&rdquo;</h1>
+
+<pre><code>SEL setLinksSelector = NSSelectorFromString(@"setLinks:");
+if([self respondsToSelector:setLinksSelector])
+{
+    [self performSelector:setLinksSelector withObject:[NSArray array]];
+}
+</code></pre>
+
+<h1>pragma clang diagnostic pop</h1>
+
+<p>}
+```
+让TTTAttributedLabel自己重新初始化了自己的links属性。</p>
+
+<h3>2. OLImageView</h3>
+
+<p>OLImageView是一个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：</p>
+
+<p><code>
+OLImageView *imageView = [[OLImageView alloc] init];
+[imageView setImageWithURL:[NSURL URLWithString:@"http://***.com/***.gif"]];
+</code></p>
+
+<p>原因在于这个库的作者利用runtime对AFNetworking做了一些手脚。它创建了AFImageRequestOperation的一个分类AFImageRequestOperation+OLImage，并在<code>+load</code>时将AFImageRequestOperation类中的<code>setResponseImage:</code>方法和该分类中的<code>setResponseOLImage:</code>方法交换：</p>
+
+<p>```
++ (void)load
+{</p>
+
+<pre><code>method_exchangeImplementations(class_getInstanceMethod(self, @selector(setResponseImage:)), class_getInstanceMethod(self, @selector(setResponseOLImage:)));
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(void)setResponseOLImage:(UIImage *)responseImage
+{
+  if ([self.responseData length] > 0 &amp;&amp; [self isFinished])
+  {
+      [self setResponseOLImage:[OLImage imageWithData:self.responseData scale:self.imageScale]];
+  }
+}
+```</li>
+</ul>
+
+
+<p>这样，当AFImageRequestOperation下载完图片数据，准备调用<code>setResponseImage:</code>时，它就会被hook进这里定义的<code>setResponseOLImage</code>，做一些定制化工作。</p>
+
+<p>如果想加下载进度提示怎么办？由于项目中使用了UIImageView+AFNetworking来实现图片下载，没有直接操作AFImageRequestOperation，没办法调用AFImageRequestOperation的<code>setDownloadProgressBlock:</code>来实现定制，于是想到了模仿之前的做法，hook AFImageRequestOperation的<code>initWithRequest</code>方法，在初始化方法里调用<code>setDownloadProgressBlock:</code>，做法如下：</p>
+
+<p>```
++ (void)load
+{</p>
+
+<pre><code>method_exchangeImplementations(class_getInstanceMethod(self, @selector(initWithRequest:)), class_getInstanceMethod(self, @selector(initWithOLRequest:)));
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(id)initWithOLRequest:(NSURLRequest *)request
+{
+  self = [super initWithRequest:request];
+  if (!self)
+  {
+      return nil;
+  }</li>
+</ul>
+
+
+<h1>if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)</h1>
+
+<pre><code>self.imageScale = [[UIScreen mainScreen] scale];
+self.automaticallyInflatesResponseImage = YES;
+[self setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead)
+{
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+        if([[self.request.URL absoluteString] isKindOfClass:[NSString class]])
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:BKPImageDownloadingProgressNotification object:[self.request.URL absoluteString] userInfo:@{BKPImageTotalBytesReadKey : @(totalBytesRead), BKPImageTotalBytesExpectedToReadKey : @(totalBytesExpectedToRead)}];
+        }
+    });
+}];
+</code></pre>
+
+<h1>endif</h1>
+
+<pre><code>return self;
+</code></pre>
+
+<p>}</p>
+
+<p>```</p>
+
+<h3>3. AFNetworking</h3>
+
+<p>Matt大神的AFNetworking应该都比较熟悉了，项目里图片下载的底层都是用了之前提到的UIImageView+AFNetworking分类，这个分类很简洁易用，不过它把图片缓存的逻辑也完全封装了，有时候需要了解某个给定的图片URL是否已经被缓存了，或者是否正在被请求，于是自己动手，丰衣足食：</p>
+
+<p>```
+&ndash; (BOOL)isRequestingForUrl:(NSURL *)url
+{</p>
+
+<h1>pragma clang diagnostic push</h1>
+
+<h1>pragma clang diagnostic ignored &ldquo;-Wundeclared-selector&rdquo;</h1>
+
+<pre><code>UIImageView *helper = [[UIImageView alloc] init];
+if ([[helper class] respondsToSelector:@selector(af_sharedImageRequestOperationQueue)])
+{
+    NSOperationQueue *operationQueue = [[helper class] performSelector:@selector(af_sharedImageRequestOperationQueue)];
+    for(AFImageRequestOperation *op in [operationQueue operations])
+    {
+        if([op.request.URL.absoluteString isEqualToString:url.absoluteString])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+else
+{
+    return NO;
+}
+</code></pre>
+
+<h1>pragma clang diagnostic pop</h1>
+
+<p>}</p>
+
+<ul>
+<li>(BOOL)isCachedForUrl:(NSURL *)url
+{
+
+<h1>pragma clang diagnostic push</h1>
+
+<h1>pragma clang diagnostic ignored &ldquo;-Wundeclared-selector&rdquo;</h1>
+
+  UIImageView <em>helper = [[UIImageView alloc] init];
+  if ([[helper class] respondsToSelector:@selector(af_sharedImageCache)])
+  {
+      id afImageCache = [[helper class] performSelector:@selector(af_sharedImageCache)];
+      if([afImageCache respondsToSelector:@selector(cachedImageForRequest:)])
+      {
+          UIImage </em>cachedImage = [afImageCache performSelector:@selector(cachedImageForRequest:) withObject:[NSURLRequest requestWithURL:url]];
+          return cachedImage != nil;
+      }
+      else
+      {
+          return NO;
+      }
+  }
+  else
+  {
+      return NO;
+  }
+
+<h1>pragma clang diagnostic pop</h1>
+
+<p>}
+```</p></li>
+</ul>
+
+
+<h3>注意点</h3>
+
+<p>利用runtime来给第三方库打patch，不是没有代价的，需要小心使用：</p>
+
+<ol>
+<li>当第三方库升级了，需要检查是否patch的方法已过期，甚至更糟糕的，是否会造成crash，因为之前的做法屏蔽了编译器警告，好看的同时也有一些隐患。</li>
+<li>method-swizzling本身会有一些副作用，可以参考这篇：<a href="http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/">http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[给第三方库打patch]]></title>
+    <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime/"/>
+    <updated>2014-04-18T15:36:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime</id>
+    <content type="html"><![CDATA[<p>标题有个前提，就是在不修改第三方库代码的基础上。</p>
+
+<p>项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
+
+<h3>1. TTTAttributedLabel</h3>
+
+<p>TTTAttributedLabel是增强版的UILabel，它有一个属性links如下定义：</p>
+
+<p><code>
+@property (readonly, nonatomic, strong) NSArray *links;
+</code></p>
+
+<p>并且提供了接口往这个属性里增加元素：</p>
+
+<p>```
+&ndash; (void)addLinkToURL:(NSURL *)url</p>
+
+<pre><code>       withRange:(NSRange)range
+</code></pre>
+
+<p>```</p>
+
+<p>但是没有清空里面元素的接口，没有的话就自己创造一个。首先创建TTTAttributedLabel的一个分类TTTAttributedLabel+RemoveLinks，增加方法brk_removeAllLinks:</p>
+
+<p>```
+&ndash; (void)brk_removeAllLinks
+{</p>
+
+<h1>pragma clang diagnostic push</h1>
+
+<h1>pragma clang diagnostic ignored &ldquo;-Warc-performSelector-leaks&rdquo;</h1>
+
+<pre><code>SEL setLinksSelector = NSSelectorFromString(@"setLinks:");
+if([self respondsToSelector:setLinksSelector])
+{
+    [self performSelector:setLinksSelector withObject:[NSArray array]];
+}
+</code></pre>
+
+<h1>pragma clang diagnostic pop</h1>
+
+<p>}
+```
+让TTTAttributedLabel自己重新初始化了自己的links属性。</p>
+
+<h3>2. OLImageView</h3>
+
+<p>OLImageView是一个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：</p>
+
+<p><code>
+OLImageView *imageView = [[OLImageView alloc] init];
+[imageView setImageWithURL:[NSURL URLWithString:@"http://***.com/***.gif"]];
+</code></p>
+
+<p>原因在于这个库的作者利用runtime对AFNetworking做了一些手脚。它创建了AFImageRequestOperation的一个分类AFImageRequestOperation+OLImage，并在<code>+load</code>时将AFImageRequestOperation类中的<code>setResponseImage:</code>方法和该分类中的<code>setResponseOLImage:</code>方法交换：</p>
+
+<p>```
++ (void)load
+{</p>
+
+<pre><code>method_exchangeImplementations(class_getInstanceMethod(self, @selector(setResponseImage:)), class_getInstanceMethod(self, @selector(setResponseOLImage:)));
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(void)setResponseOLImage:(UIImage *)responseImage
+{
+  if ([self.responseData length] > 0 &amp;&amp; [self isFinished])
+  {
+      [self setResponseOLImage:[OLImage imageWithData:self.responseData scale:self.imageScale]];
+  }
+}
+```</li>
+</ul>
+
+
+<p>这样，当AFImageRequestOperation下载完图片数据，准备调用<code>setResponseImage:</code>时，它就会被hook进这里定义的<code>setResponseOLImage</code>，做一些定制化工作。</p>
+
+<p>如果想加下载进度提示怎么办？由于项目中使用了UIImageView+AFNetworking来实现图片下载，没有直接操作AFImageRequestOperation，没办法调用AFImageRequestOperation的<code>setDownloadProgressBlock:</code>来实现定制，于是想到了模仿之前的做法，hook AFImageRequestOperation的<code>initWithRequest</code>方法，在初始化方法里调用<code>setDownloadProgressBlock:</code>，做法如下：</p>
+
+<p>```
++ (void)load
+{</p>
+
+<pre><code>method_exchangeImplementations(class_getInstanceMethod(self, @selector(initWithRequest:)), class_getInstanceMethod(self, @selector(initWithOLRequest:)));
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(id)initWithOLRequest:(NSURLRequest *)request
+{
+  self = [super initWithRequest:request];
+  if (!self)
+  {
+      return nil;
+  }</li>
+</ul>
+
+
+<h1>if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)</h1>
+
+<pre><code>self.imageScale = [[UIScreen mainScreen] scale];
+self.automaticallyInflatesResponseImage = YES;
+[self setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead)
+{
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+        if([[self.request.URL absoluteString] isKindOfClass:[NSString class]])
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:BKPImageDownloadingProgressNotification object:[self.request.URL absoluteString] userInfo:@{BKPImageTotalBytesReadKey : @(totalBytesRead), BKPImageTotalBytesExpectedToReadKey : @(totalBytesExpectedToRead)}];
+        }
+    });
+}];
+</code></pre>
+
+<h1>endif</h1>
+
+<pre><code>return self;
+</code></pre>
+
+<p>}</p>
+
+<p>```</p>
+
+<h3>3. AFNetworking</h3>
+
+<p>Matt大神的AFNetworking应该都比较熟悉了，项目里图片下载的底层都是用了之前提到的UIImageView+AFNetworking分类，这个分类很简洁易用，不过它把图片缓存的逻辑也完全封装了，有时候需要了解某个给定的图片URL是否已经被缓存了，或者是否正在被请求，于是自己动手，丰衣足食：</p>
+
+<p>```
+&ndash; (BOOL)isRequestingForUrl:(NSURL *)url
+{</p>
+
+<h1>pragma clang diagnostic push</h1>
+
+<h1>pragma clang diagnostic ignored &ldquo;-Wundeclared-selector&rdquo;</h1>
+
+<pre><code>UIImageView *helper = [[UIImageView alloc] init];
+if ([[helper class] respondsToSelector:@selector(af_sharedImageRequestOperationQueue)])
+{
+    NSOperationQueue *operationQueue = [[helper class] performSelector:@selector(af_sharedImageRequestOperationQueue)];
+    for(AFImageRequestOperation *op in [operationQueue operations])
+    {
+        if([op.request.URL.absoluteString isEqualToString:url.absoluteString])
+        {
+            return YES;
+        }
+    }
+    return NO;
+}
+else
+{
+    return NO;
+}
+</code></pre>
+
+<h1>pragma clang diagnostic pop</h1>
+
+<p>}</p>
+
+<ul>
+<li>(BOOL)isCachedForUrl:(NSURL *)url
+{
+
+<h1>pragma clang diagnostic push</h1>
+
+<h1>pragma clang diagnostic ignored &ldquo;-Wundeclared-selector&rdquo;</h1>
+
+  UIImageView <em>helper = [[UIImageView alloc] init];
+  if ([[helper class] respondsToSelector:@selector(af_sharedImageCache)])
+  {
+      id afImageCache = [[helper class] performSelector:@selector(af_sharedImageCache)];
+      if([afImageCache respondsToSelector:@selector(cachedImageForRequest:)])
+      {
+          UIImage </em>cachedImage = [afImageCache performSelector:@selector(cachedImageForRequest:) withObject:[NSURLRequest requestWithURL:url]];
+          return cachedImage != nil;
+      }
+      else
+      {
+          return NO;
+      }
+  }
+  else
+  {
+      return NO;
+  }
+
+<h1>pragma clang diagnostic pop</h1>
+
+<p>}
+```</p></li>
+</ul>
+
+
+<h3>注意点</h3>
+
+<p>利用runtime来给第三方库打patch，不是没有代价的，需要小心使用：</p>
+
+<ol>
+<li>当第三方库升级了，需要检查是否patch的方法已过期，甚至更糟糕的，是否会造成crash，因为之前的做法屏蔽了编译器警告，好看的同时也有一些隐患。</li>
+<li>method-swizzling本身会有一些副作用，可以参考这篇：<a href="http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/">http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Basic Designer Skills]]></title>
@@ -503,7 +927,7 @@ for (NSUInteger i = 0; i &lt; threadCount; i++) {
 
 <p>GCD有五个不同的队列：在主线程上运行的主队列，三个拥有不同优先级的后台队列，一个有着更低优先级的I/O受限的后台队列。另外，你也可以创建自定义队列，可以是串行或者并行队列。自定义队列的抽象层次很高，所有你调度在它上面运行的代码块最终都会分配到系统全局队列之一和它的线程池里。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#x67;&#99;&#x64;&#45;&#113;&#x75;&#101;&#117;&#x65;&#x73;&#x40;&#x32;&#x78;&#46;&#x70;&#110;&#103;">&#103;&#x63;&#x64;&#45;&#x71;&#x75;&#101;&#x75;&#x65;&#115;&#x40;&#50;&#x78;&#46;&#x70;&#x6e;&#103;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#103;&#99;&#100;&#x2d;&#113;&#117;&#x65;&#x75;&#101;&#x73;&#x40;&#x32;&#x78;&#46;&#112;&#x6e;&#103;">&#103;&#x63;&#x64;&#45;&#x71;&#117;&#x65;&#117;&#x65;&#x73;&#x40;&#x32;&#120;&#46;&#x70;&#x6e;&#103;</a>"></p>
 
 <p>使用不同优先级的几个队列一开始听起来还不错，然而我们强烈推荐你在几乎任何情况下都使用默认优先级的队列。如果几个任务访问了共享资源，那么在不同优先级的队列上调度任务会导致无法预期的行为。最坏可以导致你的程序慢慢停下来，因为低优先级的任务阻止了高优先级的任务执行。你可以了解一下这种现象，称为优先级反转。</p>
 
@@ -614,7 +1038,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>想象两个线程都试着同时去这么做的危险。举个例子，线程A和B都从内存中读取到了计数器的值，假设是17。然后线程A给计数器+1并将结果18写回内存。同时，线程B紧随其后也给计数器加1，将结果18写回到内存。在这一刻数据就错误了，因为计数器的值17在加了两次1以后变成了18。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x72;&#97;&#x63;&#x65;&#x2d;&#x63;&#x6f;&#x6e;&#100;&#105;&#116;&#105;&#x6f;&#110;&#x40;&#x32;&#120;&#46;&#x70;&#x6e;&#x67;">&#114;&#x61;&#x63;&#x65;&#x2d;&#99;&#111;&#x6e;&#x64;&#x69;&#x74;&#105;&#111;&#110;&#x40;&#50;&#120;&#x2e;&#112;&#110;&#x67;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#109;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#x72;&#97;&#x63;&#x65;&#45;&#99;&#x6f;&#110;&#x64;&#105;&#116;&#105;&#111;&#110;&#64;&#x32;&#x78;&#46;&#x70;&#110;&#103;">&#114;&#x61;&#99;&#x65;&#45;&#99;&#x6f;&#x6e;&#100;&#105;&#116;&#105;&#x6f;&#110;&#x40;&#x32;&#x78;&#x2e;&#x70;&#110;&#103;</a>"></p>
 
 <p>这个问题叫做“竞态”，如果多个线程访问某个共享资源情况下，一个线程还没访问结束，另一个就开始访问它，就会发生这个问题。如果你不光是写入一个简单的整型到内存，而是一个更复杂的结构，另一个线程在你写到一半的时候去读取内存的话，甚至可能会读到一半新数据一半老数据，或者未初始化数据。 为了防止这种情况，多线程必须以互斥的方式去访问共享资源。</p>
 
@@ -624,7 +1048,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>互斥访问的意思是一次只有一个线程可以访问某个资源。为了保证互斥，每个需要访问资源的线程需要事先获取该资源的一把互斥锁。当这个线程结束了它的操作，它会释放这把锁，这样其他线程就有机会来访问这个资源了。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#108;&#x6f;&#x63;&#107;&#105;&#110;&#x67;&#x40;&#50;&#x78;&#x2e;&#112;&#110;&#103;">&#108;&#x6f;&#99;&#x6b;&#x69;&#110;&#103;&#x40;&#x32;&#x78;&#46;&#x70;&#x6e;&#x67;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#58;&#x6c;&#x6f;&#99;&#x6b;&#105;&#110;&#103;&#x40;&#50;&#x78;&#46;&#112;&#110;&#103;">&#x6c;&#x6f;&#99;&#107;&#x69;&#110;&#x67;&#64;&#50;&#x78;&#x2e;&#112;&#x6e;&#x67;</a>"></p>
 
 <p>为了确保互斥访问，锁还必须处理乱序执行带来的问题。如果CPU访问内存的顺序不是严格按照你的程序指令顺序，光确保互斥访问是不够的。为了解决CPU优化策略所带来的这个副作用，得使用内存屏障技术。设置了内存屏障以后可以确保乱序执行问题只发生在屏障的一边。</p>
 
@@ -644,7 +1068,7 @@ YourOperation *operation = [[YourOperation alloc] init];
 
 <p>互斥锁解决了竞态的问题，但不幸的是它们同时也带来了一个新问题：死锁。死锁在多个线程都在互相等待对方运行结束的时候发生。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x64;&#101;&#x61;&#100;&#x2d;&#108;&#x6f;&#x63;&#x6b;&#x40;&#x32;&#120;&#46;&#112;&#x6e;&#103;">&#x64;&#101;&#x61;&#100;&#45;&#108;&#x6f;&#99;&#107;&#64;&#x32;&#120;&#x2e;&#112;&#110;&#103;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#x64;&#x65;&#x61;&#100;&#x2d;&#x6c;&#111;&#99;&#x6b;&#64;&#x32;&#120;&#x2e;&#x70;&#x6e;&#x67;">&#100;&#x65;&#x61;&#100;&#x2d;&#x6c;&#x6f;&#99;&#107;&#64;&#50;&#x78;&#x2e;&#x70;&#110;&#103;</a>"></p>
 
 <p>考虑下面的示例代码，交换两个变量的值：</p>
 
@@ -685,7 +1109,7 @@ swap(Y, X); // thread 2
 
 <p>这个问题在高低优先级任务共享资源的情况下可能会发生。当低优先级任务拥有了公共资源上的一把锁，它理应迅速完成任务以便释放锁让高优先级任务执行不至于等待太久。由于低优先级任务有锁，高优先级任务得不到运行，期间有可能被中优先级的任务钻了空子，抢占了低优先级特任务的运行时间，是因为中优先级任务拥有当前所有可运行任务中最高的优先级。这样，中优先级任务阻止了低优先级任务释放锁，因此成功地从还在等待运行的高优先级任务那抢到了优先运行的机会。</p>
 
-<p><img class="/images/2013/08/<a" src="href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#x70;&#x72;&#x69;&#x6f;&#x72;&#105;&#116;&#121;&#x2d;&#105;&#x6e;&#x76;&#x65;&#114;&#x73;&#x69;&#111;&#x6e;&#64;&#x32;&#120;&#46;&#x70;&#110;&#x67;">&#x70;&#x72;&#105;&#x6f;&#x72;&#x69;&#116;&#121;&#45;&#x69;&#110;&#118;&#x65;&#114;&#x73;&#x69;&#x6f;&#x6e;&#64;&#x32;&#120;&#x2e;&#112;&#x6e;&#103;</a>"></p>
+<p><img class="/images/2013/08/<a" src="href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#58;&#112;&#114;&#x69;&#111;&#x72;&#105;&#116;&#121;&#x2d;&#x69;&#x6e;&#x76;&#101;&#x72;&#115;&#x69;&#x6f;&#x6e;&#x40;&#50;&#120;&#46;&#x70;&#110;&#x67;">&#x70;&#114;&#105;&#111;&#114;&#105;&#116;&#121;&#45;&#105;&#110;&#118;&#101;&#114;&#x73;&#105;&#111;&#110;&#64;&#x32;&#x78;&#x2e;&#112;&#110;&#103;</a>"></p>
 
 <p>在你的代码中，可能不会像火星探测器那样发生那么戏剧性的事情，因为优先级反转带来的后果往往不会那么严重。</p>
 
@@ -700,198 +1124,6 @@ swap(Y, X); // thread 2
 <p>另一方面，并发是充分利用现代多核CPU的强有力的手段。关键在于确保你的并发模型越简单越好，这样可以减少所需锁的数量。</p>
 
 <p>我们推荐的安全的使用模式是：在主线程中使用数据，在后台线程用operation queue来对数据操作，最终将后台任务的结果带回到主线程中使用。这样的话，你不需要自己做任何锁操作，大大降低了犯错的可能性。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[《iOS 5 Programming Pushing the Limits》读书笔记1——用关联引用为分类增加数据]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0/"/>
-    <updated>2013-05-28T13:57:08+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/28/e3808aios-5-programming-pushing-the-limitse3808be8afbbe4b9a6e7ac94e8aeb01-e794a8e585b3e88194e5bc95e794a8e4b8bae58886e7b1bbe5a29ee58aa0</id>
-    <content type="html"><![CDATA[<p>无法在分类中增加成员变量，但是可以用关联引用来实现这一点。</p>
-
-<p>假设有一个Person类：</p>
-
-<pre><code>@interface Person : NSObject
-   @property (readwrite, copy) NSString *name;
-   @end
-   @implementation Person
-   @synthesize name=name_;
-   @end
-</code></pre>
-
-<p>可以创建Person类的一个分类来为Person新增一个emailAddress变量：</p>
-
-<pre><code>#import &lt;objc/runtime.h&gt;
-   @interface Person (EmailAddress)
-   @property (readwrite, copy) NSString *emailAddress;
-   @end
-   @implementation Person (EmailAddress)
-   static char emailAddressKey;
-   - (NSString *)emailAddress {
-     return objc_getAssociatedObject(self, &amp;emailAddressKey);
-}
-   - (void)setEmailAddress:(NSString *)emailAddress {
-     objc_setAssociatedObject(self, &amp;emailAddressKey,emailAddress,OBJC_ASSOCIATION_COPY);
-} @end
-emailAddress,
-OBJC_ASSOCIATION_COPY);
-</code></pre>
-
-<p>之后Person类就动态“增加”了属性emailAddress。</p>
-
-<p>关联引用有个比较实用的地方在于可以动态为一些控件增加数据对象：</p>
-
-<pre><code>ViewController.m (AssocRef)
-     id interestingObject = ...;
-     UIAlertView *alert = [[UIAlertView alloc]
-                           initWithTitle:@”Alert” message:nil
-                           delegate:self
-                           cancelButtonTitle:@”OK”
-                           otherButtonTitles:nil];
-     objc_setAssociatedObject(alert, &amp;kRepresentedObject,
-                              interestingObject,
-                           OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-     [alert show];
-</code></pre>
-
-<p>以上代码将interestingObject对象附在了UIAlertView控件对象上，当警告框消失时候，可以取出该对象，并做一些操作：</p>
-
-<pre><code>- (void)alertView:(UIAlertView *)alertView
-   clickedButtonAtIndex:(NSInteger)buttonIndex {
-UIButton *sender = objc_getAssociatedObject(alertView, &amp;kRepresentedObject);
-     self.buttonLabel.text = [[sender titleLabel] text];
-   }
-</code></pre>
-
-<p>不用关联引用的话就得在类里新建一个成员变量来保存interestingObject对象的引用了。</p>
-
-<p>类似的代码在开源库SDWebImage中的UIImageView分类等文件也能看到：</p>
-
-<pre><code>- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock;
-{
-    [self cancelCurrentImageLoad];
-
-    self.image = placeholder;
-
-    if (url)
-    {
-        __weak UIImageView *wself = self;
-        id&lt;SDWebImageOperation&gt; operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
-        {
-            __strong UIImageView *sself = wself;
-            if (!sself) return;
-            if (image)
-            {
-                sself.image = image;
-                [sself setNeedsLayout];
-            }
-            if (completedBlock &amp;&amp; finished)
-            {
-                completedBlock(image, error, cacheType);
-            }
-        }];
-        objc_setAssociatedObject(self, &amp;operationKey, operation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-- (void)cancelCurrentImageLoad
-{
-    // Cancel in progress downloader from queue
-    id&lt;SDWebImageOperation&gt; operation = objc_getAssociatedObject(self, &amp;operationKey);
-    if (operation)
-    {
-        [operation cancel];
-        objc_setAssociatedObject(self, &amp;operationKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iPad UIModalpresentationPageSheet视图的resize和dismiss]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss/"/>
-    <updated>2013-05-27T16:38:00+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/27/ipad-uimodalpresentationpagesheete8a786e59bbee79a84resizee5928cdismiss</id>
-    <content type="html"><![CDATA[<p>自定义弹出视图的frame:</p>
-
-<pre><code>- (void)viewDidLoad
-{
-    CGRect newFrame = CGRectMake(0,
-                              0,
-                              POP_WINDOW_WIDTH,
-                              POP_WINDOW_HEIGHT);
-
-    [self.view setFrame:newFrame];
-
-    //Now the bounds have changed so we save them to be used later on
-    self.realBounds = self.view.bounds;
-
-    [super viewDidLoad];
-
-    //视图周围一圈加阴影
-    UIImage *image = [[UIImage imageNamed:@"popup_view_shadow_bg"] stretchableImageWithLeftCapWidth:15 topCapHeight:15];
-    self.shadowView = [[UIImageView alloc] initWithFrame:CGRectMake(-7, -7, self.view.bounds.size.width + 14, self.view.bounds.size.height + 14)] ;
-    self.shadowView.image = image;
-    [self.navigationController.view.superview addSubview:self.shadowView];
-
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-//可以对view的边界做些定制，去除圆角等
-    self.navigationController.view.superview.layer.cornerRadius = 0;
-    self.navigationController.view.layer.cornerRadius = 0;
-    self.navigationController.view.superview.layer.borderColor = [UIColor darkGrayColor].CGColor;
-    self.navigationController.view.superview.layer.borderWidth = 1;
-//设置bounds
-    self.navigationController.view.superview.bounds = self.realBounds;
-}
-</code></pre>
-
-<p>点击灰色区域dismiss掉view:</p>
-
-<pre><code>-(void)showPopupView
-{
-    PopupViewController *vc = [[PopupViewController alloc] init];
-    vc.delegate = self;
-    self.navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    self.navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    self.navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:self.navController animated:YES completion:nil];
-
-    if(self.recongnizer)
-    {
-        [self.view.window removeGestureRecognizer:self.recongnizer];
-        self.recognizer = nil;
-    }
-    self.recongnizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
-    [self.recongnizer setNumberOfTapsRequired:1];
-    self.recongnizer.cancelsTouchesInView = NO;
-    [self.view.window addGestureRecognizer:self.recongnizer];
-}
-
-- (void)handleTapBehind:(UITapGestureRecognizer *)sender
-{
-    if (sender.state == UIGestureRecognizerStateEnded)
-    {
-        CGPoint location = [sender locationInView:nil];
-        BOOL inSelfView;
-        BOOL inSelfNavigationView;
-        BOOL inPopupView;
-        inSelfView = [self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil];
-        inSelfNavigationView = [self.navigationController.view pointInside:[self.navigationController.view convertPoint:location fromView:self.view.window] withEvent:nil];
-        inPopupView = [self.navController.view pointInside:[self.navController.view convertPoint:location fromView:self.view.window] withEvent:nil];
-        if ((inSelfView || inSelfNavigationView) &amp;&amp; !inPopupView)
-        {
-            [self.view.window removeGestureRecognizer:sender];
-            [self dismissModalViewControllerAnimated:YES];
-        }
-    }
-}
-</code></pre>
 ]]></content>
   </entry>
   

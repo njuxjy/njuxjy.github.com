@@ -4,7 +4,7 @@
   <title><![CDATA[不可卷也]]></title>
   <link href="http://xiaojiayi.com/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2014-04-18T16:18:00+08:00</updated>
+  <updated>2014-04-19T15:03:18+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -15,12 +15,12 @@
   
   <entry>
     <title type="html"><![CDATA[给第三方库打patch]]></title>
-    <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime/"/>
+    <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime%E5%89%AF%E6%9C%AC/"/>
     <updated>2014-04-18T15:36:00+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime</id>
+    <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime副本</id>
     <content type="html"><![CDATA[<p>标题有个前提，就是在不修改第三方库代码的基础上。</p>
 
-<p>项目中用到的第三方库，有时候不能满足项目的特定需求，比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
+<p>项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
 
 <h3>1. TTTAttributedLabel</h3>
 
@@ -67,6 +67,497 @@
 <p>让TTTAttributedLabel自己重新初始化了自己的links属性。</p>
 
 <h3>2. OLImageView</h3>
+
+<p>OLImageView是一个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>OLImageView *imageView = [[OLImageView alloc] init];
+</span><span class='line'>[imageView setImageWithURL:[NSURL URLWithString:@"http://***.com/***.gif"]];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原因在于这个库的作者利用runtime对AFNetworking做了一些手脚。它创建了AFImageRequestOperation的一个分类AFImageRequestOperation+OLImage，并在<code>+load</code>时将AFImageRequestOperation类中的<code>setResponseImage:</code>方法和该分类中的<code>setResponseOLImage:</code>方法交换：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void)load
+</span><span class='line'>{
+</span><span class='line'>    method_exchangeImplementations(class_getInstanceMethod(self, @selector(setResponseImage:)), class_getInstanceMethod(self, @selector(setResponseOLImage:)));
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (void)setResponseOLImage:(UIImage *)responseImage
+</span><span class='line'>{
+</span><span class='line'>    if ([self.responseData length] &gt; 0 && [self isFinished])
+</span><span class='line'>    {
+</span><span class='line'>        [self setResponseOLImage:[OLImage imageWithData:self.responseData scale:self.imageScale]];
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样，当AFImageRequestOperation下载完图片数据，准备调用<code>setResponseImage:</code>时，它就会被hook进这里定义的<code>setResponseOLImage</code>，做一些定制化工作。</p>
+
+<p>如果想加下载进度提示怎么办？由于项目中使用了UIImageView+AFNetworking来实现图片下载，没有直接操作AFImageRequestOperation，没办法调用AFImageRequestOperation的<code>setDownloadProgressBlock:</code>来实现定制，于是想到了模仿之前的做法，hook AFImageRequestOperation的<code>initWithRequest</code>方法，在初始化方法里调用<code>setDownloadProgressBlock:</code>，做法如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void)load
+</span><span class='line'>{
+</span><span class='line'>    method_exchangeImplementations(class_getInstanceMethod(self, @selector(initWithRequest:)), class_getInstanceMethod(self, @selector(initWithOLRequest:)));
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (id)initWithOLRequest:(NSURLRequest *)request
+</span><span class='line'>{
+</span><span class='line'>    self = [super initWithRequest:request];
+</span><span class='line'>    if (!self)
+</span><span class='line'>    {
+</span><span class='line'>        return nil;
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+</span><span class='line'>    self.imageScale = [[UIScreen mainScreen] scale];
+</span><span class='line'>    self.automaticallyInflatesResponseImage = YES;
+</span><span class='line'>    [self setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead)
+</span><span class='line'>    {
+</span><span class='line'>        dispatch_async(dispatch_get_main_queue(), ^
+</span><span class='line'>        {
+</span><span class='line'>            if([[self.request.URL absoluteString] isKindOfClass:[NSString class]])
+</span><span class='line'>            {
+</span><span class='line'>                [[NSNotificationCenter defaultCenter] postNotificationName:BKPImageDownloadingProgressNotification object:[self.request.URL absoluteString] userInfo:@{BKPImageTotalBytesReadKey : @(totalBytesRead), BKPImageTotalBytesExpectedToReadKey : @(totalBytesExpectedToRead)}];
+</span><span class='line'>            }
+</span><span class='line'>        });
+</span><span class='line'>    }];
+</span><span class='line'>    
+</span><span class='line'>#endif
+</span><span class='line'>    
+</span><span class='line'>    return self;
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. AFNetworking</h3>
+
+<p>Matt大神的AFNetworking应该都比较熟悉了，项目里图片下载的底层都是用了之前提到的UIImageView+AFNetworking分类，这个分类很简洁易用，不过它把图片缓存的逻辑也完全封装了，有时候需要了解某个给定的图片URL是否已经被缓存了，或者是否正在被请求，于是自己动手，丰衣足食：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (BOOL)isRequestingForUrl:(NSURL *)url
+</span><span class='line'>{
+</span><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Wundeclared-selector"
+</span><span class='line'>    UIImageView *helper = [[UIImageView alloc] init];
+</span><span class='line'>    if ([[helper class] respondsToSelector:@selector(af_sharedImageRequestOperationQueue)])
+</span><span class='line'>    {
+</span><span class='line'>        NSOperationQueue *operationQueue = [[helper class] performSelector:@selector(af_sharedImageRequestOperationQueue)];
+</span><span class='line'>        for(AFImageRequestOperation *op in [operationQueue operations])
+</span><span class='line'>        {
+</span><span class='line'>            if([op.request.URL.absoluteString isEqualToString:url.absoluteString])
+</span><span class='line'>            {
+</span><span class='line'>                return YES;
+</span><span class='line'>            }
+</span><span class='line'>        }
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>#pragma clang diagnostic pop
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (BOOL)isCachedForUrl:(NSURL *)url
+</span><span class='line'>{
+</span><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Wundeclared-selector"
+</span><span class='line'>    UIImageView *helper = [[UIImageView alloc] init];
+</span><span class='line'>    if ([[helper class] respondsToSelector:@selector(af_sharedImageCache)])
+</span><span class='line'>    {
+</span><span class='line'>        id afImageCache = [[helper class] performSelector:@selector(af_sharedImageCache)];
+</span><span class='line'>        if([afImageCache respondsToSelector:@selector(cachedImageForRequest:)])
+</span><span class='line'>        {
+</span><span class='line'>            UIImage *cachedImage = [afImageCache performSelector:@selector(cachedImageForRequest:) withObject:[NSURLRequest requestWithURL:url]];
+</span><span class='line'>            return cachedImage != nil;
+</span><span class='line'>        }
+</span><span class='line'>        else
+</span><span class='line'>        {
+</span><span class='line'>            return NO;
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>#pragma clang diagnostic pop
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>注意点</h3>
+
+<p>利用runtime来给第三方库打patch，不是没有代价的，需要小心使用：</p>
+
+<ol>
+<li>当第三方库升级了，需要检查是否patch的方法已过期，甚至更糟糕的，是否会造成crash，因为之前的做法屏蔽了编译器警告，好看的同时也有一些隐患。</li>
+<li>method-swizzling本身会有一些副作用，可以参考这篇：<a href="http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/">http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[给第三方库打patch]]></title>
+    <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime/"/>
+    <updated>2014-04-18T15:36:00+08:00</updated>
+    <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime</id>
+    <content type="html"><![CDATA[<p>标题有个前提，就是在不修改第三方库代码的基础上。</p>
+
+<p>项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
+
+<h3>1. TTTAttributedLabel</h3>
+
+<p>TTTAttributedLabel是增强版的UILabel，它有一个属性links如下定义：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@property (readonly, nonatomic, strong) NSArray *links;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>并且提供了接口往这个属性里增加元素：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)addLinkToURL:(NSURL *)url
+</span><span class='line'>           withRange:(NSRange)range</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是没有清空里面元素的接口，没有的话就自己创造一个。首先创建TTTAttributedLabel的一个分类TTTAttributedLabel+RemoveLinks，增加方法brk_removeAllLinks:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (void)brk_removeAllLinks
+</span><span class='line'>{
+</span><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+</span><span class='line'>    SEL setLinksSelector = NSSelectorFromString(@"setLinks:");
+</span><span class='line'>    if([self respondsToSelector:setLinksSelector])
+</span><span class='line'>    {
+</span><span class='line'>        [self performSelector:setLinksSelector withObject:[NSArray array]];
+</span><span class='line'>    }
+</span><span class='line'>#pragma clang diagnostic pop
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>让TTTAttributedLabel自己重新初始化了自己的links属性。</p>
+
+<h3>2. OLImageView</h3>
+
+<p>OLImageView是一个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>OLImageView *imageView = [[OLImageView alloc] init];
+</span><span class='line'>[imageView setImageWithURL:[NSURL URLWithString:@"http://***.com/***.gif"]];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原因在于这个库的作者利用runtime对AFNetworking做了一些手脚。它创建了AFImageRequestOperation的一个分类AFImageRequestOperation+OLImage，并在<code>+load</code>时将AFImageRequestOperation类中的<code>setResponseImage:</code>方法和该分类中的<code>setResponseOLImage:</code>方法交换：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void)load
+</span><span class='line'>{
+</span><span class='line'>    method_exchangeImplementations(class_getInstanceMethod(self, @selector(setResponseImage:)), class_getInstanceMethod(self, @selector(setResponseOLImage:)));
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (void)setResponseOLImage:(UIImage *)responseImage
+</span><span class='line'>{
+</span><span class='line'>    if ([self.responseData length] &gt; 0 && [self isFinished])
+</span><span class='line'>    {
+</span><span class='line'>        [self setResponseOLImage:[OLImage imageWithData:self.responseData scale:self.imageScale]];
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样，当AFImageRequestOperation下载完图片数据，准备调用<code>setResponseImage:</code>时，它就会被hook进这里定义的<code>setResponseOLImage</code>，做一些定制化工作。</p>
+
+<p>如果想加下载进度提示怎么办？由于项目中使用了UIImageView+AFNetworking来实现图片下载，没有直接操作AFImageRequestOperation，没办法调用AFImageRequestOperation的<code>setDownloadProgressBlock:</code>来实现定制，于是想到了模仿之前的做法，hook AFImageRequestOperation的<code>initWithRequest</code>方法，在初始化方法里调用<code>setDownloadProgressBlock:</code>，做法如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+ (void)load
+</span><span class='line'>{
+</span><span class='line'>    method_exchangeImplementations(class_getInstanceMethod(self, @selector(initWithRequest:)), class_getInstanceMethod(self, @selector(initWithOLRequest:)));
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (id)initWithOLRequest:(NSURLRequest *)request
+</span><span class='line'>{
+</span><span class='line'>    self = [super initWithRequest:request];
+</span><span class='line'>    if (!self)
+</span><span class='line'>    {
+</span><span class='line'>        return nil;
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+</span><span class='line'>    self.imageScale = [[UIScreen mainScreen] scale];
+</span><span class='line'>    self.automaticallyInflatesResponseImage = YES;
+</span><span class='line'>    [self setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead)
+</span><span class='line'>    {
+</span><span class='line'>        dispatch_async(dispatch_get_main_queue(), ^
+</span><span class='line'>        {
+</span><span class='line'>            if([[self.request.URL absoluteString] isKindOfClass:[NSString class]])
+</span><span class='line'>            {
+</span><span class='line'>                [[NSNotificationCenter defaultCenter] postNotificationName:BKPImageDownloadingProgressNotification object:[self.request.URL absoluteString] userInfo:@{BKPImageTotalBytesReadKey : @(totalBytesRead), BKPImageTotalBytesExpectedToReadKey : @(totalBytesExpectedToRead)}];
+</span><span class='line'>            }
+</span><span class='line'>        });
+</span><span class='line'>    }];
+</span><span class='line'>    
+</span><span class='line'>#endif
+</span><span class='line'>    
+</span><span class='line'>    return self;
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. AFNetworking</h3>
+
+<p>Matt大神的AFNetworking应该都比较熟悉了，项目里图片下载的底层都是用了之前提到的UIImageView+AFNetworking分类，这个分类很简洁易用，不过它把图片缓存的逻辑也完全封装了，有时候需要了解某个给定的图片URL是否已经被缓存了，或者是否正在被请求，于是自己动手，丰衣足食：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (BOOL)isRequestingForUrl:(NSURL *)url
+</span><span class='line'>{
+</span><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Wundeclared-selector"
+</span><span class='line'>    UIImageView *helper = [[UIImageView alloc] init];
+</span><span class='line'>    if ([[helper class] respondsToSelector:@selector(af_sharedImageRequestOperationQueue)])
+</span><span class='line'>    {
+</span><span class='line'>        NSOperationQueue *operationQueue = [[helper class] performSelector:@selector(af_sharedImageRequestOperationQueue)];
+</span><span class='line'>        for(AFImageRequestOperation *op in [operationQueue operations])
+</span><span class='line'>        {
+</span><span class='line'>            if([op.request.URL.absoluteString isEqualToString:url.absoluteString])
+</span><span class='line'>            {
+</span><span class='line'>                return YES;
+</span><span class='line'>            }
+</span><span class='line'>        }
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>#pragma clang diagnostic pop
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (BOOL)isCachedForUrl:(NSURL *)url
+</span><span class='line'>{
+</span><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Wundeclared-selector"
+</span><span class='line'>    UIImageView *helper = [[UIImageView alloc] init];
+</span><span class='line'>    if ([[helper class] respondsToSelector:@selector(af_sharedImageCache)])
+</span><span class='line'>    {
+</span><span class='line'>        id afImageCache = [[helper class] performSelector:@selector(af_sharedImageCache)];
+</span><span class='line'>        if([afImageCache respondsToSelector:@selector(cachedImageForRequest:)])
+</span><span class='line'>        {
+</span><span class='line'>            UIImage *cachedImage = [afImageCache performSelector:@selector(cachedImageForRequest:) withObject:[NSURLRequest requestWithURL:url]];
+</span><span class='line'>            return cachedImage != nil;
+</span><span class='line'>        }
+</span><span class='line'>        else
+</span><span class='line'>        {
+</span><span class='line'>            return NO;
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    else
+</span><span class='line'>    {
+</span><span class='line'>        return NO;
+</span><span class='line'>    }
+</span><span class='line'>#pragma clang diagnostic pop
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>注意点</h3>
+
+<p>利用runtime来给第三方库打patch，不是没有代价的，需要小心使用：</p>
+
+<ol>
+<li>当第三方库升级了，需要检查是否patch的方法已过期，甚至更糟糕的，是否会造成crash，因为之前的做法屏蔽了编译器警告，好看的同时也有一些隐患。</li>
+<li>method-swizzling本身会有一些副作用，可以参考这篇：<a href="http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/">http://herkuang.info/blog/2014/02/25/%E6%85%8E%E7%94%A8method-swizzling/</a></li>
+</ol>
+
 ]]></content>
   </entry>
   
@@ -1558,40 +2049,6 @@ printf(“i am the parent process, my process id is %d”,getpid());    <br/>
 <p>Nook与众不同的因素之一便是顾客可以把书“借”给朋友。但是顾客一次只可以把任一本书借出去14天，并且在书外借期间他们不能在自己的Nook上阅读它。</p>
 
 <p>在一次采访中，Barnes&amp;Noble.com的总裁William Lynch说，公司将在有营业场所的商店里不遗余力地推销Nook。Nook也自带软件可以检测到一个顾客走进了一家商店，这样它便可以跳出优惠券信息和其他促销信息，像即将到来的书的摘要或者新书阅读建议。当在商店的时候，Nook的主人可以通过流媒体软件阅读任何电子书。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[(旧文迁移) 为什么人人都爱Twitter（译文）]]></title>
-    <link href="http://xiaojiayi.com/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89/"/>
-    <updated>2013-05-02T19:04:16+08:00</updated>
-    <id>http://xiaojiayi.com/blog/2013/05/02/e4b8bae4bb80e4b988e4babae4babae983bde788b1twitterefbc88e8af91e69687efbc89</id>
-    <content type="html"><![CDATA[<p>原文网址：<a href="http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html">http://www.telegraph.co.uk/technology/twitter/6409435/Why-everyone-wants-to-be-Twitters-friend.html</a></p>
-
-<p><a href="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001.jpg"><img src="http://www.xiaojiayi.com/wp-content/uploads/2013/05/clip_image001_thumb.jpg" alt="clip_image001" /></a>    <br/>
-Twitter的实时搜索功能给人一种在线谈话的感受</p>
-
-<p>硅谷的许多顶尖和优秀的企业都参加了在旧金山举行的Web2.0会议，但这场盛会上最亮眼的明星无疑是Twitter。</p>
-
-<p>如果还需要证据来证明微博客服务确实已经飞速成名了，你只需要看看昨天下午从诸如微软和谷歌这样的技术中坚传来的潮水般的新闻就可以了。他们两家都争相宣称自己和Twitter签订了协议来在他们的网站上增强新的实时搜索功能，以在竞争中胜过对方。</p>
-
-<p>甚至于Facebook这样的Web2.0运动的典范都发现，自己和微软签订的将Facebook状态更新整合到Bing的搜索结果中的新闻跟Twitter提供的盛宴比起来仅仅是一道开胃菜而已。</p>
-
-<p>微软和谷歌在最近几个月里都承认他们需要在将实时搜索整合到他们的结果页面里这方面做得更好。Twitter最强大的能力便是能展现出世界上任何地 方的人们当下正在讨论些什么的快照。和这些流动的超地域数据相比，Bing和谷歌的搜索结果如此固定以至于他们看起来不会变化。</p>
-
-<p>就在我写这篇文章的时候，举个例子，英国国民党领袖Nick Griffin在今晚出现在“质询时间”之前已经摆平了在BBC电视中心外面的抗议者。在Google里迅速搜索下“Nick Griffin”抛出了一些有趣的结果，其中包括了一份在BBC网站上的简介和一篇来自卫报的社论。但在Twitter里搜同样的内容能看到关于成百上千 个人的愤怒的更加丰富、详细和引人注意的内容。</p>
-
-<p>某些类型的搜索，诸如关于一些事件、新闻或者股票和证券的，越是最近的和最新的消息越是有价值。Twitter本身有野心成为“地球的脉搏”。</p>
-
-<p>Web用户所梦想的场景是有这么一种搜索引擎，它能提供那种我们期望从我们喜欢的Bing和谷歌那里能得到的事实和背景信息，并且带有一种在Web社区里进行全球化交谈的氛围。</p>
-
-<p>微软和谷歌非常渴望“买进”这些实时搜索功能，而不是他们内部开发一套自己的解决方案。但是这明显是个最明智的选择；与Twitter合作使得这两个网站从Twitter数百万的活跃用户那里增强自己的数据，只要鼠标轻轻一点便展现出一个实时的看法和意见的现成的图景。</p>
-
-<p>当然，所有这些最大的赢家是Twitter自己。尽管微软和谷歌都尚未透露这项交易的财务条款，基本上可以确定这已经成为了Twitter的第一个 真正的收入来源。迄今收到过约一亿美元风险投资资金的微博客网站，为这项服务打拼出了一个商业模式；这些协议和合作伙伴能潜在地给网站带来可观的收入，通 过给它金融安全网，而同时它可以尝试其他业务建议，包括要求公司和企业为Twitter上的企业账户而付费。</p>
-
-<p>TechCrunch的行业分析师Michael Arrington表示现在还不清楚这些实时的更新是怎样“融合”到搜索结果中区的，但他设想那些不出名的在Web社区里广为议论的博客文章或网站可能会 在相关搜索的结果列表里排名上升一些。同样地，当这些来源淡出了网络的讨论，它们将会在结果排名上跌回来，其他热门的观点和意见便泡沫一样浮出表面。</p>
-
-<p>本周的会议上清楚的一点是，Twitter喜欢在技术社区里不断增长实力和影响力。它的这种在网上发布和分享信息的新鲜的方法已经迫使其他的像谷歌这样的技术中坚放弃游戏转而继续围绕搜索平台进行创新。那样，最终受益的是我们所有人。</p>
 ]]></content>
   </entry>
   
