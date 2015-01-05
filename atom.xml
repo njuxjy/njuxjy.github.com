@@ -4,7 +4,7 @@
   <title><![CDATA[不可卷也]]></title>
   <link href="http://xiaojiayi.com/atom.xml" rel="self"/>
   <link href="http://xiaojiayi.com/"/>
-  <updated>2014-04-19T22:40:32+08:00</updated>
+  <updated>2015-01-05T13:43:29+08:00</updated>
   <id>http://xiaojiayi.com/</id>
   <author>
     <name><![CDATA[njuxjy]]></name>
@@ -18,7 +18,7 @@
     <link href="http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime/"/>
     <updated>2014-04-18T15:36:00+08:00</updated>
     <id>http://xiaojiayi.com/blog/2014/04/18/have-fun-with-runtime</id>
-    <content type="html"><![CDATA[<p>标题有个前提，就是在不修改第三方库代码的基础上。</p>
+    <content type="html"><![CDATA[<p>标题有一个前提，就是在不修改第三方库代码的基础上。</p>
 
 <p>项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。</p>
 
@@ -68,7 +68,7 @@
 
 <h3>2. OLImageView</h3>
 
-<p>OLImageView是一个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：</p>
+<p>OLImageView是个支持GIF的UIImageView，它和AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
