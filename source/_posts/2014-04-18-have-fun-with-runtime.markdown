@@ -6,7 +6,7 @@ comments: true
 categories: [iOS]
 ---
 
-标题有个前提，就是在不修改第三方库代码的基础上。
+标题有一个前提，就是在不修改第三方库代码的基础上。
 
 项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。
 
