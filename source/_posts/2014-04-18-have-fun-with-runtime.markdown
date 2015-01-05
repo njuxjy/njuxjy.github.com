@@ -44,7 +44,7 @@ TTTAttributedLabel是增强版的UILabel，它有一个属性links如下定义�
 
 ###2. OLImageView
 
-OLImageView是一个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：
+OLImageView是个支持GIF的UIImageView，它跟AFNetworking的UIImageView+AFNetworking分类配合起来可以下载并显示一张GIF图，就跟显示普通的jpg没什么两样，使用方法如下：
 
 ```
 OLImageView *imageView = [[OLImageView alloc] init];
