@@ -16,7 +16,7 @@ function prettyDate(time) {
     days_ago:    "d",
     last_week:   "1w",
     weeks_ago:   "w"
-  };
+  };   
 
   var current_date = new Date(),
       current_date_time = current_date.getTime(),
