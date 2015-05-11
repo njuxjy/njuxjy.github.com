@@ -9,7 +9,8 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="之前在项目中实现了音频对讲功能，现在要加上类似微信最新版的向上滑动取消发送功能，看似很简单，也花了些功夫。有更方便的实现欢迎交流。 界面如上所示。底部是一个UIView的子类ChatVoiceView，“按住说话”按钮是该view上的子view。现在要实现的效果是长按该按钮时， &hellip;">
+  <meta name="description" content="项目中的会话界面逻辑很复杂，滚动起来有些卡。从发现问题到一步步解决，过程如下： 锁定问题就和tableview的几个代理函数有关。于是基于二分法的思想，注释掉部分代码，检查只运行其余代码会不会卡。
+这样找下来发现性能瓶颈在设置用户头像的函数。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +67,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/01/e8aeb0e4b880e6aca1tableviewe6bb9ae58aa8e680a7e883bde8b083e4bc98/">记一次tableview滚动性能调优</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-01T22:33:47+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>项目中的会话界面逻辑很复杂，滚动起来有些卡。从发现问题到一步步解决，过程如下：</p>
+
+<ol>
+<li><p>锁定问题就和tableview的几个代理函数有关。于是基于二分法的思想，注释掉部分代码，检查只运行其余代码会不会卡。</p></li>
+<li><p>这样找下来发现性能瓶颈在设置用户头像的函数。 是之前项目里已有的一个UIButton的网络图片下载分类，里面会对图片路径进行MD5的加密，并且没用内存缓存，每次都从磁盘将头像读入UIImage，而头像照片的尺寸有的很大，于是把头像下载控件换成开源的SDWebImage，原以为就能圆满解决，结果发现还是有问题。</p></li>
+<li><p>只能靠工具了。用了Profile工具查CPU发现是每个cell在计算是否需要加上消息显示日期的时候，日期部分的计算占了大量cpu。每个cell的绘制都频繁创建和销毁NSCalendar和NSDateTimeFormatterz对象，而这两个对象的创建是比较昂贵的，难怪会卡。于是将NSCalendar和NSDateTimeFormatter改为全局cache，不需要每次都创建，粗略测了下发现不卡了。</p></li>
+<li><p>过了阵子又去测测发现又开始卡了（肯定遇到了未覆盖到的测试用例）。 肯定还有其他地方性能不够好。。 再接再厉，再次运行profile工具，多滚动列表一会，然后观察时间最长的部分在哪里。发现NSDateFormatter的dateFromString函数和获取登录用户头像路径的函数都比较耗时，于是采取逐个击破的方式，先注释掉其中一个的代码，调试另一个。首先将耗时的计算结果尽可能的缓存，比如这里的获取登录用户头像路径。改好后还是卡，说明dateFromString函数的计算时间需要减少，但这是系统函数（我还一度以为是该函数的性能有问题，去SO上搜索半天没人反映它有什么问题）。于是就假设是该函数调用次数太多了。</p></li>
+</ol>
+
+
+<p>5. 经检查发现在计算cell高度和绘制cell时，为了确定是否要显示时间条，需要计算两个时间之差是否在五分钟内，计算的函数都要调用dateFromString。必须把计算移到外面去，把结果保存好。改完后好了一阵，多测测又不行了。。还是有丢帧的感觉。。后来怀疑是debug模式下log没关，因为据说每一句NSLog底层都会调用[NSCalendar currentCalendar]，但关了以后发现还是不行。有些束手无策。</p>
+
+<p>6.  然后发现整个会话中没有时间条的时候都很顺畅，有了几个时间条以后滚动就会有点卡，于是目光聚焦在绘制时间条的地方。由于之前对时间条UILabel的layer使用了圆角设置了borderColor，这个肯定很耗时，去掉，用默认的UILabel格式，然后在draw的时候根据是否需要展示时间条来设置其hidden属性。发现还是卡。然后发现把UILabel的颜色改成clearColor（跟tableView的backgroundColor一样）就不卡了。之前网上看到说clearColor会影响性能，但这里竟然好像改善了性能。原因可能是在tableView背景色透明时，在上面画不同色的view比较耗时。 然后在label后面加了个背景图，就解决了原先需要用layer的问题了。最终问题解决。当然肯定还有优化空间，但至少比较流畅了，就不做“过早优化”了。</p>
+
+<p>总结下：</p>
+
+<ol>
+<li><p>Time Profile很重要，光凭感觉去猜是不靠谱的。这一点WWDC里也提到了。</p></li>
+<li><p>性能问题有可能由单个大问题引起，也可能由很多小问题叠加引起。对于后者，用“控制变量法”逐个击破。</p></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -4262,54 +4319,6 @@ wp7目前没有统计需求，有的话再调研下。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/04/e69c80e8bf91/">最近</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-04T01:28:06+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>单位最近抛弃了symbian，结束了我和它这段短暂而意外的缘分。因为业务的需要而转投wp7新项目的开发，项目未启动，技术储备中。出于兴趣之前开始自学iOS，由于和白天wp7的冲突，故放到晚上抽空学习下。</p>
-
-<p>工作后greader使用频率大幅减少，最近一个月就没用过，也许是心态比较浮躁吧，把大把时间都花在微博上了，时间被拆分的支离破碎。</p>
-
-<p>工作大半年内集齐了除iPhone外的几乎apple全系列产品，当然不全是自己买的。有时候开着Carbide敲着symbian代码，想起自己的果粉身份，觉得真是好笑。</p>
-
-<p>wp7的学习打算用和iOS学习不同的方法，相比iOS的“学院派”，打算用“野兽派”，试试哪个效果好。</p>
-
-<p>跟甲鱼说好下次他去北京出差时，我有空的话跟着去蹭吃蹭喝两个礼拜，坐穿北京的地铁。</p>
-
-<p>给LP打了个赌，尽早实现。</p>
-
-<p>自律。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -4325,7 +4334,7 @@ wp7目前没有统计需求，有的话再调研下。</p>
     <section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/ios/'>iOS (25)</a></li>
+    <li class='category'><a href='/blog/categories/ios/'>iOS (26)</a></li>
 <li class='category'><a href='/blog/categories/symbian/'>symbian (5)</a></li>
 <li class='category'><a href='/blog/categories/si-wei/'>思维 (1)</a></li>
 <li class='category'><a href='/blog/categories/ji-zhu/'>技术 (6)</a></li>
@@ -4337,6 +4346,10 @@ wp7目前没有统计需求，有的话再调研下。</p>
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/05/11/zhi-zuo-wei-xin-iosban-qiang-hong-bao-cha-jian/">制作微信iOS版抢红包插件</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/18/have-fun-with-runtime/">给第三方库打patch</a>
@@ -4352,10 +4365,6 @@ wp7目前没有统计需求，有的话再调研下。</p>
     
       <li class="post">
         <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
       </li>
     
   </ul>

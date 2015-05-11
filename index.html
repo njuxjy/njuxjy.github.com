@@ -9,7 +9,8 @@
   <meta name="author" content="njuxjy">
 
   
-  <meta name="description" content="标题有一个前提，即在不修改第三方库代码的基础上。 项目中用到的第三方库，有时候不能满足项目的特定需求，这时需要对它们打一些patch。比如我们项目中用到的TTTAttributedLabel, OLImageView和AFNetworking。都能在github上找到。 1. &hellip;">
+  <meta name="description" content="Placeholder&hellip;
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +67,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/11/zhi-zuo-wei-xin-iosban-qiang-hong-bao-cha-jian/">制作微信iOS版抢红包插件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-11T16:22:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Placeholder&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1640,119 +1677,6 @@ fi
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/04/nstimere79a84retain-cyclee997aee9a298e8a7a3e586b3/">NSTimer的retain Cycle问题解决</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-04T09:46:02+08:00" pubdate data-updated="true">May 4<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>环境为iOS 5.1，6.1，开启了ARC。</p>
-
-<p>在某个Custom的UIView里开启了一个定时器，原想在其dealloc函数中将timer invalidate并置为nil，但发现退出view controller时view没有被释放，timer也在在不停的fire。原来的写法是这样的：</p>
-
-<pre><code>@property (nonatomic, strong) NSTimer *timer;
-
--(void)startTimer
-{
-    if(self.timer == nil)
-    {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_DURATION target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
-    }
-}
-
--(void)stopTimer
-{
-    [self.timer invalidate];
-    self.timer = nil;
-}
-
--(void)dealloc
-{
-    [self stopTimer];
-}
-</code></pre>
-
-<p>由于NSTimer scheduledTimerWithTimeInterval会对self强引用，而self对timer也是强引用，这里存在了retain cycle。</p>
-
-<p>尝试将strong的timer改为weak，但并不奏效：</p>
-
-<pre><code>@property (nonatomic, weak) NSTimer *timer;
-
--(void)startTimer
-{
-    if(self.timer == nil)
-    {
-        __weak MainCycleScrollView *weakSelf = self;
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_DURATION target:weakSelf selector:@selector(timerFired) userInfo:nil repeats:YES];
-    }
-}
-</code></pre>
-
-<p>尝试覆盖父类的removeFromSuperView函数，但也不奏效：</p>
-
-<pre><code>-(void)removeFromSuperview
-{
-    [self stopTimer];
-    [super removeFromSuperview];
-}
-</code></pre>
-
-<p>解决办法有两个，一个是将timer的启动和关闭移到controller，让controller来决定何时开启解决，但这样破坏了封装性。</p>
-
-<p>最后用了另一个方法，通过覆盖willMoveToWindow，并将self.timer改为_timer解决了问题：</p>
-
-<pre><code>- (void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    if (newWindow == (id)[NSNull null] || newWindow == nil)
-    {
-        [self stopTimer];
-    }
-}
-
--(void)startTimer
-{
-    if(_timer == nil)
-    {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_DURATION target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
-    }
-}
-
--(void)stopTimer
-{
-    [_timer invalidate];
-    _timer = nil;
-}
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1766,7 +1690,7 @@ fi
     <section>
   <h1>Categories</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/ios/'>iOS (25)</a></li>
+    <li class='category'><a href='/blog/categories/ios/'>iOS (26)</a></li>
 <li class='category'><a href='/blog/categories/symbian/'>symbian (5)</a></li>
 <li class='category'><a href='/blog/categories/si-wei/'>思维 (1)</a></li>
 <li class='category'><a href='/blog/categories/ji-zhu/'>技术 (6)</a></li>
@@ -1778,6 +1702,10 @@ fi
 </section><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/05/11/zhi-zuo-wei-xin-iosban-qiang-hong-bao-cha-jian/">制作微信iOS版抢红包插件</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/04/18/have-fun-with-runtime/">给第三方库打patch</a>
@@ -1793,10 +1721,6 @@ fi
     
       <li class="post">
         <a href="/blog/2013/08/25/ios-e5bc80e58f91e88085e5bf85e79fa5e79a84-75-e4b8aae5b7a5e585b7efbc88e8af91e69687efbc89/">iOS 开发者必知的 75 个工具（译文）</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/20/objc-ioe4b98be5b9b6e58f91e7bc96e7a88befbc9aapie5928ce68c91e68898/">objc.io之并发编程：API和挑战（译文）</a>
       </li>
     
   </ul>
